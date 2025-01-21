@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+    #home button{
+        @apply flex justify-start items-center gap-5 p-5 text-gray-200 font-bold w-[372px] h-[72px] bg-gray-600 rounded-lg
+    }
+
+  
+}
