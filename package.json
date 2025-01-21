@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ignite-ui/react": "^2.2.4",
     "@phosphor-icons/react": "^2.1.7",
     "next": "15.1.3",
     "react": "^19.0.0",

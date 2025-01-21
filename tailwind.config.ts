@@ -13,6 +13,7 @@ export default {
         'green-200' : '#255D6A',
         'green-300' : '#0A313C',
 
+        'purple-hoover' : '#ABAAE1',
         'purple-100' : '#8381D9',
         'purple-200' : '#2A2879',
         
@@ -26,6 +27,8 @@ export default {
         'gray-700' : '#181C2A',
         'gray-750' : '#141824',
         'gray-800' : '#0E1116',
+
+        'red-exit' : '#F75A68'
 
 
       },

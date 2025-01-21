@@ -6,9 +6,9 @@ export function PopularBooks(){
     return(
         <div className="flex flex-col gap-4 w-[20.25rem] ml-16">
 
-            <div className="flex justify-between">
+            <div className="flex justify-between text-sm">
                 <h2 className="text-gray-100">Livros populares</h2>
-                <button className="text-purple-100">Ver todos</button>
+                <button className="text-purple-100 hover:text-purple-hoover">Ver todos</button>
             </div>
 
             <div className="flex gap-5 bg-gray-700 p-5 rounded-lg">
