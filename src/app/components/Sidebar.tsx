@@ -5,10 +5,14 @@ import Avatar from "../../public/assets/avatar.svg";
 import { useState } from "react";
 import { PhotoProfile } from "./PhotoProfile";
 
+interface SidebarProps{
+  setActivePage : (page: 'inicio' | 'perfil' | 'explorar') => void;
+}
 
-export function Sidebar() {
+export function Sidebar({setActivePage} : SidebarProps) {
+
   const logado = true;
-  const [selecionado, setSelecionado] = useState<string | null>(null);
+  const [selecionado, setSelecionado] = useState<string | null>('inicio');
 
   const imgUrl = Avatar.src;
   // Mapeamento para associar cada botão a um identificador único
@@ -18,8 +22,10 @@ export function Sidebar() {
     { id: "perfil", label: "Perfil", icon: <User size={24} />, requiresAuth: true },
   ];
 
-  function handleButtonClick(buttonName: string) {
-    setSelecionado((prev) => (prev === buttonName ? null : buttonName));
+  function handleButtonClick(buttonName: 'inicio' | 'perfil' | 'explorar') {
+    setSelecionado(buttonName);
+    setActivePage(buttonName); 
+
   }
 
   return (
@@ -60,7 +66,7 @@ export function Sidebar() {
                     className={`flex items-center gap-3 hover:text-gray-100 ${
                       selecionado === btn.id ? "text-gray-100" : ""
                     }`}
-                    onClick={() => handleButtonClick(btn.id)}
+                    onClick={() => handleButtonClick(btn.id as "inicio" | "perfil" | 'explorar')}
                   >
                     {btn.icon}
                     {btn.label}
@@ -72,8 +78,23 @@ export function Sidebar() {
       
       {/* Botão de Login */}
       {
-        !logado ?  <button className="flex gap-3 mb-12 text-gray-200">Fazer login <SignIn className="text-green-100" size={24}/></button> : <button className="flex items-center gap-3 mb-12 
-        text-gray-200"><PhotoProfile imageUrl={imgUrl} size='2rem' width={32} height={32}/> Cristofer <SignIn className="text-red-exit" size={24}/></button>
+        !logado ?  
+          <button className="flex gap-3 mb-12 text-gray-200">
+            Fazer login 
+            <SignIn className="text-green-100" size={24}/>
+          </button> : 
+          
+          <button className="flex items-center gap-3 mb-12 
+        text-gray-200">
+            <PhotoProfile 
+              imageUrl={imgUrl}
+              size='2rem'
+              width={32}
+              height={32}
+            /> 
+              Cristofer 
+              <SignIn className="text-red-exit" size={24}/>
+          </button>
       }
      
     </div>

@@ -1,6 +1,7 @@
 import { Star } from "@phosphor-icons/react";
 import Image from "next/image";
 import Cover from '@/public/assets/livrosAlgoritmos.svg'
+import { motion } from "framer-motion";
 
 export function LastReading(){
     return(
@@ -10,10 +11,13 @@ export function LastReading(){
                 <button className="text-purple-100 hover:text-purple-hoover">Ver todos</button>
             </div>
 
-            <div className='flex flex-col gap-8 bg-gray-600 w-[38rem] h-48 rounded-lg p-6 mt-3' >
-
-            
-                <div className='flex gap-5'>
+            <motion.div
+                  initial={{ opacity: 0 }}  // Começa invisível
+                  animate={{ opacity: 1 }}  // Aparece gradualmente
+                  transition={{ duration: 0.8, ease: "easeOut" }} // Tempo de transição
+                  className='flex flex-col gap-8 bg-gray-600 w-[38rem] h-48 rounded-lg p-6 mt-3'
+            >
+            <div className='flex gap-5'>
                 
                 <Image src={Cover} alt="image-home" width={108} height={152}/>
 
@@ -44,7 +48,7 @@ export function LastReading(){
                         <p>Nec tempor nunc in egestas. Euismod nisi eleifend at et in sagittis. Penatibus id vestibulum imperdiet a at imperdiet lectu...</p>
                     </div>
                 </div> 
-            </div>
+            </motion.div>
         </div>
         
     )

@@ -1,4 +1,4 @@
-import { MagnifyingGlass, Star, User } from "@phosphor-icons/react";
+import { MagnifyingGlass, User } from "@phosphor-icons/react";
 import { MyBooks } from "./components/MyBooks";
 import { MyProfile } from "./components/MyProfile";
 import EntendendoAlgoritmo from '../../../public/assets/livrosAlgoritmos.svg'

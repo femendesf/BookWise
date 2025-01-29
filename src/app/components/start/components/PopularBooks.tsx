@@ -1,6 +1,6 @@
 import Image from "next/image";
-
 import { Star } from "@phosphor-icons/react";
+import {motion} from 'framer-motion'
 
 interface PopularBooksProps{
     title: string;
@@ -8,16 +8,34 @@ interface PopularBooksProps{
     imgBook: string;
     alt: string;
     rating: number;
-
+    index: number;
 }
 
-export function PopularBooks({title, author, rating, alt, imgBook} : PopularBooksProps){
+const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (index: number) => ({
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.5,
+            ease: "easeOut",
+            delay: index * 0.2, // Cada card terá um delay incremental
+        }
+    })
+};
+
+export function PopularBooks({title, author, rating, alt, imgBook, index} : PopularBooksProps){
 
     const totalStars = 5
 
     return(
-
-        <div className="flex gap-5 bg-gray-700 p-5 rounded-lg">
+        
+        <motion.div 
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            custom={index} // Passando o index para o delay funcionar corretamente
+            className="flex gap-5 bg-gray-700 p-5 rounded-lg">
 
             <Image src={imgBook} alt={alt} width={64} height={94} />
 
@@ -36,7 +54,7 @@ export function PopularBooks({title, author, rating, alt, imgBook} : PopularBook
                 </div>
             </div>
 
-        </div>
+        </motion.div>
        
     )
 }

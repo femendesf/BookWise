@@ -19,19 +19,10 @@ export function Inicio(){
 
     const logado = true
 
-    const img = Hobbit.src
-    const capa1 = Book1.src
-    const capa2 = Algoritmo.src
-    const lindsey = Lindsey.src
-    const brandon = Brandon.src
-    const jaxson = Jaxson.src
-
-   
-    
-
+    const habitos = Book1.src
     
     return(
-        <div id="inicio" className="flex justify-between">
+        <div id="start" className="flex justify-between">
 
             <div className="flex flex-col gap-10 mb-1">
 
@@ -46,14 +37,16 @@ export function Inicio(){
                     <span className="text-gray-100 text-sm">Avaliações mais recentes</span>
 
                     <RecentReviews 
+
                         title="O Hobbit" 
                         author="J.R.R. Tolkien"
-                        imgBook={img}
-                        imgProfile={jaxson}
+                        imgBook={Hobbit}
+                        imgProfile={Jaxson}
                         name="Jaxson Dias"
                         when="Hoje"
                         rating={4}
-                        description="Semper et sapien proin vitae nisi. Feugiat neque integer donec et aenean posuere amet ultrices. Cras fermentum id pulvinar varius leo a in. Amet libero pharetra nunc elementum fringilla velit ipsum. Sed vulputate massa velit nibh... ver mais"/>
+                        description="Semper et sapien proin vitae nisi. Feugiat neque integer donec et aenean posuere amet ultrices. Cras fermentum id pulvinar varius leo a in. Amet libero pharetra nunc elementum fringilla velit ipsum. Sed vulputate massa velit nibh... ver mais"
+                        index={0}/>
 
                     <RecentReviews
                         name="Brandon Botosh"
@@ -61,20 +54,22 @@ export function Inicio(){
                         imgProfile={Brandon}
                         title="O guia do mochileiro das galáxias"
                         author="Douglas Adams"
-                        imgBook={capa1}
+                        imgBook={habitos}
                         description="Nec tempor nunc in egestas. Euismod nisi eleifend at et in sagittis. Penatibus id vestibulum imperdiet a at imperdiet lectus leo. Sit porta eget nec vitae sit vulputate eget"
                         rating={4}
+                        index={1}
                     />
 
                     <RecentReviews
                         name="Lindsey Philips"
                         when="Ontem"
-                        imgProfile={lindsey}
+                        imgProfile={Lindsey}
                         rating={5}
                         title="Entendendo Algoritmos"
                         author="Aditya Bhargava"
-                        imgBook={capa2}
+                        imgBook={Algoritmo}
                         description="Integer at tincidunt sed mi. Venenatis nunc justo porta viverra lacus scelerisque ut orci ultricies. Massa ultrices lacus non lectus pellentesque cras posuere neque. Nunc nisl curabitur et non. Tellus senectus elit porta lorem."
+                        index={2}
 
                     />
                     
@@ -95,6 +90,7 @@ export function Inicio(){
                     title="A revolução dos bichos"
                     author="George Orwell"
                     rating={4}
+                    index={0}
                 />
 
                 <PopularBooks
@@ -103,6 +99,7 @@ export function Inicio(){
                     title="14 Hábitos de Desenvolvedores Alta..."
                     author="Zeno Rocha"
                     rating={3}
+                    index={1}
                 />
 
                 <PopularBooks
@@ -111,6 +108,7 @@ export function Inicio(){
                     title="O Fim da Eternidade"
                     author="Isaac Asimov"
                     rating={4}
+                    index={2}
                 />
 
                 <PopularBooks
@@ -119,6 +117,7 @@ export function Inicio(){
                     title="Entendendo Algoritmos"
                     author="Aditya Bhargava"
                     rating={5}
+                    index={3}
                 />
             </div>
         </div>
