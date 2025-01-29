@@ -3,9 +3,27 @@
 @tailwind utilities;
  
 @layer base {
-    #home button{
+    html{
+        @apply font-nunito
+    }
+
+    #login button{
         @apply flex justify-start items-center gap-5 p-5 text-gray-200 font-bold w-[372px] h-[72px] bg-gray-600 rounded-lg
     }
 
-  
+   #home h1{
+        @apply text-gray-100 text-2xl
+   }
+
+   #home h2{
+        @apply text-gray-100 text-lg
+   }
+
+   #home h3{
+        @apply text-gray-400 text-sm
+   }
+
+   #home p{
+        @apply text-gray-300 text-sm
+   }
 }

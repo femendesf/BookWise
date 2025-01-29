@@ -7,7 +7,7 @@ import { User } from "@phosphor-icons/react";
 
 export default function Login() {
   return (
-    <div id="home" className="flex  items-center justify-center gap-56 w-full h-screen max-md:flex-col max-md:gap-3">
+    <div id="login" className="flex  items-center justify-center gap-56 w-full h-screen max-md:flex-col max-md:gap-3">
 
       <div className="mt-6 ">
         <Image className="rounded-lg" src={ImageHome} alt="image-home" 

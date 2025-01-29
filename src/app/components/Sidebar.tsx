@@ -3,12 +3,14 @@ import { Binoculars, ChartLineUp, SignIn, User } from "@phosphor-icons/react";
 import Logo from "../../public/assets/logo.svg";
 import Avatar from "../../public/assets/avatar.svg";
 import { useState } from "react";
+import { PhotoProfile } from "./PhotoProfile";
 
 
 export function Sidebar() {
-  const logado = false;
+  const logado = true;
   const [selecionado, setSelecionado] = useState<string | null>(null);
 
+  const imgUrl = Avatar.src;
   // Mapeamento para associar cada botão a um identificador único
   const buttons = [
     { id: "inicio", label: "Início", icon: <ChartLineUp size={24} /> },
@@ -71,7 +73,7 @@ export function Sidebar() {
       {/* Botão de Login */}
       {
         !logado ?  <button className="flex gap-3 mb-12 text-gray-200">Fazer login <SignIn className="text-green-100" size={24}/></button> : <button className="flex items-center gap-3 mb-12 
-        text-gray-200"><Image src={Avatar} alt="avatar"/> Cristofer <SignIn className="text-red-exit" size={24}/></button>
+        text-gray-200"><PhotoProfile imageUrl={imgUrl} size='2rem' width={32} height={32}/> Cristofer <SignIn className="text-red-exit" size={24}/></button>
       }
      
     </div>
