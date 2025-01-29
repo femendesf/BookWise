@@ -8,7 +8,7 @@ export function MyProfile(){
     const imageUrl = Avatar.src;
 
     return(
-        <div className="flex flex-col items-center justify-center gap-10 border-l-[1px] border-gray-700 w-[19.25rem]">
+        <div className="flex flex-col items-center gap-10 border-l-[1px] border-gray-700 w-[19.25rem] h-[34.75rem]">
 
             <div className="flex flex-col items-center gap-5">
 

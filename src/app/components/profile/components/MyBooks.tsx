@@ -1,5 +1,6 @@
 import { Star } from "@phosphor-icons/react";
 import Image from "next/image";
+import { motion } from 'framer-motion';
 
 interface MyBooksProps {
     title: string;
@@ -7,21 +8,40 @@ interface MyBooksProps {
     img: string;
     rating: number;
     description: string;
+    dateLastReading: string;
+    index: number;
+}
 
+const cardVariants = {
+    hidden: { opacity: 0, y: 20},
+    visible: (index: number) => ({
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.5,
+            ease: 'easeOut',
+            delay: index*0.2
+        }
+    })
 }
 
 
-export function MyBooks({title, author, img, rating, description}: MyBooksProps) {
+export function MyBooks({title, author, img, rating, description, dateLastReading, index}: MyBooksProps) {
 
     const totalStars = 5;
 
     return(
 
         <div className="flex flex-col w-[39rem] h-auto mt-8 gap-2"> 
-
-        <span className="text-sm text-gray-300">Há 2 dias</span>
-
-        <div className="flex flex-col bg-gray-700 gap-6 p-6 rounded-lg"> {/* Card*/}
+        <span className="text-sm text-gray-300">{dateLastReading != 'Hoje' ? `Há ${dateLastReading}` : dateLastReading}</span>
+        
+        <motion.div
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            custom={index}
+            className="flex flex-col bg-gray-700 gap-6 p-6 rounded-lg"
+        >{/* Card*/}
 
             <div className="flex gap-6">
 
@@ -46,8 +66,8 @@ export function MyBooks({title, author, img, rating, description}: MyBooksProps)
             </div>
 
             <p>{description}</p>
-        </div>
-
+        </motion.div>
     </div>
+   
     )
 }

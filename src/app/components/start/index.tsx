@@ -15,6 +15,10 @@ import GeorgeOrwell from '../../../public/assets/livroGeorge.svg'
 import Habitos from '../../../public/assets/habitos.svg'
 import OFimDaEternidade from '../../../public/assets/oFimDaEternidade.svg'
 
+import { motion } from "framer-motion";
+import { fadeIn } from "@/utils/fadeOut";
+
+
 export function Inicio(){
 
     const logado = true
@@ -22,14 +26,20 @@ export function Inicio(){
     const habitos = Book1.src
     
     return(
+
+        <motion.div
+            {...fadeIn}
+        >
         <div id="start" className="flex justify-between">
 
             <div className="flex flex-col gap-10 mb-1">
 
-                <h1 className="flex gap-3">
-                   <ChartLineUp size={32} className="text-green-100"/>
-                    Início
-                </h1>
+                
+                    <h1 className="flex gap-3">
+                        <ChartLineUp size={32} className="text-green-100"/>
+                        Início
+                    </h1>
+           
 
                 {logado && <LastReading />}
 
@@ -37,7 +47,6 @@ export function Inicio(){
                     <span className="text-gray-100 text-sm">Avaliações mais recentes</span>
 
                     <RecentReviews 
-
                         title="O Hobbit" 
                         author="J.R.R. Tolkien"
                         imgBook={Hobbit}
@@ -46,7 +55,7 @@ export function Inicio(){
                         when="Hoje"
                         rating={4}
                         description="Semper et sapien proin vitae nisi. Feugiat neque integer donec et aenean posuere amet ultrices. Cras fermentum id pulvinar varius leo a in. Amet libero pharetra nunc elementum fringilla velit ipsum. Sed vulputate massa velit nibh... ver mais"
-                        index={0}/>
+                        index={1}/>
 
                     <RecentReviews
                         name="Brandon Botosh"
@@ -57,7 +66,7 @@ export function Inicio(){
                         imgBook={habitos}
                         description="Nec tempor nunc in egestas. Euismod nisi eleifend at et in sagittis. Penatibus id vestibulum imperdiet a at imperdiet lectus leo. Sit porta eget nec vitae sit vulputate eget"
                         rating={4}
-                        index={1}
+                        index={2}
                     />
 
                     <RecentReviews
@@ -69,8 +78,7 @@ export function Inicio(){
                         author="Aditya Bhargava"
                         imgBook={Algoritmo}
                         description="Integer at tincidunt sed mi. Venenatis nunc justo porta viverra lacus scelerisque ut orci ultricies. Massa ultrices lacus non lectus pellentesque cras posuere neque. Nunc nisl curabitur et non. Tellus senectus elit porta lorem."
-                        index={2}
-
+                        index={3}
                     />
                     
                 </div>
@@ -90,7 +98,7 @@ export function Inicio(){
                     title="A revolução dos bichos"
                     author="George Orwell"
                     rating={4}
-                    index={0}
+                    index={1}
                 />
 
                 <PopularBooks
@@ -99,7 +107,7 @@ export function Inicio(){
                     title="14 Hábitos de Desenvolvedores Alta..."
                     author="Zeno Rocha"
                     rating={3}
-                    index={1}
+                    index={2}
                 />
 
                 <PopularBooks
@@ -108,7 +116,7 @@ export function Inicio(){
                     title="O Fim da Eternidade"
                     author="Isaac Asimov"
                     rating={4}
-                    index={2}
+                    index={3}
                 />
 
                 <PopularBooks
@@ -117,10 +125,11 @@ export function Inicio(){
                     title="Entendendo Algoritmos"
                     author="Aditya Bhargava"
                     rating={5}
-                    index={3}
+                    index={4}
                 />
             </div>
         </div>
+        </motion.div>
     )
 
 }

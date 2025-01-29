@@ -5,17 +5,21 @@ import { motion } from "framer-motion";
 
 export function LastReading(){
     return(
+
+        <motion.div
+            initial={{ opacity: 0 }}  // Começa invisível
+            animate={{ opacity: 1 }}  // Aparece gradualmente
+            transition={{ duration: 0.8, ease: "easeOut" }} // Tempo de transição
+        >
+
         <div className="flex flex-col gap-5">
             <div className="flex justify-between items-center text-sm">
                 <span className="text-gray-200">Sua última leitura</span>
                 <button className="text-purple-100 hover:text-purple-hoover">Ver todos</button>
             </div>
 
-            <motion.div
-                  initial={{ opacity: 0 }}  // Começa invisível
-                  animate={{ opacity: 1 }}  // Aparece gradualmente
-                  transition={{ duration: 0.8, ease: "easeOut" }} // Tempo de transição
-                  className='flex flex-col gap-8 bg-gray-600 w-[38rem] h-48 rounded-lg p-6 mt-3'
+            <div
+                className='flex flex-col gap-8 bg-gray-600 w-[38rem] h-48 rounded-lg p-6 mt-3'
             >
             <div className='flex gap-5'>
                 
@@ -48,8 +52,8 @@ export function LastReading(){
                         <p>Nec tempor nunc in egestas. Euismod nisi eleifend at et in sagittis. Penatibus id vestibulum imperdiet a at imperdiet lectu...</p>
                     </div>
                 </div> 
-            </motion.div>
+            </div>
         </div>
-        
+        </motion.div>
     )
 }
