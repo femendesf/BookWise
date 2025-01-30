@@ -21,6 +21,7 @@ export function Profile() {
     const capaOGuidaDoMochileiro = OGuiadoMochileiro.src
 
     const [botaoClicado, setBotaoClicado] = useState(false)
+    const [verificado, setVerificado] = useState(false)
     const [query, setQuery] = useState('')
     const [error, setError] = useState('')
 
@@ -38,17 +39,18 @@ export function Profile() {
 
         if(!result.success){
             setError(result.error.errors[0].message)
+           
         }else{
             setError('')
+            setVerificado(true)
         }
 
     }
 
-
     return(
-        <div className="flex justify-start gap-16"> 
+        <div className="flex justify-start gap-16 "> 
 
-            <div>
+            <div className="xxl:max-w-[51.25rem] ">
                 <motion.div
                     key={botaoClicado ? "clicked" : "default"}
                     {...fadeIn}
@@ -80,9 +82,10 @@ export function Profile() {
                         onChange={handlInputChange}
                     />
 
+                    
                     <button 
-                        className= {`text-gray-500 hover:text-gray-400 ${error? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
-                        onClick={()=> !error && handleButtonClicked(true)}
+                        className= {`text-gray-500  ${error || verificado === false ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-gray-400'}`}
+                        onClick={()=> !error && verificado && handleButtonClicked(true)}
                     > 
                         <MagnifyingGlass  size={20}/>
                     </button>

@@ -32,7 +32,7 @@ export function MyBooks({title, author, img, rating, description, dateLastReadin
 
     return(
 
-        <div className="flex flex-col w-[39rem] h-auto mt-8 gap-2"> 
+        <div className="flex flex-col w-[48.75rem] xxl:w-full h-auto mt-8 gap-2"> 
         <span className="text-sm text-gray-300">{dateLastReading != 'Hoje' ? `Há ${dateLastReading}` : dateLastReading}</span>
         
         <motion.div

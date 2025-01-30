@@ -19,7 +19,7 @@ export function LastReading(){
             </div>
 
             <div
-                className='flex flex-col gap-8 bg-gray-600 w-[38rem] h-48 rounded-lg p-6 mt-3'
+                className='flex flex-col gap-8 bg-gray-600 h-48 rounded-lg p-6 mt-3 overflow-hidden'
             >
             <div className='flex gap-5'>
                 

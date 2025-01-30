@@ -40,7 +40,7 @@ export function RecentReviews({ name, imgProfile, when, title, author, imgBook, 
             initial="hidden"
             animate="visible"
             custom={index} // Passando o index para o delay funcionar corretamente
-            className="flex flex-col gap-8 bg-gray-700 w-[38rem] h-[17.5rem] rounded-lg p-6 mt-3"
+            className="flex flex-col gap-8 bg-gray-700 h-[17.5rem] rounded-lg p-6 mt-3 overflow-hidden"
         >
             <div className='flex items-center justify-between'>
                 <div className='flex gap-4'>

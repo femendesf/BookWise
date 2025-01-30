@@ -1,4 +1,5 @@
 'use client'
+
 import {ChartLineUp } from "@phosphor-icons/react";
 import { RecentReviews } from "./components/RecentReviews";
 import { PopularBooks } from "./components/PopularBooks";
@@ -18,11 +19,12 @@ import OFimDaEternidade from '../../../public/assets/oFimDaEternidade.svg'
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
 
+interface StartProps{
+    loggedIn: boolean;
+}
 
-export function Inicio(){
-
-    const logado = true
-
+export function Start({loggedIn} : StartProps){
+    
     const habitos = Book1.src
     
     return(
@@ -32,16 +34,14 @@ export function Inicio(){
         >
         <div id="start" className="flex justify-between">
 
-            <div className="flex flex-col gap-10 mb-1">
+            <div className="flex flex-col gap-10 mb-1 w-[48.75rem] xxl:w-[51.25rem]">
 
-                
-                    <h1 className="flex gap-3">
-                        <ChartLineUp size={32} className="text-green-100"/>
-                        Início
-                    </h1>
+                <h1 className="flex gap-3">
+                    <ChartLineUp size={32} className="text-green-100"/>
+                    Início
+                </h1>
            
-
-                {logado && <LastReading />}
+                {loggedIn && <LastReading />}
 
                 <div>
                     <span className="text-gray-100 text-sm">Avaliações mais recentes</span>
@@ -85,7 +85,7 @@ export function Inicio(){
 
             </div>
             
-            <div className="flex flex-col gap-4 w-[20.25rem] ml-16">
+            <div className="flex flex-col gap-4 w-96 ml-16 xxl:20 overflow-hidden">
 
                 <div className="flex justify-between text-sm">
                     <span className="text-gray-100">Livros populares</span>
@@ -104,7 +104,7 @@ export function Inicio(){
                 <PopularBooks
                     imgBook={Habitos}
                     alt="Capa 14 Hábitos de Desenvolvedores Alta..."
-                    title="14 Hábitos de Desenvolvedores Alta..."
+                    title="14 Hábitos de Desenvolvedores Altamente Produtivos"
                     author="Zeno Rocha"
                     rating={3}
                     index={2}

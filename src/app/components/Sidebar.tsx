@@ -10,14 +10,16 @@ import { fadeIn } from "@/utils/fadeOut";
 
 interface SidebarProps{
   setActivePage : (page: 'inicio' | 'perfil' | 'explorar') => void;
+  setClickedButtonLogin: (clicked: boolean) => void;
+  setExitLogin: (exit: boolean) => void;
+  loggedIn: boolean;
 }
 
-export function Sidebar({setActivePage} : SidebarProps) {
+export function Sidebar({setActivePage, loggedIn, setClickedButtonLogin, setExitLogin} : SidebarProps) {
 
-  const logado = true;
   const [selected, setSelected] = useState<string | null>('inicio');
-
   const imgUrl = Avatar.src;
+
   // Mapeamento para associar cada botão a um identificador único
   const buttons = [
     { id: "inicio", label: "Início", icon: <ChartLineUp size={24} /> },
@@ -63,7 +65,7 @@ export function Sidebar({setActivePage} : SidebarProps) {
               {/* Botões */}
 
               {buttons
-                .filter((btn) => !btn.requiresAuth || logado)
+                .filter((btn) => !btn.requiresAuth || loggedIn)
                 .map((btn) => (
                   
                   <div className="flex items-center gap-4" key={btn.id}>
@@ -83,14 +85,20 @@ export function Sidebar({setActivePage} : SidebarProps) {
         
         {/* Botão de Login */}
         {
-          !logado ?  
-            <button className="flex gap-3 mb-12 text-gray-200">
+          !loggedIn ?  
+            <button 
+              className="flex gap-3 mb-12 text-gray-200"
+              onClick={() => setClickedButtonLogin(true)}
+            >
               Fazer login 
               <SignIn className="text-green-100" size={24}/>
             </button> : 
             
-            <button className="flex items-center gap-3 mb-12 
-          text-gray-200">
+            <button 
+              className="flex items-center gap-3 mb-12 
+          text-gray-200"
+              onClick={() => setExitLogin(false)}
+            >
               <PhotoProfile 
                 imageUrl={imgUrl}
                 size='2rem'

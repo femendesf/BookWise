@@ -35,13 +35,13 @@ export function PopularBooks({title, author, rating, alt, imgBook, index} : Popu
             initial="hidden"
             animate="visible"
             custom={index} // Passando o index para o delay funcionar corretamente
-            className="flex gap-5 bg-gray-700 p-5 rounded-lg">
+            className="flex gap-5 bg-gray-700 p-5 rounded-lg overflow-hidden">
 
             <Image src={imgBook} alt={alt} width={64} height={94} />
 
             <div className="flex flex-col justify-between">
                 <div> 
-                    <h2>{title}</h2>
+                    <h2 className="line-clamp-2">{title}</h2>
                     <h3>{author}</h3>
                 </div>
                 

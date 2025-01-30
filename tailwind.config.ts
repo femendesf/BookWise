@@ -24,6 +24,7 @@ export default {
 
         'gray-500' : '#303F73',
         'gray-600' : '#252D4A',
+        'gray-650': '#2B334B',
         'gray-700' : '#181C2A',
         'gray-750' : '#141824',
         'gray-800' : '#0E1116',
@@ -40,6 +41,9 @@ export default {
       },
       boxShadow:{
         'custom-dual' : 'inset 0px 60px 73px -29px rgba(41, 40, 121, 0.4), inset 0px -70px 30px -29px rgba(37, 93, 106, 0.11)',
+      },
+      screens:{
+        'xxl' : '1920px'
       }
     },
   },
