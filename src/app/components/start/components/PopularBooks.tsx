@@ -9,6 +9,8 @@ interface PopularBooksProps{
     alt: string;
     rating: number;
     index: number;
+    width: number;
+    height: number;
 }
 
 const cardVariants = {
@@ -24,7 +26,7 @@ const cardVariants = {
     })
 };
 
-export function PopularBooks({title, author, rating, alt, imgBook, index} : PopularBooksProps){
+export function PopularBooks({title, author, rating, alt, imgBook, index, width, height} : PopularBooksProps){
 
     const totalStars = 5
 
@@ -35,20 +37,18 @@ export function PopularBooks({title, author, rating, alt, imgBook, index} : Popu
             initial="hidden"
             animate="visible"
             custom={index} // Passando o index para o delay funcionar corretamente
-            className="flex gap-5 bg-gray-700 p-5 rounded-lg overflow-hidden">
+            className="flex gap-5 bg-gray-700 p-5 rounded-lg overflow-hidden h-full">
 
-            <Image src={imgBook} alt={alt} width={64} height={94} />
+            <Image className="rounded-md" src={imgBook} alt={alt} width={width} height={height} />
 
             <div className="flex flex-col justify-between">
                 <div> 
                     <h2 className="line-clamp-2">{title}</h2>
                     <h3>{author}</h3>
                 </div>
-                
 
-                    <div className='flex gap-1 text-purple-100'>
+                <div className='flex gap-1 text-purple-100'>
                     {Array.from({length: totalStars}, (_, index) => (
-
                         <Star key={index} size={16} weight={index < rating ? "fill" : "regular"}/>)
                     )}
                 </div>

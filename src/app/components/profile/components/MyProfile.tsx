@@ -15,8 +15,8 @@ export function MyProfile(){
                 <PhotoProfile imageUrl={imageUrl} size="4.5rem" width={76} height={76}/>
 
                 <div className="flex flex-col items-center gap-1">
-                    <span className="text-xl text-gray-100">Cristofer Rosser</span>
-                    <h3>membro desde 2019</h3>
+                    <span className="text-xl text-gray-100">Felipe Mendes Fosneca</span>
+                    <h3>membro desde 2025</h3>
 
                     <div className="w-[32px] h-[4px] bg-gradient-to-r from-[#7FD1CC] to-[#9694F5] rounded-full mt-9"></div>
                 </div>

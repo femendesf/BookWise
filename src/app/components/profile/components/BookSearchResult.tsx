@@ -3,7 +3,7 @@ import FragmentosDoHorror from '../../../../public/assets/fragmentosDoHorror.png
 
 import HistoriaExtraordinarias from '../../../../public/assets/historias-extraordinarias.svg'
 
-import ViagemAoCentroDaTerra from '../../../../public/assets/vvagem-ao-centro-da-terra.svg'
+import ViagemAoCentroDaTerra from '../../../../public/assets/viagem-ao-centro-da-terra.svg'
 
 export function BookSearchResult(){
 

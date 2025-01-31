@@ -8,16 +8,14 @@ import { LastReading } from "./components/LastReading";
 import Hobbit from '../../../public/assets/hobbit.svg'
 import Jaxson from '../../../public/assets/profile.svg'
 import Brandon from '../../../public/assets/brandon.svg'
-import Book1 from '../../../public/assets/book1.png'
+import Book1 from '../../../public/assets/o-guia-do-mochileiro.png'
 import Lindsey from '../../../public/assets/lindsey.svg'
 import Algoritmo from '../../../public/assets/livrosAlgoritmos.svg'
 
-import GeorgeOrwell from '../../../public/assets/livroGeorge.svg'
-import Habitos from '../../../public/assets/habitos.svg'
-import OFimDaEternidade from '../../../public/assets/oFimDaEternidade.svg'
-
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
+
+import { listBooks } from "@/utils/listBooks";
 
 interface StartProps{
     loggedIn: boolean;
@@ -92,41 +90,23 @@ export function Start({loggedIn} : StartProps){
                     <button className="text-purple-100 hover:text-purple-hoover">Ver todos</button>
                 </div>
 
-                <PopularBooks 
-                    imgBook={GeorgeOrwell}
-                    alt="Capa livro A revolução dos bichos"
-                    title="A revolução dos bichos"
-                    author="George Orwell"
-                    rating={4}
-                    index={1}
-                />
+                {listBooks.slice(0, 4).map(({title, author, cover, rating, id}) => (
+                    <div className="h-36" key={id}>
+                        <PopularBooks
+                            key={id}
+                            imgBook={cover}
+                            alt={`Capa livro ${title}`}
+                            title={title}
+                            author={author}
+                            rating={rating}
+                            index={id}
+                            width={64}
+                            height={94}
+                    />
+                    </div>
+                   
+                ))}
 
-                <PopularBooks
-                    imgBook={Habitos}
-                    alt="Capa 14 Hábitos de Desenvolvedores Alta..."
-                    title="14 Hábitos de Desenvolvedores Altamente Produtivos"
-                    author="Zeno Rocha"
-                    rating={3}
-                    index={2}
-                />
-
-                <PopularBooks
-                    imgBook={OFimDaEternidade}
-                    alt="Capa O Fim da Eternidade"
-                    title="O Fim da Eternidade"
-                    author="Isaac Asimov"
-                    rating={4}
-                    index={3}
-                />
-
-                <PopularBooks
-                    imgBook={Algoritmo}
-                    alt="Capa Entendendo Algoritmos"
-                    title="Entendendo Algoritmos"
-                    author="Aditya Bhargava"
-                    rating={5}
-                    index={4}
-                />
             </div>
         </div>
         </motion.div>

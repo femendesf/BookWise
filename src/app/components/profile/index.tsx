@@ -1,20 +1,16 @@
-import { CaretLeft, MagnifyingGlass, User } from "@phosphor-icons/react";
+import { CaretLeft, User } from "@phosphor-icons/react";
 import { MyBooks } from "./components/MyBooks";
 import { MyProfile } from "./components/MyProfile";
 import EntendendoAlgoritmo from '../../../public/assets/livrosAlgoritmos.svg'
 
 import Hobbit from '../../../public/assets/hobbit.svg'
-import OGuiadoMochileiro from '../../../public/assets/book1.png'
+import OGuiadoMochileiro from '../../../public/assets/o-guia-do-mochileiro.png'
 import React, { useState } from "react";
 import { BookSearchResult } from "./components/BookSearchResult";
 
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
-import { z } from "zod";
-
-const searchSchema = z.object({
-    query: z.string().min(3, 'Digite pelo menos 3 caracters')
-})
+import { InputSearchBook } from "../InputSearchBook";
 
 export function Profile() {
 
@@ -22,33 +18,10 @@ export function Profile() {
 
     const [buttonSearch, setButtonSearch] = useState(false)//Verifica se o botao de pesquisa foi clicado
 
-    const [inputValueValidation, setInputValueValidation] = useState(false) //Estado para validar o valor do input para bloquear o clique
-
-    const [query, setQuery] = useState('')
-    const [error, setError] = useState('')
-
     function handleButtonClicked(clicado: boolean){
         setButtonSearch(clicado)
     }
     
-    function handlInputChange(event: React.ChangeEvent<HTMLInputElement>){ //Verificar eventos do input
-
-        const value = event.target.value;
-        setQuery(value)
-
-        //Validação com ZOD
-        const result = searchSchema.safeParse({query: value});
-
-        if(!result.success){
-            setError(result.error.errors[0].message)
-           
-        }else{
-            setError('')
-            setInputValueValidation(true)
-        }
-
-    }
-
     return(
         <div className="flex justify-start gap-16 "> 
 
@@ -74,25 +47,10 @@ export function Profile() {
                     }
                 </motion.div>
 
-                <div className="flex items-center justify-between gap-3 h-12 border border-gray-500 rounded-md px-5 mt-10"> {/* Search bar */}
-
-                    <input 
-                        className="text-gray-400 focus:outline-none text-sm bg-transparent w-full "
-                        type="text"
-                        placeholder="Buscar livro avaliado"
-                        value={query}
-                        onChange={handlInputChange}
-                    />
-
-                    
-                    <button 
-                        className= {`text-gray-500  ${error || inputValueValidation === false ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-gray-400'}`}
-                        onClick={()=> !error && inputValueValidation && handleButtonClicked(true)}
-                    > 
-                        <MagnifyingGlass  size={20}/>
-                    </button>
-
-
+                <div className="h-12 mt-10"> 
+                    {/* Search bar */}
+                    <InputSearchBook
+                    setButtonClicked={setButtonSearch}/>
                 </div>
                 
                 {!buttonSearch ? 

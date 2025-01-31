@@ -4,8 +4,11 @@ import ImageHome from "../public/assets/imagem-home.svg";
 import LogoGoogle from "../public/assets/logo-google.svg";
 import LogoGitHub from "../public/assets/logo-github.svg";
 import { User } from "@phosphor-icons/react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter()
+
   return (
     <div id="login" className="flex  items-center justify-center gap-56 w-full h-screen max-md:flex-col max-md:gap-3">
 
@@ -35,7 +38,7 @@ export default function Login() {
               Entrar com GitHub
             </button>
             
-            <button>
+            <button onClick={() => router.push('/home')}>
               <User size={32} />
               Entrar como visitante.
             </button>

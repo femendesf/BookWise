@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Binoculars, ChartLineUp, SignIn, User } from "@phosphor-icons/react";
 import Logo from "../../public/assets/logo.svg";
-import Avatar from "../../public/assets/avatar.svg";
+import Avatar from "../../public/assets/rick.jpg";
 import { useEffect, useState } from "react";
 import { PhotoProfile } from "./PhotoProfile";
 
@@ -38,6 +38,10 @@ export function Sidebar({setActivePage, loggedIn, setClickedButtonLogin, setExit
     }
   },[loggedIn])
 
+  function handleExitLogin(){
+    setExitLogin(false)
+    setActivePage("inicio"); 
+  }
   return (
 
       <motion.div 
@@ -106,7 +110,7 @@ export function Sidebar({setActivePage, loggedIn, setClickedButtonLogin, setExit
               <button 
                 className="flex items-center gap-3 mb-12 
             text-gray-200"
-                onClick={() => setExitLogin(false)}
+                onClick={() => handleExitLogin()}
               >
                 <PhotoProfile 
                   imageUrl={imgUrl}
@@ -114,7 +118,7 @@ export function Sidebar({setActivePage, loggedIn, setClickedButtonLogin, setExit
                   width={32}
                   height={32}
                 /> 
-                  Cristofer 
+                  <span>Felipe</span>
                   <SignIn className="text-red-exit" size={24}/>
               </button>
           }
