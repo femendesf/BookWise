@@ -20,13 +20,15 @@ export function Profile() {
 
     const capaOGuidaDoMochileiro = OGuiadoMochileiro.src
 
-    const [botaoClicado, setBotaoClicado] = useState(false)
-    const [verificado, setVerificado] = useState(false)
+    const [buttonSearch, setButtonSearch] = useState(false)//Verifica se o botao de pesquisa foi clicado
+
+    const [inputValueValidation, setInputValueValidation] = useState(false) //Estado para validar o valor do input para bloquear o clique
+
     const [query, setQuery] = useState('')
     const [error, setError] = useState('')
 
     function handleButtonClicked(clicado: boolean){
-        setBotaoClicado(clicado)
+        setButtonSearch(clicado)
     }
     
     function handlInputChange(event: React.ChangeEvent<HTMLInputElement>){ //Verificar eventos do input
@@ -42,7 +44,7 @@ export function Profile() {
            
         }else{
             setError('')
-            setVerificado(true)
+            setInputValueValidation(true)
         }
 
     }
@@ -52,10 +54,10 @@ export function Profile() {
 
             <div className="xxl:max-w-[51.25rem] ">
                 <motion.div
-                    key={botaoClicado ? "clicked" : "default"}
+                    key={buttonSearch ? "clicked" : "default"}
                     {...fadeIn}
                 >
-                    {!botaoClicado ? 
+                    {!buttonSearch ? 
                         
                         <h1 className="flex items-center gap-3 ">
                             <User className="text-green-100" size={32}/> 
@@ -84,8 +86,8 @@ export function Profile() {
 
                     
                     <button 
-                        className= {`text-gray-500  ${error || verificado === false ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-gray-400'}`}
-                        onClick={()=> !error && verificado && handleButtonClicked(true)}
+                        className= {`text-gray-500  ${error || inputValueValidation === false ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-gray-400'}`}
+                        onClick={()=> !error && inputValueValidation && handleButtonClicked(true)}
                     > 
                         <MagnifyingGlass  size={20}/>
                     </button>
@@ -93,7 +95,7 @@ export function Profile() {
 
                 </div>
                 
-                {!botaoClicado ? 
+                {!buttonSearch ? 
                     <div>
                         <MyBooks 
                             title="Entendendo Algoritmos" 

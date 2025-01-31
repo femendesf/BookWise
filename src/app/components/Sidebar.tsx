@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Binoculars, ChartLineUp, SignIn, User } from "@phosphor-icons/react";
 import Logo from "../../public/assets/logo.svg";
 import Avatar from "../../public/assets/avatar.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PhotoProfile } from "./PhotoProfile";
 
 import { motion } from "framer-motion";
@@ -30,8 +30,13 @@ export function Sidebar({setActivePage, loggedIn, setClickedButtonLogin, setExit
   function handleButtonClick(buttonName: 'inicio' | 'perfil' | 'explorar') {
     setSelected(buttonName);
     setActivePage(buttonName); 
-
   }
+
+  useEffect(() => {
+    if(!loggedIn){
+      setSelected('inicio')
+    }
+  },[loggedIn])
 
   return (
 
@@ -84,31 +89,36 @@ export function Sidebar({setActivePage, loggedIn, setClickedButtonLogin, setExit
         </div>
         
         {/* Botão de Login */}
-        {
-          !loggedIn ?  
-            <button 
-              className="flex gap-3 mb-12 text-gray-200"
-              onClick={() => setClickedButtonLogin(true)}
-            >
-              Fazer login 
-              <SignIn className="text-green-100" size={24}/>
-            </button> : 
-            
-            <button 
-              className="flex items-center gap-3 mb-12 
-          text-gray-200"
-              onClick={() => setExitLogin(false)}
-            >
-              <PhotoProfile 
-                imageUrl={imgUrl}
-                size='2rem'
-                width={32}
-                height={32}
-              /> 
-                Cristofer 
-                <SignIn className="text-red-exit" size={24}/>
-            </button>
-        }
+        <motion.div
+          key={loggedIn ? "clicked" : "default"}
+          {...fadeIn}
+        >
+          {
+            !loggedIn ?  
+              <button 
+                className="flex gap-3 mb-12 text-gray-200"
+                onClick={() => setClickedButtonLogin(true)}
+              >
+                Fazer login 
+                <SignIn className="text-green-100" size={24}/>
+              </button> : 
+              
+              <button 
+                className="flex items-center gap-3 mb-12 
+            text-gray-200"
+                onClick={() => setExitLogin(false)}
+              >
+                <PhotoProfile 
+                  imageUrl={imgUrl}
+                  size='2rem'
+                  width={32}
+                  height={32}
+                /> 
+                  Cristofer 
+                  <SignIn className="text-red-exit" size={24}/>
+              </button>
+          }
+        </motion.div>
     </motion.div>
   );
 }

@@ -1,21 +1,26 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Start } from "../components/start"
 import { Profile } from "../components/profile"
 import { Sidebar } from "../components/Sidebar"
 import { Discover } from "../components/discover"
 import { Login } from "../components/Login"
 
-
 export default function Home() {
 
-  
-    const [loggedIn, setLoggedIn] = useState(false)
+    const [loggedIn, setLoggedIn] = useState(false)// Verifica se o usuario esta logado
 
-    const [showLogin, setShowLogin] = useState(false)
+    const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
 
-    const [activePage, setActivePage] = useState<'inicio' | 'perfil' | 'explorar'>('inicio')
+    const [activePage, setActivePage] = useState<'inicio' | 'perfil' | 'explorar'>('inicio') //Para mostrar os componentes na tela conforme esta clicado no Sidebar
+
+    useEffect(()=>{
+        console.log('Estado de login atualizado:', loggedIn)
+        if(activePage === 'perfil'){
+            setActivePage('inicio')
+        }
+    },[loggedIn])
 
     return(
 
@@ -39,7 +44,7 @@ export default function Home() {
                         setCloseLogin={setShowLogin}
                     /> 
                 </div>
-            }
+            }{/*Mostra a tela de login se tiver clicado no botão de fazer login */}
         </div>
     )
 }
