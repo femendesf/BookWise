@@ -1,9 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { Star } from "@phosphor-icons/react";
-import { PhotoProfile } from '../../PhotoProfile';
 import { motion } from 'framer-motion';
+import { ReviewUser } from '../../ReviewUser';
 
 interface RecentReviewsProps {
     imgProfile: string;
@@ -32,8 +31,7 @@ const cardVariants = {
 };
 
 export function RecentReviews({ name, imgProfile, when, title, author, imgBook, rating, description, index }: RecentReviewsProps) {
-    const totalStars = 5;
-
+   
     return (
         <motion.div
             variants={cardVariants}
@@ -42,21 +40,7 @@ export function RecentReviews({ name, imgProfile, when, title, author, imgBook, 
             custom={index} // Passando o index para o delay funcionar corretamente
             className="flex flex-col gap-8 bg-gray-700 h-[17.5rem] rounded-lg p-6 mt-3 overflow-hidden"
         >
-            <div className='flex items-center justify-between'>
-                <div className='flex gap-4'>
-                    <PhotoProfile imageUrl={imgProfile} size='3rem' width={40} height={40} />
-                    <div>
-                        <h2>{name}</h2>
-                        <h3>{when}</h3>
-                    </div>
-                </div>
-
-                <div className='flex gap-1 text-purple-100'>
-                    {Array.from({ length: totalStars }, (_, i) => (
-                        <Star key={i} size={16} weight={i < rating ? "fill" : "regular"} />
-                    ))}
-                </div>
-            </div>
+            <ReviewUser imgProfile={imgProfile} nameUser={name} when={when} rating={rating} sizeImageUser='3rem' />
 
             <div className='flex gap-5'>
                 <Image src={imgBook} alt="image-home" width={108} height={152} />

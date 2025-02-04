@@ -1,3 +1,4 @@
+'use client'
 import { CaretLeft, User } from "@phosphor-icons/react";
 import { MyBooks } from "./components/MyBooks";
 import { MyProfile } from "./components/MyProfile";

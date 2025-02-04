@@ -12,7 +12,7 @@ export function MyProfile(){
 
             <div className="flex flex-col items-center gap-5">
 
-                <PhotoProfile imageUrl={imageUrl} size="4.5rem" width={76} height={76}/>
+                <PhotoProfile imageUrl={imageUrl} size="4.5rem"/>
 
                 <div className="flex flex-col items-center gap-1">
                     <span className="text-xl text-gray-100">Felipe Mendes Fosneca</span>
@@ -23,37 +23,37 @@ export function MyProfile(){
 
             </div>
 
-             <div className="flex flex-col gap-10">
+             <div className="flex flex-col gap-10" id="info-profile">
 
-                <div className="flex gap-5 items-center">
-                    <BookOpen className="text-green-100" size={32}/>
+                <div>
+                    <BookOpen size={32}/>
                     <div>
-                        <h4 className="text-gray-200 text-base">853</h4>
-                        <span className="text-gray-300 text-sm">Páginas lidas</span>
+                        <h4>853</h4>
+                        <span>Páginas lidas</span>
                     </div>
                 </div>
 
-                <div className="flex gap-5 items-center">
-                    <Books className="text-green-100" size={32}/>
+                <div>
+                    <Books size={32}/>
                     <div>
-                        <h4 className="text-gray-200 text-base">3</h4>
-                        <span className="text-gray-300 text-sm">Livros avaliados</span>
+                        <h4>3</h4>
+                        <span>Livros avaliados</span>
                     </div>
                 </div>
 
-                <div className="flex gap-5 items-center">
-                    <UserList className="text-green-100" size={32}/>
+                <div>
+                    <UserList size={32}/>
                     <div>
-                        <h4 className="text-gray-200 text-base">3</h4>
-                        <span className="text-gray-300 text-sm">Autores lidos</span>
+                        <h4>3</h4>
+                        <span>Autores lidos</span>
                     </div>
                 </div>
 
-                <div className="flex gap-5 items-center">
-                    <BookmarkSimple className="text-green-100" size={32}/>
+                <div>
+                    <BookmarkSimple size={32}/>
                     <div>
-                        <h4 className="text-gray-200 text-base">Horror</h4>
-                        <span className="text-gray-300 text-sm">Categoria mais lida</span>
+                        <h4>Horror</h4>
+                        <span>Categoria mais lida</span>
                     </div>
                 </div>
 

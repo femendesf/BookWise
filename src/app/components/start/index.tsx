@@ -2,7 +2,6 @@
 
 import {ChartLineUp } from "@phosphor-icons/react";
 import { RecentReviews } from "./components/RecentReviews";
-import { PopularBooks } from "./components/PopularBooks";
 import { LastReading } from "./components/LastReading";
 
 import Hobbit from '../../../public/assets/hobbit.svg'
@@ -16,6 +15,7 @@ import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
 
 import { listBooks } from "@/utils/listBooks";
+import { PopularBooks } from "../PopularBooks";
 
 interface StartProps{
     loggedIn: boolean;

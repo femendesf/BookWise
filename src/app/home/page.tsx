@@ -6,6 +6,7 @@ import { Profile } from "../components/profile"
 import { Sidebar } from "../components/Sidebar"
 import { Discover } from "../components/discover"
 import { Login } from "../components/Login"
+import { SidePanel } from "../components/SidePanel"
 
 export default function Home() {
 
@@ -14,6 +15,8 @@ export default function Home() {
     const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
 
     const [activePage, setActivePage] = useState<'inicio' | 'perfil' | 'explorar'>('inicio') //Para mostrar os componentes na tela conforme esta clicado no Sidebar
+
+    const [clicadoNoLivro, setClicadoNoLivro] = useState(false)
 
     useEffect(()=>{
         console.log('Estado de login atualizado:', loggedIn)
@@ -38,13 +41,13 @@ export default function Home() {
             </div>
 
             {showLogin && 
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
-                    <Login 
-                        setLogin={setLoggedIn}
-                        setCloseLogin={setShowLogin}
-                    /> 
-                </div>
+                <Login 
+                    setLogin={setLoggedIn}
+                    setCloseLogin={setShowLogin}
+                /> 
             }{/*Mostra a tela de login se tiver clicado no botão de fazer login */}
+
+
         </div>
     )
 }

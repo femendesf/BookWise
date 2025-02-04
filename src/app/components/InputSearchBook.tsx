@@ -1,3 +1,5 @@
+'use client'
+
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import { useState } from "react";
 import { z } from "zod";

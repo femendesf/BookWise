@@ -7,23 +7,69 @@
         @apply font-nunito
     }
 
+        /* Barra de rolagem para navegadores baseados em WebKit (Chrome, Edge, Safari) */
+    ::-webkit-scrollbar {
+        width: 6px; /* Largura da barra de rolagem */
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #181c2a; /* Cor do fundo da barra */
+        border-radius: 10px; 
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #2b334b; /* Cor da alça (thumb) da barra */
+        border-radius: 10px;
+        transition: background 0.3s ease;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #718096; /* Cor ao passar o mouse */
+}
+
     #login button{
-        @apply flex justify-start items-center gap-5 p-5 text-gray-200 font-bold w-[372px] h-[72px] bg-gray-600 hover:bg-gray-650 rounded-lg
+          @apply flex justify-start items-center gap-5 p-5 text-gray-200 font-bold w-[372px] h-[72px] bg-gray-600 hover:bg-gray-650 rounded-lg
     }
 
    #home h1{
-        @apply text-gray-100 text-2xl
+          @apply text-gray-100 text-2xl
    }
 
    #home h2{
-        @apply text-gray-100 text-lg
+          @apply text-gray-100 text-lg
    }
 
    #home h3{
-        @apply text-gray-400 text-sm
+          @apply text-gray-400 text-sm
    }
 
    #home p{
-        @apply text-gray-300 text-sm
+          @apply text-gray-300 text-sm
    }
+
+   
+   #info-profile div{
+       @apply flex gap-5 items-center
+   }
+
+   #info-profile h4{
+       @apply text-gray-200 text-base
+   }
+
+   #info-profile span{
+       @apply text-gray-300 text-sm
+   }
+
+   #info-profile svg{
+       @apply text-green-100
+   }
+
+   #reviews h2{
+       @apply text-base text-gray-100
+   }
+
+   #reviews h3{
+       @apply text-sm text-gray-300
+   }
+
 }

@@ -1,3 +1,5 @@
+'use client'
+
 import Image from "next/image";
 import { Binoculars, ChartLineUp, SignIn, User } from "@phosphor-icons/react";
 import Logo from "../../public/assets/logo.svg";
@@ -115,8 +117,7 @@ export function Sidebar({setActivePage, loggedIn, setClickedButtonLogin, setExit
                 <PhotoProfile 
                   imageUrl={imgUrl}
                   size='2rem'
-                  width={32}
-                  height={32}
+                 
                 /> 
                   <span>Felipe</span>
                   <SignIn className="text-red-exit" size={24}/>

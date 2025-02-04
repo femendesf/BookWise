@@ -1,11 +1,13 @@
+'use client'
+
 import { Binoculars } from "@phosphor-icons/react";
-import { PopularBooks } from "../start/components/PopularBooks";
 import { useEffect, useState } from "react";
 import { InputSearchBook } from "../InputSearchBook";
 
 import { listBooks } from "@/utils/listBooks";
 import { listScienceFictionBooks } from "@/utils/listScienceFiction";
 import { listTIBooks } from "@/utils/listTIBooks";
+import { PopularBooks } from "../PopularBooks";
 
 const listaDosGeneros = [
     {

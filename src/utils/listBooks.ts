@@ -1,5 +1,5 @@
 import GeorgeOrwell from '../public/assets/livroGeorge.svg'
-import ZenoRocha from '../public/assets/habitos.svg'
+import ZenoRocha from '../public/assets/14habitos.png'
 import Isaac from '../public/assets/oFimDaEternidade.svg'
 import Aditya from '../public/assets/livrosAlgoritmos.svg'
 import RobertCodigoLimpo from '../public/assets/codigo-limpo.svg'

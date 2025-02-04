@@ -1,6 +1,7 @@
 import { Star } from "@phosphor-icons/react";
 import Image from "next/image";
 import { motion } from 'framer-motion';
+import { StartRating } from "../../StarRating";
 
 interface MyBooksProps {
     title: string;
@@ -54,12 +55,7 @@ export function MyBooks({title, author, img, rating, description, dateLastReadin
                         <h3>{author}</h3>
                     </div>
 
-                    <div className='flex gap-1 text-purple-100'>
-                        {Array.from({length: totalStars}, (_, index) => (
-
-                            <Star key={index} size={16} weight={index < rating ? "fill" : "regular"}/>)
-                        )}
-                    </div>
+                    <StartRating rating={rating}/>
 
                 </div>
         

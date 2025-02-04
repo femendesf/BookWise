@@ -1,6 +1,6 @@
 import Aditya from '../public/assets/livrosAlgoritmos.svg'
 import RobertCodigoLimpo from '../public/assets/codigo-limpo.svg'
-import ZenoRocha from '../public/assets/habitos.svg'
+import ZenoRocha from '../public/assets/14habitos.png'
 import RobertArquiteturaLimpa from '../public/assets/arquitetura-limpa.svg'
 import Martin from '../public/assets/refatoracao.svg'
 import Eric from '../public/assets/domain-driven-design.svg'
