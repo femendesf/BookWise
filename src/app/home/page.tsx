@@ -6,7 +6,6 @@ import { Profile } from "../components/profile"
 import { Sidebar } from "../components/Sidebar"
 import { Discover } from "../components/discover"
 import { Login } from "../components/Login"
-import { SidePanel } from "../components/SidePanel"
 
 export default function Home() {
 

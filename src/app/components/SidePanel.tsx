@@ -1,11 +1,14 @@
-import { BookmarkSimple, BookOpen, X } from '@phosphor-icons/react'
+import { BookmarkSimple, BookOpen, Check, X } from '@phosphor-icons/react'
 import { PhotoProfile } from "./PhotoProfile"
-import { StartRating } from "./StarRating"
+import { StarRating } from "./StarRating"
 import { ReviewUser } from "./ReviewUser"
 
 import Avatar from '../../public/assets/rick.jpg'
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { PopularBooks } from "./PopularBooks"
+import { TextAreaWithCounter } from './TextAreaWithCounter'
+
+import { listComments } from '@/utils/listComments'
 
 interface SidePanelProps{
     title: string;
@@ -18,15 +21,18 @@ interface SidePanelProps{
 
 
 export function SidePanel({imgCover, title, author, rating, index, clickedExitBook} : SidePanelProps){
-        console.log(clickedExitBook)
 
-        useEffect(() => {
-            document.body.style.overflow = 'hidden'
+    console.log(clickedExitBook)
+    const [reviewButton, setReviewButton] = useState(false)
 
-            return() => {
-                document.body.style.overflow = ''
-            }
-        },[]) // Para tirar a barra de rolagem do body quando componente estiver aberto
+    useEffect(() => {
+        document.body.style.overflow = 'hidden'
+
+        return() => {
+            document.body.style.overflow = ''
+        }
+    },[]) // Para tirar a barra de rolagem do body quando componente estiver aberto
+
 
     return(
         <div className="fixed inset-0 flex bg-black bg-opacity-70">
@@ -48,6 +54,7 @@ export function SidePanel({imgCover, title, author, rating, index, clickedExitBo
                         rating={rating}
                         width={172}
                         height={242}
+                        blockedClick
                     />
 
                     <div className="flex gap-[3.75rem] border-t-[1px] border-gray-600 py-6"> 
@@ -77,69 +84,61 @@ export function SidePanel({imgCover, title, author, rating, index, clickedExitBo
 
                     <div className="flex justify-between">
                         <h2 className="text-sm text-gray-200">Avaliações</h2>
-                        <button className="text-base text-purple-100">Avaliar</button>
+
+                        {!reviewButton && <button onClick={() => setReviewButton(true)} className="text-base text-purple-100">Avaliar</button>}
+                        
+
                     </div>
 
-                    <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews">
-                        <ReviewUser 
-                            imgProfile={Avatar.src}
-                            nameUser="Felipe Mendes"
-                            when="Hoje"
-                            sizeImageUser="2.5rem"
-                            rating={4}
-                            comment="Tortor sed elementum dolor sed nunc elementum enim viverra. Massa tempus ac a adipiscing at cursus senectus dui libero. Elementum lacus enim viverra arcu at ut amet convallis. Maecenas ac fringilla blandit risus nibh praesent sagittis dapibus netus. Dignissim sed congue sed vel faucibus purus dapibus pellentesque."
-                        />
-                    </div>{/*Comentario*/ }
-                    <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews">
-                        <ReviewUser 
-                            imgProfile={Avatar.src}
-                            nameUser="Felipe Mendes"
-                            when="Hoje"
-                            sizeImageUser="2.5rem"
-                            rating={4}
-                            comment="Tortor sed elementum dolor sed nunc elementum enim viverra. Massa tempus ac a adipiscing at cursus senectus dui libero. Elementum lacus enim viverra arcu at ut amet convallis. Maecenas ac fringilla blandit risus nibh praesent sagittis dapibus netus. Dignissim sed congue sed vel faucibus purus dapibus pellentesque."
-                        />
-                    </div>{/*Comentario*/ }
-                    <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews">
-                        <ReviewUser 
-                            imgProfile={Avatar.src}
-                            nameUser="Felipe Mendes"
-                            when="Hoje"
-                            sizeImageUser="2.5rem"
-                            rating={4}
-                            comment="Tortor sed elementum dolor sed nunc elementum enim viverra. Massa tempus ac a adipiscing at cursus senectus dui libero. Elementum lacus enim viverra arcu at ut amet convallis. Maecenas ac fringilla blandit risus nibh praesent sagittis dapibus netus. Dignissim sed congue sed vel faucibus purus dapibus pellentesque."
-                        />
-                    </div>{/*Comentario*/ }
-                    <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews">
-                        <ReviewUser 
-                            imgProfile={Avatar.src}
-                            nameUser="Felipe Mendes"
-                            when="Hoje"
-                            sizeImageUser="2.5rem"
-                            rating={4}
-                            comment="Tortor sed elementum dolor sed nunc elementum enim viverra. Massa tempus ac a adipiscing at cursus senectus dui libero. Elementum lacus enim viverra arcu at ut amet convallis. Maecenas ac fringilla blandit risus nibh praesent sagittis dapibus netus. Dignissim sed congue sed vel faucibus purus dapibus pellentesque."
-                        />
-                    </div>{/*Comentario*/ }
-                    <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews">
-                        <ReviewUser 
-                            imgProfile={Avatar.src}
-                            nameUser="Felipe Mendes"
-                            when="Hoje"
-                            sizeImageUser="2.5rem"
-                            rating={4}
-                            comment="Tortor sed elementum dolor sed nunc elementum enim viverra. Massa tempus ac a adipiscing at cursus senectus dui libero. Elementum lacus enim viverra arcu at ut amet convallis. Maecenas ac fringilla blandit risus nibh praesent sagittis dapibus netus. Dignissim sed congue sed vel faucibus purus dapibus pellentesque."
-                        />
-                    </div>{/*Comentario*/ }
-                    <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews">
-                        <ReviewUser 
-                            imgProfile={Avatar.src}
-                            nameUser="Felipe Mendes"
-                            when="Hoje"
-                            sizeImageUser="2.5rem"
-                            rating={4}
-                            comment="Tortor sed elementum dolor sed nunc elementum enim viverra. Massa tempus ac a adipiscing at cursus senectus dui libero. Elementum lacus enim viverra arcu at ut amet convallis. Maecenas ac fringilla blandit risus nibh praesent sagittis dapibus netus. Dignissim sed congue sed vel faucibus purus dapibus pellentesque."
-                        />
-                    </div>{/*Comentario*/ }
+                   
+                    {reviewButton && 
+                            <div className='flex flex-col  bg-gray-700 p-5 rounded-lg w-full gap-6'>
+
+                                <div>
+                                    <ReviewUser
+                                        imgProfile={Avatar.src}
+                                        nameUser='Felipe Mendes'
+                                        rating={0}
+                                        sizeStarRating={28}
+                                        userRating
+                                    />
+                                 </div>
+                                 
+                                 <div className='flex flex-col gap-3'>
+                                    <TextAreaWithCounter/>
+
+                                    <div className='flex gap-2 text-2xl items-center justify-end'>
+
+                                        <button className='flex text-purple-100 w-10 h-10 bg-gray-600 justify-center items-center hover:bg-gray-500
+                                        '
+                                        onClick={() =>setReviewButton(false)}>
+                                            <X/>
+                                        </button>
+
+                                        <button className='flex text-green-100 bg-gray-600 w-10 h-10 justify-center items-center hover:bg-gray-500'>
+                                            <Check/>
+                                        </button>
+                                    </div>
+
+                                 </div>
+                            </div>
+                           
+                        }
+                    
+                    {listComments.map(({avatar, nameUser, comment}) => (
+                        <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews" key={nameUser}>
+                        
+                            <ReviewUser 
+                                imgProfile={avatar}
+                                nameUser={nameUser}
+                                when="Hoje"
+                                sizeImageUser="2.5rem"
+                                rating={4}
+                                comment={comment}
+                            />
+                        </div>
+                    ))}{/*Comentario*/ }
+                   
                 </div>
             </div>
         </div>

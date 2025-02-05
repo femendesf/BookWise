@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Star } from "@phosphor-icons/react";
 import {motion} from 'framer-motion'
 import { useEffect, useState } from "react";
-import { StartRating } from "./StarRating";
+import { StarRating } from "./StarRating";
 import { SidePanel } from "./SidePanel";
 
 
@@ -17,6 +17,7 @@ interface PopularBooksProps{
     index: number;
     width: number;
     height: number;
+    blockedClick?: boolean;
 }
 
 const cardVariants = {
@@ -32,7 +33,7 @@ const cardVariants = {
     })
 };
 
-export function PopularBooks({title, author, rating, alt, imgBook, index, width, height} : PopularBooksProps){
+export function PopularBooks({title, author, rating, alt, imgBook, index, width, height, blockedClick} : PopularBooksProps){
 
     const [clicadoNoLivro, setClicadoNoLivro] = useState(false)
     
@@ -45,7 +46,7 @@ export function PopularBooks({title, author, rating, alt, imgBook, index, width,
                 animate="visible"
                 custom={index} // Passando o index para o delay funcionar corretamente
                 className="flex gap-5 bg-gray-700 p-5 rounded-lg overflow-hidden h-full"
-                onClick={() => setClicadoNoLivro(true)}
+                onClick={() => !blockedClick && setClicadoNoLivro(true)}
             >
 
                 <Image className="rounded-md" src={imgBook} alt={alt} width={width} height={height} />
@@ -56,7 +57,7 @@ export function PopularBooks({title, author, rating, alt, imgBook, index, width,
                         <h3>{author}</h3>
                     </div>
 
-                <StartRating rating={rating}/>
+                <StarRating rating={rating}/>
                 </div>
 
             </motion.div>
