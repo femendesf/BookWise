@@ -90,7 +90,7 @@ export function Discover(){
                 {buttons.map(({id, label})=> (
                     <button 
                         key={id}
-                        className={`${genderSelected === id ? 'text-gray-100 bg-purple-200' : 'border-purple-100 text-purple-100 border'} px-4 py-1 rounded-full`}
+                        className={`${genderSelected === id ? 'text-gray-100 bg-purple-200' : 'border-purple-100 text-purple-100 border hover:bg-purple-200 hover:text-gray-100'} px-4 py-1 rounded-full`}
                         onClick={() => setGenderSelected(id)}
                     >
                         {label}

@@ -43,9 +43,9 @@ export function InputSearchBook({setButtonClicked} : inputSearchBook){
     }
 
     return(
-        <div className="flex items-center justify-between w-full h-full px-5 border border-gray-500 rounded-md"> {/* Search bar */}
+        <div className="flex items-center justify-between w-full h-full px-5 border border-gray-500 rounded-md focus-within:border-green-200 focus-within:text-green-200" id="input-search-book"> {/* Search bar */}
             <input 
-                className="text-gray-400 focus:outline-none text-sm bg-transparent w-full "
+                className="text-gray-200 focus:outline-none text-sm bg-transparent w-full"
                 type="text"
                 placeholder="Buscar livro avaliado"
                 value={query}
@@ -54,10 +54,10 @@ export function InputSearchBook({setButtonClicked} : inputSearchBook){
 
             
             <button 
-                className= {`text-gray-500  ${error || inputValueValidation === false ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-gray-400'}`}
+                className= {`text-gray-500 focus-within:text-green-200 ${error || inputValueValidation === false ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-gray-400'}`}
                 onClick={()=> !error && inputValueValidation && handleButtonClicked(true)}
             > 
-                <MagnifyingGlass  size={20}/>
+                <MagnifyingGlass size={20}/>
             </button>
         </div>
     )

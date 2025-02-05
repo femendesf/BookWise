@@ -4,22 +4,21 @@ import Image from "next/image";
 import { Binoculars, ChartLineUp, SignIn, User } from "@phosphor-icons/react";
 import Logo from "../../public/assets/logo.svg";
 import Avatar from "../../public/assets/rick.jpg";
-import { useEffect, useState } from "react";
 import { PhotoProfile } from "./PhotoProfile";
 
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
 
 interface SidebarProps{
+  activePage: 'inicio' | 'perfil' | 'explorar' ;
   setActivePage : (page: 'inicio' | 'perfil' | 'explorar') => void;
   setClickedButtonLogin: (clicked: boolean) => void;
   setExitLogin: (exit: boolean) => void;
   loggedIn: boolean;
 }
 
-export function Sidebar({setActivePage, loggedIn, setClickedButtonLogin, setExitLogin} : SidebarProps) {
+export function Sidebar({activePage, setActivePage, loggedIn, setClickedButtonLogin, setExitLogin} : SidebarProps) {
 
-  const [selected, setSelected] = useState<string | null>('inicio');
   const imgUrl = Avatar.src;
 
   // Mapeamento para associar cada botão a um identificador único
@@ -30,15 +29,8 @@ export function Sidebar({setActivePage, loggedIn, setClickedButtonLogin, setExit
   ];
 
   function handleButtonClick(buttonName: 'inicio' | 'perfil' | 'explorar') {
-    setSelected(buttonName);
     setActivePage(buttonName); 
   }
-
-  useEffect(() => {
-    if(!loggedIn){
-      setSelected('inicio')
-    }
-  },[loggedIn])
 
   function handleExitLogin(){
     setExitLogin(false)
@@ -61,12 +53,12 @@ export function Sidebar({setActivePage, loggedIn, setClickedButtonLogin, setExit
 
             {/* Div Indicadora Separada */}
             
-            {selected && (
+            {activePage && (
               <div
                 className="bg-gradient-to-b from-[#7FD1CC] to-[#9694F5] w-1 h-6 rounded-full absolute transition-all duration-300"
                 style={{
                   top: `${
-                    buttons.findIndex((btn) => btn.id === selected) * 48 /* Altura + margem entre os botões */
+                    buttons.findIndex((btn) => btn.id === activePage) * 48 /* Altura + margem entre os botões */
                   }px`,
                   left: -20,
                 }}
@@ -82,7 +74,7 @@ export function Sidebar({setActivePage, loggedIn, setClickedButtonLogin, setExit
                   <div className="flex items-center gap-4" key={btn.id}>
                     <button
                       className={`flex items-center gap-3 hover:text-gray-100 ${
-                        selected === btn.id ? "text-gray-100" : ""
+                        activePage === btn.id ? "text-gray-100" : ""
                       }`}
                       onClick={() => handleButtonClick(btn.id as "inicio" | "perfil" | 'explorar')}
                     >

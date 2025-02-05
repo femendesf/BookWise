@@ -9,6 +9,7 @@ import { PopularBooks } from "./PopularBooks"
 import { TextAreaWithCounter } from './TextAreaWithCounter'
 
 import { listComments } from '@/utils/listComments'
+import { SendReview } from './SendReview'
 
 interface SidePanelProps{
     title: string;
@@ -24,6 +25,7 @@ export function SidePanel({imgCover, title, author, rating, index, clickedExitBo
 
     console.log(clickedExitBook)
     const [reviewButton, setReviewButton] = useState(false)
+    const [sendComment, setSendComment] = useState(false)
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'
@@ -40,7 +42,7 @@ export function SidePanel({imgCover, title, author, rating, index, clickedExitBo
             <div className="relative flex flex-col bg-gray-800 w-[41.25rem] py-16 px-12 ml-auto max-h-screen overflow-y-auto">
 
                 <button className="absolute top-4 right-4" onClick={() => clickedExitBook(false)}>
-                    <X className="text-gray-400" width={24} height={24}/>
+                    <X className="text-gray-400 hover:text-gray-300" width={24} height={24}/>
                 </button>
 
                 <div className="flex flex-col bg-gray-700 py-6 px-8 rounded-lg gap-10">
@@ -55,6 +57,8 @@ export function SidePanel({imgCover, title, author, rating, index, clickedExitBo
                         width={172}
                         height={242}
                         blockedClick
+                        sizeStar={20}
+
                     />
 
                     <div className="flex gap-[3.75rem] border-t-[1px] border-gray-600 py-6"> 
@@ -87,43 +91,20 @@ export function SidePanel({imgCover, title, author, rating, index, clickedExitBo
 
                         {!reviewButton && <button onClick={() => setReviewButton(true)} className="text-base text-purple-100">Avaliar</button>}
                         
-
                     </div>
 
                    
                     {reviewButton && 
-                            <div className='flex flex-col  bg-gray-700 p-5 rounded-lg w-full gap-6'>
-
-                                <div>
-                                    <ReviewUser
-                                        imgProfile={Avatar.src}
-                                        nameUser='Felipe Mendes'
-                                        rating={0}
-                                        sizeStarRating={28}
-                                        userRating
-                                    />
-                                 </div>
-                                 
-                                 <div className='flex flex-col gap-3'>
-                                    <TextAreaWithCounter/>
-
-                                    <div className='flex gap-2 text-2xl items-center justify-end'>
-
-                                        <button className='flex text-purple-100 w-10 h-10 bg-gray-600 justify-center items-center hover:bg-gray-500
-                                        '
-                                        onClick={() =>setReviewButton(false)}>
-                                            <X/>
-                                        </button>
-
-                                        <button className='flex text-green-100 bg-gray-600 w-10 h-10 justify-center items-center hover:bg-gray-500'>
-                                            <Check/>
-                                        </button>
-                                    </div>
-
-                                 </div>
-                            </div>
-                           
-                        }
+                        <SendReview
+                            imgAvatar={Avatar.src}
+                            nameUser='Felipe Mendes'
+                            rating={0}
+                            sizeStarRating={24}
+                            setCloseReview={setReviewButton}
+                            key={index}
+                        />
+                    } {/*Deixar Avalição*/ }
+                   
                     
                     {listComments.map(({avatar, nameUser, comment}) => (
                         <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews" key={nameUser}>
@@ -137,7 +118,7 @@ export function SidePanel({imgCover, title, author, rating, index, clickedExitBo
                                 comment={comment}
                             />
                         </div>
-                    ))}{/*Comentario*/ }
+                    ))}{/*Comentarios*/ }
                    
                 </div>
             </div>

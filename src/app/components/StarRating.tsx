@@ -28,8 +28,7 @@ export function StarRating({ rating, size, userRating } : StarRatingProps){
                 Array.from({length: totalStars} ,(_, index) => {
 
                     const isFilled = index < (hoveredStars ?? rating);
-
-                    console.log(`valor de isFilled: ${hoveredStars}`)
+                    
                     return(
                         <Star
                         key={index}

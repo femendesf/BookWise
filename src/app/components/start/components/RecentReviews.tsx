@@ -49,7 +49,7 @@ export function RecentReviews({ name, imgProfile, when, title, author, imgBook, 
                         <h2>{title}</h2>
                         <h3>{author}</h3>
                     </div>
-                    <p>{description}</p>
+                    <p className='line-clamp-4'>{description}</p>
                 </div>
             </div>
         </motion.div>

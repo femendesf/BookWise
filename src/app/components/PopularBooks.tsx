@@ -18,6 +18,7 @@ interface PopularBooksProps{
     width: number;
     height: number;
     blockedClick?: boolean;
+    sizeStar?: number;
 }
 
 const cardVariants = {
@@ -33,11 +34,10 @@ const cardVariants = {
     })
 };
 
-export function PopularBooks({title, author, rating, alt, imgBook, index, width, height, blockedClick} : PopularBooksProps){
+export function PopularBooks({title, author, rating, alt, imgBook, index, width, height, blockedClick, sizeStar} : PopularBooksProps){
 
-    const [clicadoNoLivro, setClicadoNoLivro] = useState(false)
+    const [clickOnBook, setClickOnnBook] = useState(false)
     
-    console.log(`Estado atual do clicadoNoLivro: ${clicadoNoLivro}`)
     return(
         <>
             <motion.div 
@@ -45,8 +45,8 @@ export function PopularBooks({title, author, rating, alt, imgBook, index, width,
                 initial="hidden"
                 animate="visible"
                 custom={index} // Passando o index para o delay funcionar corretamente
-                className="flex gap-5 bg-gray-700 p-5 rounded-lg overflow-hidden h-full"
-                onClick={() => !blockedClick && setClicadoNoLivro(true)}
+                className={`flex gap-5 bg-gray-700 p-5 rounded-lg overflow-hidden h-full border border-x-2 border-gray-700 ${!blockedClick && `hover:cursor-pointer hover:border hover:border-x-2 hover:border-gray-600`}`}
+                onClick={() => !blockedClick && setClickOnnBook(true)}
             >
 
                 <Image className="rounded-md" src={imgBook} alt={alt} width={width} height={height} />
@@ -57,12 +57,12 @@ export function PopularBooks({title, author, rating, alt, imgBook, index, width,
                         <h3>{author}</h3>
                     </div>
 
-                <StarRating rating={rating}/>
+                <StarRating rating={rating} size={sizeStar}/>
                 </div>
 
             </motion.div>
 
-            {clicadoNoLivro && <SidePanel title={title} author={author} imgCover={imgBook} rating={rating} index={index} clickedExitBook={setClicadoNoLivro}/>}
+            {clickOnBook && <SidePanel title={title} author={author} imgCover={imgBook} rating={rating} index={index} clickedExitBook={setClickOnnBook}/>}
 
         </>
        

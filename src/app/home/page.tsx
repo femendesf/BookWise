@@ -15,28 +15,33 @@ export default function Home() {
 
     const [activePage, setActivePage] = useState<'inicio' | 'perfil' | 'explorar'>('inicio') //Para mostrar os componentes na tela conforme esta clicado no Sidebar
 
-    const [clicadoNoLivro, setClicadoNoLivro] = useState(false)
 
     useEffect(()=>{
-        console.log('Estado de login atualizado:', loggedIn)
+
         if(activePage === 'perfil'){
             setActivePage('inicio')
         }
-    },[loggedIn])
+
+    },[loggedIn]) // Atualiza a marcação do SideBar para voltando ao inicio quando o usuario esta no componente perfil e aperta para desconectar
+
+    function handleChangeComponent(page: 'inicio' | 'perfil' | 'explorar') {
+        setActivePage(page);
+    }
 
     return(
 
         <div className="flex w-full h-full ">
 
             <Sidebar 
-                setActivePage={setActivePage}
+                activePage={activePage}
+                setActivePage={handleChangeComponent}
                 loggedIn={loggedIn}
                 setClickedButtonLogin={setShowLogin}
                 setExitLogin={setLoggedIn}
             />
         
             <div className="mt-12 ml-16 xxl:ml-24" id="home">
-                {activePage === 'inicio' ? <Start loggedIn={loggedIn}/> : activePage === 'perfil' ? <Profile/> : <Discover/>}
+                {activePage === 'inicio' ? <Start setButtonSeeAll={handleChangeComponent} loggedIn={loggedIn}/> : activePage === 'perfil' ? <Profile/> : <Discover/>}
             </div>
 
             {showLogin && 

@@ -1,9 +1,35 @@
-import { useState } from "react";
+import React, { TextareaHTMLAttributes, useState } from "react";
+import { z } from "zod";
 
-export function TextAreaWithCounter() {
+const searchSchema = z.object({
+  text: z.string().min(3, 'Avaliação precisa ter pelo menos 3 caracteres')
+})
+
+interface TextAreaWithCounterProps{
+  setSendComment: (send: boolean) => void
+}
+
+export function TextAreaWithCounter({setSendComment} : TextAreaWithCounterProps) {
+  
   const [text, setText] = useState("");
+  const [error, setError] = useState('')
   const maxChars = 450;
 
+  function handleTextChange(e: React.ChangeEvent<HTMLTextAreaElement>){
+    const value = e.target.value
+    setText(value)
+
+    const result = searchSchema.safeParse({text: value})
+
+    if(!result.success){
+      setError(result.error.errors[0].message)
+      setSendComment(false)
+    }else{
+      console.log(`Erro TextArea: ${error}`)
+      setSendComment(true)
+      setError('')
+    }
+  }
   return (
     <div className="relative w-full">
       <textarea
@@ -16,13 +42,15 @@ export function TextAreaWithCounter() {
         maxLength={maxChars}
         placeholder="Escreva sua avaliação"
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={handleTextChange}
       />
       
       {/* Contador de caracteres */}
       <span className="absolute bottom-2 right-3 text-xs text-gray-400">
         {text.length} / {maxChars}
       </span>
+
+      {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
     </div>
   );
 }

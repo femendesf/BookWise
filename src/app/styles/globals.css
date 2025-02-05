@@ -72,4 +72,8 @@
        @apply text-sm text-gray-300
    }
 
+   #input-search-book:focus-within svg{
+        @apply text-green-200
+   }
+
 }
