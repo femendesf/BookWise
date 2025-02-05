@@ -43,7 +43,7 @@ export function SendReview({imgAvatar, nameUser, rating, sizeStarRating, setClos
 
                     <button 
                         className={`flex text-green-100 bg-gray-600 w-10 h-10 justify-center items-center ${!sendComment ? `cursor-not-allowed opacity-50` : `hover:bg-gray-500 `}`}
-                        
+                        onClick={() => sendComment && alert('ENVIADO')}
                     >
                         <Check/>
                     </button>
