@@ -1,12 +1,10 @@
 'use client'
 
 import Image from "next/image";
-import { Star } from "@phosphor-icons/react";
 import {motion} from 'framer-motion'
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StarRating } from "./StarRating";
 import { SidePanel } from "./SidePanel";
-
 
 interface PopularBooksProps{
     title: string;
@@ -19,6 +17,8 @@ interface PopularBooksProps{
     height: number;
     blockedClick?: boolean;
     sizeStar?: number;
+    onCLick?: () => void;
+   
 }
 
 const cardVariants = {
@@ -34,7 +34,7 @@ const cardVariants = {
     })
 };
 
-export function PopularBooks({title, author, rating, alt, imgBook, index, width, height, blockedClick, sizeStar} : PopularBooksProps){
+export function PopularBooks({title, author, rating, alt, imgBook, width, height, blockedClick, sizeStar, index, onCLick} : PopularBooksProps){
 
     const [clickOnBook, setClickOnnBook] = useState(false)
     
@@ -46,7 +46,7 @@ export function PopularBooks({title, author, rating, alt, imgBook, index, width,
                 animate="visible"
                 custom={index} // Passando o index para o delay funcionar corretamente
                 className={`flex gap-5 bg-gray-700 p-5 rounded-lg overflow-hidden h-full border border-x-2 border-gray-700 ${!blockedClick && `hover:cursor-pointer hover:border hover:border-x-2 hover:border-gray-600`}`}
-                onClick={() => !blockedClick && setClickOnnBook(true)}
+                onClick={() => !blockedClick && setClickOnnBook(true) }
             >
 
                 <Image className="rounded-md" src={imgBook} alt={alt} width={width} height={height} />

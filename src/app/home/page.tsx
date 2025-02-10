@@ -6,7 +6,8 @@ import { Profile } from "../components/profile"
 import { Sidebar } from "../components/Sidebar"
 import { Discover } from "../components/discover"
 import { Login } from "../components/Login"
-
+import { listComments as initialComments } from "@/utils/listComments";
+import { SidePanel } from "../components/SidePanel"
 export default function Home() {
 
     const [loggedIn, setLoggedIn] = useState(false)// Verifica se o usuario esta logado
@@ -15,6 +16,7 @@ export default function Home() {
 
     const [activePage, setActivePage] = useState<'inicio' | 'perfil' | 'explorar'>('inicio') //Para mostrar os componentes na tela conforme esta clicado no Sidebar
 
+    // const [ comments, setComments] = useState(initialComments)
 
     useEffect(()=>{
 
@@ -26,7 +28,11 @@ export default function Home() {
 
     function handleChangeComponent(page: 'inicio' | 'perfil' | 'explorar') {
         setActivePage(page);
-    }
+    }// Função para mudar o componente na tela
+
+    // function handleNewComment(commentData: {avatar: string, nameUser: string, comment: string}){
+    //     setComments((prevComments) => [...prevComments, commentData]);
+    // } // Adiciona um novo comentário
 
     return(
 
@@ -51,7 +57,7 @@ export default function Home() {
                 /> 
             }{/*Mostra a tela de login se tiver clicado no botão de fazer login */}
 
-
+            {/* <SidePanel comments={comments} handleNewComment={handleNewComment}/> */}
         </div>
     )
 }

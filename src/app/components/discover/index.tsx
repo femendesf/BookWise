@@ -1,37 +1,18 @@
 'use client'
 
 import { Binoculars } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { InputSearchBook } from "../InputSearchBook";
 
 import { listBooks } from "@/utils/listBooks";
-import { listScienceFictionBooks } from "@/utils/listScienceFiction";
-import { listTIBooks } from "@/utils/listTIBooks";
 import { PopularBooks } from "../PopularBooks";
-
-const listaDosGeneros = [
-    {
-        id: 1,
-        genero: 'Tudo',
-        lista: listBooks,
-    },
-    {
-        id: 2,
-        genero: 'Ficção cientifica',
-        lista: listScienceFictionBooks
-    },
-    {
-        id: 3,
-        genero: 'Computação',
-        lista: listTIBooks
-    },
-]
 
 export function Discover(){
 
     const [clickButtonSearch, setClickButtonSearch] = useState(false)
     const [genderSelected, setGenderSelected] = useState('Tudo')
-    
+    const [selectedBook, setSelectedBook] = useState(null); // Estado para armazenar o livro selecionado
+
     const buttons = [
         {
             id: 'Tudo',
@@ -50,8 +31,8 @@ export function Discover(){
             label: 'Fantasia',
         },
         {
-            id: 'Ficção cientifica',
-            label: 'Ficção cientifica',
+            id: 'Ficção Científica',
+            label: 'Ficção Científica',
         },
         {
             id: 'Horror',
@@ -68,7 +49,11 @@ export function Discover(){
         
     ]
 
-    
+    const filteredBooks = genderSelected === 'Tudo' 
+    ? listBooks
+    : listBooks.filter(book => book.description.category.includes(genderSelected)); // Filtrando os livros por genero
+
+
     return(
         <div className=" flex flex-col w-[75rem] xxl:w-[80rem]" key={genderSelected}> {/* Forçando o componente ser desmotado e remontado sempre que trocar de genero*/ }
 
@@ -90,7 +75,11 @@ export function Discover(){
                 {buttons.map(({id, label})=> (
                     <button 
                         key={id}
-                        className={`${genderSelected === id ? 'text-gray-100 bg-purple-200' : 'border-purple-100 text-purple-100 border hover:bg-purple-200 hover:text-gray-100'} px-4 py-1 rounded-full`}
+                        className={`${genderSelected === id ?   
+                            'text-gray-100 bg-purple-200'
+                            : 
+                            'border-purple-100 text-purple-100 border hover:bg-purple-200 hover:text-gray-100'}
+                            px-4 py-1 rounded-full`}
                         onClick={() => setGenderSelected(id)}
                     >
                         {label}
@@ -99,23 +88,23 @@ export function Discover(){
             </div>
             
             <div className="grid grid-cols-3 w-[69rem] gap-5">
-
-                {listaDosGeneros.find(item => item.genero === genderSelected)?.lista.map(({title, author, cover, rating, id }) => (
-                    <div className="" key={id}>
-                        <PopularBooks
+                
+               {filteredBooks.map(({ title, author, cover, rating, id }, index) => (
+                    <PopularBooks
                         key={id}
                         imgBook={cover}
-                        alt={`Capa livro ${title}`}
+                        index={index}
                         title={title}
+                        alt={`Capa livro ${title}`}
                         author={author}
                         rating={rating}
-                        index={id}
+                        sizeStar={20}
                         width={108}
                         height={152}
-                        />
-                    </div>))
-                }
-            </div>
+                    />
+                ))}
+            </div> {/* Grid Books */}
+            
         </div>
     )
 }

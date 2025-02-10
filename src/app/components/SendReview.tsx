@@ -2,6 +2,9 @@ import { Check, X } from "@phosphor-icons/react";
 import { TextAreaWithCounter } from "./TextAreaWithCounter";
 import { ReviewUser } from "./ReviewUser";
 import { useState } from "react";
+import { listComments } from "@/utils/listComments";
+import { StarRating } from "./StarRating";
+import { PhotoProfile } from "./PhotoProfile";
 
 interface SendCommentProps{
     imgAvatar: string;
@@ -9,31 +12,62 @@ interface SendCommentProps{
     rating: number;
     sizeStarRating: number;
     setCloseReview: (close: boolean) => void;
-}
+    handleNewComment: (commentData: {avatar: string, nameUser: string, comment: string, rating: number}) => void;
+}   
 
-export function SendReview({imgAvatar, nameUser, rating, sizeStarRating, setCloseReview} : SendCommentProps){
 
-    const [sendComment, setSendComment] = useState(false)
+export function SendReview({imgAvatar, nameUser, setCloseReview, handleNewComment} : SendCommentProps){
+
+    const [sendCommentIsAvailable, setSendCommentIsAvailable] = useState(false)// Verifica se o botão de enviar está disponível
+
+    const [commentText, setCommentText] = useState('')// Texto do comentário
+
+    const [quantityStarsRating, setQuantityStarsRating] = useState<number | null >(null)
+
+    const [comment, setComment] = useState(listComments)
     
-    console.log(`COMPONENTE SendReview: ${sendComment}`)
+    function handleSendComment(){
+        console.log(`COMPONENTE SendReview: ${quantityStarsRating}`)
+        if(sendCommentIsAvailable && commentText.trim() !== ''){
+
+            if(quantityStarsRating){
+
+                const newComment = {
+                avatar: imgAvatar,
+                rating: quantityStarsRating,
+                nameUser: nameUser,
+                comment: commentText
+                }
+                handleNewComment(newComment)
+                setCloseReview(false)
+            }else{
+               alert('Você precisa avaliar o livro')
+            }
+        }
+    } // Função para enviar o comentário
+    
+
+    console.log(`COMPONENTE SendReview: ${sendCommentIsAvailable}`)
 
     return(
         <div className='flex flex-col  bg-gray-700 p-5 rounded-lg w-full gap-6'>
 
-            <div>
-                <ReviewUser
-                    imgProfile={imgAvatar}
-                    nameUser={nameUser}
-                    rating={rating}
-                    sizeStarRating={sizeStarRating}
-                    userRating
-                />
+            <div className="flex justify-between items-center">
+
+                 <div className="flex items-center justify-center gap-4">
+                    <PhotoProfile imageUrl={imgAvatar} size="2.5rem"/>
+                    <h2>{nameUser}</h2>
+                </div>
+                
+                <div>
+                    <StarRating rating={0} setQuantityStarsRating={setQuantityStarsRating} size={28} userRating/>
+                </div>
             </div>
      
             <div className='flex flex-col gap-3'>
-                <TextAreaWithCounter setSendComment={ setSendComment}/>
+                <TextAreaWithCounter setSendComment={setSendCommentIsAvailable} setTextComment={setCommentText}/>
 
-                <div className='flex gap-2 text-2xl items-center justify-end'>
+                <div className='flex gap-2 text-2xl items-center justify-end '>
 
                     <button className='flex text-purple-100 w-10 h-10 bg-gray-600 justify-center items-center hover:bg-gray-500
                     '
@@ -42,11 +76,13 @@ export function SendReview({imgAvatar, nameUser, rating, sizeStarRating, setClos
                     </button>
 
                     <button 
-                        className={`flex text-green-100 bg-gray-600 w-10 h-10 justify-center items-center ${!sendComment ? `cursor-not-allowed opacity-50` : `hover:bg-gray-500 `}`}
-                        onClick={() => sendComment && alert('ENVIADO')}
+                        className={`flex text-green-100 bg-gray-600 w-10 h-10 justify-center items-center ${!sendCommentIsAvailable ? `cursor-not-allowed opacity-50` : `hover:bg-gray-500 `}`}
+                        onClick={handleSendComment}
                     >
                         <Check/>
                     </button>
+
+                    
                 </div>
             </div>
         </div>

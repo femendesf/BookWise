@@ -73,7 +73,7 @@ export function Start({loggedIn, setButtonSeeAll} : StartProps){
 
                 </div>
                 
-                {listBooks.slice(0, 4).map(({title, author, cover, rating, id}) => (
+                {listBooks.slice(0, 4).map(({title, author, cover, rating, id}, index) => (
                     <div className="h-36 " key={id}>
                         <PopularBooks
                             key={id}
@@ -82,7 +82,7 @@ export function Start({loggedIn, setButtonSeeAll} : StartProps){
                             title={title}
                             author={author}
                             rating={rating}
-                            index={id}
+                            index={index}
                             width={64}
                             height={94}
                             sizeStar={16}

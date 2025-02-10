@@ -1,4 +1,4 @@
-import React, { TextareaHTMLAttributes, useState } from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 
 const searchSchema = z.object({
@@ -6,10 +6,11 @@ const searchSchema = z.object({
 })
 
 interface TextAreaWithCounterProps{
-  setSendComment: (send: boolean) => void
+  setSendComment: (send: boolean) => void,
+  setTextComment: (text: string) => void,
 }
 
-export function TextAreaWithCounter({setSendComment} : TextAreaWithCounterProps) {
+export function TextAreaWithCounter({setSendComment, setTextComment} : TextAreaWithCounterProps) {
   
   const [text, setText] = useState("");
   const [error, setError] = useState('')
@@ -24,12 +25,15 @@ export function TextAreaWithCounter({setSendComment} : TextAreaWithCounterProps)
     if(!result.success){
       setError(result.error.errors[0].message)
       setSendComment(false)
+
     }else{
       console.log(`Erro TextArea: ${error}`)
+      setTextComment!(value)
       setSendComment(true)
       setError('')
     }
-  }
+  } // Função para verificar se o texto tem mais de 3 caracteres
+
   return (
     <div className="relative w-full">
       <textarea

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { PhotoProfile } from "./PhotoProfile";
 import { StarRating } from "./StarRating";
 
@@ -10,9 +11,11 @@ interface Reviews{
     sizeStarRating?: number;
     comment?:  string;
     userRating?: boolean;
+    quantityStarsRating?: (quantity: number | null) => void;
+    
 }
 
-export function ReviewUser({imgProfile, sizeImageUser, nameUser, when, rating, comment, sizeStarRating, userRating} : Reviews){
+export function ReviewUser({imgProfile, sizeImageUser, nameUser, when, rating, comment, sizeStarRating, userRating, quantityStarsRating} : Reviews){
 
     if(!rating){
         rating = 0
@@ -35,7 +38,7 @@ export function ReviewUser({imgProfile, sizeImageUser, nameUser, when, rating, c
                     </div>
                 </div>
 
-                <StarRating rating={rating} size={sizeStarRating} userRating={userRating}/>
+                <StarRating rating={rating} size={sizeStarRating}/>
             </div>
 
             {comment && <p className="text-gray-300 text-sm">{comment}</p>}
