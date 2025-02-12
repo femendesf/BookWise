@@ -51,7 +51,7 @@ export function Profile() {
                 <div className="h-12 mt-10"> 
                     {/* Search bar */}
                     <InputSearchBook
-                    setButtonClicked={setButtonSearch}/>
+                    setButtonClicked={setButtonSearch} placeholder="Buscar livro avaliado"/>
                 </div>
                 
                 {!buttonSearch ? 

@@ -5,16 +5,19 @@ import { LastReading } from "./components/LastReading";
 
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
+import { MotionCard } from "@/utils/motionDiv";
 
 import { listBooks } from "@/utils/listBooks";
 import { PopularBooks } from "../PopularBooks";
 import { lastBookReading } from "@/utils/lastBookReading";
 import { useState } from "react";
 
+
 interface StartProps{
     loggedIn: boolean;
     setButtonSeeAll: (page: 'inicio' | 'perfil' | 'explorar') => void
 }
+
 
 export function Start({loggedIn, setButtonSeeAll} : StartProps){
 
@@ -74,7 +77,14 @@ export function Start({loggedIn, setButtonSeeAll} : StartProps){
                 </div>
                 
                 {listBooks.slice(0, 4).map(({title, author, cover, rating, id}, index) => (
-                    <div className="h-36 " key={id}>
+                    <motion.div 
+                        variants={MotionCard}
+                        initial="hidden"
+                        animate="visible"
+                        custom={index} 
+                        className="h-36 "
+                        key={id}>
+
                         <PopularBooks
                             key={id}
                             imgBook={cover}
@@ -87,7 +97,7 @@ export function Start({loggedIn, setButtonSeeAll} : StartProps){
                             height={94}
                             sizeStar={16}
                     />
-                    </div>
+                    </motion.div>
                    
                 ))}
 

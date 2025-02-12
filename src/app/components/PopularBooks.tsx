@@ -21,18 +21,6 @@ interface PopularBooksProps{
    
 }
 
-const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (index: number) => ({
-        opacity: 1,
-        y: 0,
-        transition: {
-            duration: 0.5,
-            ease: "easeOut",
-            delay: index * 0.2, // Cada card terá um delay incremental
-        }
-    })
-};
 
 export function PopularBooks({title, author, rating, alt, imgBook, width, height, blockedClick, sizeStar, index, onCLick} : PopularBooksProps){
 
@@ -40,11 +28,7 @@ export function PopularBooks({title, author, rating, alt, imgBook, width, height
     
     return(
         <>
-            <motion.div 
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                custom={index} // Passando o index para o delay funcionar corretamente
+            <div 
                 className={`flex gap-5 bg-gray-700 p-5 rounded-lg overflow-hidden h-full border border-x-2 border-gray-700 ${!blockedClick && `hover:cursor-pointer hover:border hover:border-x-2 hover:border-gray-600`}`}
                 onClick={() => !blockedClick && setClickOnnBook(true) }
             >
@@ -60,7 +44,7 @@ export function PopularBooks({title, author, rating, alt, imgBook, width, height
                 <StarRating rating={rating} size={sizeStar}/>
                 </div>
 
-            </motion.div>
+            </div>
 
             {clickOnBook && <SidePanel title={title} author={author} imgCover={imgBook} rating={rating} index={index} clickedExitBook={setClickOnnBook}/>}
 

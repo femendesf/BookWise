@@ -10,24 +10,27 @@ const searchSchema = z.object({
 
 
 interface inputSearchBook{
-    setButtonClicked: (clicked: boolean) => void;
+    setTextSearch: (text: string) => void;
+    placeholder: string;
 }
 
-export function InputSearchBook({setButtonClicked} : inputSearchBook){
+export function InputSearchBook({ placeholder, setTextSearch} : inputSearchBook){
 
     const [query, setQuery] = useState('')
     const [error, setError] = useState('')
     
     const [inputValueValidation, setInputValueValidation] = useState(false)//Estado para validar o valor do input para bloquear o clique
 
-    function handleButtonClicked(clicado: boolean){
-        setButtonClicked(clicado)
-    }
+    // function handleButtonClicked(clicked: boolean){
+    //     setTextSearch(query)
+    //     setButtonClicked(clicked)
+    // }
         
-    function handlInputChange(event: React.ChangeEvent<HTMLInputElement>){ //Verificar eventos do input
-
+    function handleInputChange(event: React.ChangeEvent<HTMLInputElement>){ //Verificar eventos do input
+        
         const value = event.target.value;
         setQuery(value)
+        setTextSearch(value)
 
         //Validação com ZOD
         const result = searchSchema.safeParse({query: value});
@@ -36,6 +39,7 @@ export function InputSearchBook({setButtonClicked} : inputSearchBook){
             setError(result.error.errors[0].message)
             
         }else{
+            
             setError('')
             setInputValueValidation(true)
         }
@@ -47,18 +51,15 @@ export function InputSearchBook({setButtonClicked} : inputSearchBook){
             <input 
                 className="text-gray-200 focus:outline-none text-sm bg-transparent w-full"
                 type="text"
-                placeholder="Buscar livro avaliado"
+                placeholder={placeholder}
                 value={query}
-                onChange={handlInputChange}
+                onChange={handleInputChange}
             />
 
-            
-            <button 
-                className= {`text-gray-500 focus-within:text-green-200 ${error || inputValueValidation === false ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-gray-400'}`}
-                onClick={()=> !error && inputValueValidation && handleButtonClicked(true)}
-            > 
-                <MagnifyingGlass size={20}/>
-            </button>
+            {query === '' && (
+                <MagnifyingGlass className={`text-gray-500 focus-within:text-green-200 ${error || inputValueValidation === false ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-gray-400'}`} size={20}/>
+            )}
+
         </div>
     )
 }

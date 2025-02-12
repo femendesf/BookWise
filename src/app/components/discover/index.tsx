@@ -1,17 +1,20 @@
 'use client'
 
 import { Binoculars } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { InputSearchBook } from "../InputSearchBook";
 
 import { listBooks } from "@/utils/listBooks";
 import { PopularBooks } from "../PopularBooks";
 
+import {motion} from 'framer-motion'
+import { MotionCard } from "@/utils/motionDiv";
+
 export function Discover(){
 
-    const [clickButtonSearch, setClickButtonSearch] = useState(false)
+    
     const [genderSelected, setGenderSelected] = useState('Tudo')
-    const [selectedBook, setSelectedBook] = useState(null); // Estado para armazenar o livro selecionado
+    const [textSearch, setTextSearch] = useState('')
 
     const buttons = [
         {
@@ -53,9 +56,19 @@ export function Discover(){
     ? listBooks
     : listBooks.filter(book => book.description.category.includes(genderSelected)); // Filtrando os livros por genero
 
+    const searchedBooks = filteredBooks.filter(book => 
+        book.title.toLowerCase().includes(textSearch.toLowerCase())  || 
+        book.author.toLowerCase().includes(textSearch.toLowerCase())
+    ); // Filtrando os livros por pesquisa
+
+    console.log(`LIVRO PESQUISADO: ${textSearch}`)
+
+    useEffect(() => {
+        
+    } , [textSearch])
 
     return(
-        <div className=" flex flex-col w-[75rem] xxl:w-[80rem]" key={genderSelected}> {/* Forçando o componente ser desmotado e remontado sempre que trocar de genero*/ }
+        <div className=" flex flex-col w-[75rem] xxl:w-[80rem]"> 
 
             <div className="flex items-center justify-between">
 
@@ -66,7 +79,8 @@ export function Discover(){
                 
                 <div className=" w-[28.75rem] h-12 ">
                     <InputSearchBook
-                        setButtonClicked={setClickButtonSearch}
+                        placeholder="Buscar livro ou autor"
+                        setTextSearch={setTextSearch}
                     />
                 </div>
             </div>
@@ -87,22 +101,60 @@ export function Discover(){
                 ))}
             </div>
             
-            <div className="grid grid-cols-3 w-[69rem] gap-5">
+            <div className="grid grid-cols-3 w-[69rem] gap-5" key={genderSelected}>
                 
-               {filteredBooks.map(({ title, author, cover, rating, id }, index) => (
-                    <PopularBooks
-                        key={id}
-                        imgBook={cover}
-                        index={index}
-                        title={title}
-                        alt={`Capa livro ${title}`}
-                        author={author}
-                        rating={rating}
-                        sizeStar={20}
-                        width={108}
-                        height={152}
-                    />
-                ))}
+               { textSearch != '' ? (
+                    // Exibe livros filtrados pela pesquisa
+                    searchedBooks.map(({ title, author, cover, rating, id }, index) => (
+                        <motion.div
+                            variants={MotionCard}
+                            initial="hidden"
+                            animate="visible"
+                            custom={index} 
+                            key={index}
+                        >
+                            <PopularBooks
+                            key={id}
+                            imgBook={cover}
+                            index={index}
+                            title={title}
+                            alt={`Capa livro ${title}`}
+                            author={author}
+                            rating={rating}
+                            sizeStar={20}
+                            width={108}
+                            height={152}
+                            />
+                        </motion.div>
+                      ))
+                )
+                : (
+                    // Exibe livros filtrados pelo gênero
+                    
+                    filteredBooks.map(({ title, author, cover, rating, id }, index) => (
+                        <motion.div
+                            variants={MotionCard}
+                            initial="hidden"
+                            animate="visible"
+                            custom={index} 
+                            key={index}
+                        >
+                            <PopularBooks
+                                key={id}
+                                imgBook={cover}
+                                index={index}
+                                title={title}
+                                alt={`Capa livro ${title}`}
+                                author={author}
+                                rating={rating}
+                                sizeStar={20}
+                                width={108}
+                                height={152}
+                            />
+                        </motion.div>
+                    ))
+                )
+                }
             </div> {/* Grid Books */}
             
         </div>
