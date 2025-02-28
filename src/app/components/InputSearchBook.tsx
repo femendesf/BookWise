@@ -1,49 +1,19 @@
 'use client'
 
 import { MagnifyingGlass } from "@phosphor-icons/react";
-import { useState } from "react";
-import { z } from "zod";
-
-const searchSchema = z.object({
-    query: z.string().min(3, 'Digite pelo menos 3 caracters')
-})
-
 
 interface inputSearchBook{
     setTextSearch: (text: string) => void;
     placeholder: string;
+    textSearch: string;
 }
 
-export function InputSearchBook({ placeholder, setTextSearch} : inputSearchBook){
+export function InputSearchBook({ placeholder , textSearch, setTextSearch} : inputSearchBook){
 
-    const [query, setQuery] = useState('')
-    const [error, setError] = useState('')
-    
-    const [inputValueValidation, setInputValueValidation] = useState(false)//Estado para validar o valor do input para bloquear o clique
-
-    // function handleButtonClicked(clicked: boolean){
-    //     setTextSearch(query)
-    //     setButtonClicked(clicked)
-    // }
-        
     function handleInputChange(event: React.ChangeEvent<HTMLInputElement>){ //Verificar eventos do input
         
         const value = event.target.value;
-        setQuery(value)
         setTextSearch(value)
-
-        //Validação com ZOD
-        const result = searchSchema.safeParse({query: value});
-
-        if(!result.success){
-            setError(result.error.errors[0].message)
-            
-        }else{
-            
-            setError('')
-            setInputValueValidation(true)
-        }
-        
     }
 
     return(
@@ -52,14 +22,43 @@ export function InputSearchBook({ placeholder, setTextSearch} : inputSearchBook)
                 className="text-gray-200 focus:outline-none text-sm bg-transparent w-full"
                 type="text"
                 placeholder={placeholder}
-                value={query}
+                value={textSearch}
                 onChange={handleInputChange}
             />
 
-            {query === '' && (
-                <MagnifyingGlass className={`text-gray-500 focus-within:text-green-200 ${error || inputValueValidation === false ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-gray-400'}`} size={20}/>
+            {textSearch === '' && (
+                <MagnifyingGlass className={`text-gray-500 focus-within:text-green-200 `} size={20}/>
             )}
 
         </div>
     )
 }
+
+/*
+    OPÇÃO PARA VALIDAR O INPUT COM BOTAO DE PESQUISA
+
+
+    // import { z } from "zod";
+
+    // const searchSchema = z.object({
+    //     query: z.string().min(3, 'Digite pelo menos 3 caracters')
+    // })
+
+    // const [error, setError] = useState('')
+        
+    // const [inputValueValidation, setInputValueValidation] = useState(false)//Estado para validar o valor do input para bloquear o clique
+
+
+    //Validação com ZOD
+    // const result = searchSchema.safeParse({query: value});
+
+    // if(!result.success){
+    //     setError(result.error.errors[0].message)
+        
+    // }else{
+        
+    //     setError('')
+    //     setInputValueValidation(true)
+    // }
+
+*/

@@ -20,7 +20,7 @@ export const listBooks = [
         title: 'A revolução dos bichos',
         author: 'George Orwell',
         cover: GeorgeOrwell,
-        rating: 4,
+        rating: 3.5,
         description: {
             category: ['Ficção Científica'],
             pages: 160
@@ -31,9 +31,9 @@ export const listBooks = [
         title: '14 Hábitos de Desenvolvedor Altamente Produtivos',
         author: 'Zeno Rocha',
         cover: ZenoRocha,
-        rating: 4,
+        rating: 4.5,
         description: {
-            category: ['Computação,', 'Educação'],
+            category: ['Computação', 'Educação'],
             pages: 160
         }
     },

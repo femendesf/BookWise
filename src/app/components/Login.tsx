@@ -10,11 +10,12 @@ interface LoginProps{
 
 export function Login({setLogin, setCloseLogin} : LoginProps){
 
-    function handleBottonLogin(){
+    function handleButtonLogin(){
         setLogin(true)
         setCloseLogin(false)
         
     }
+    
     return(
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
             <div className="relative flex flex-col w-[32.25rem] h-[21.0625rem] bg-gray-700 gap-4 p-3 rounded-lg shadow-lg">
@@ -28,12 +29,12 @@ export function Login({setLogin, setCloseLogin} : LoginProps){
                     <span className="text-base text-gray-200">Faça login para deixar sua avaliação</span>
     
                     <div className="flex flex-col gap-3" id="login">
-                        <button onClick={() => handleBottonLogin()}> 
+                        <button onClick={() => handleButtonLogin()}> 
                 <           Image src={LogoGoogle} alt="logo" width={32} height={32}/>  
                             Entrar com Google
                         </button>
 
-                        <button onClick={() => handleBottonLogin()}>
+                        <button onClick={() => handleButtonLogin()}>
                             <Image src={LogoGitHub} alt="logo" width={32} height={32}/>
                             Entrar com GitHub
                         </button>

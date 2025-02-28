@@ -1,7 +1,7 @@
 
 import Aditya from '../public/assets/livrosAlgoritmos.svg'
 import Tolkien from '../public/assets/hobbit.svg'
-import Douglas from '../public/assets/o-guia-do-mochileiro.png'
+import Douglas from '../public/assets/svgGuiaMochileiro.svg'
 
 import Jaxson from '../public/assets/avatar.svg'
 import Brandon from '../public/assets/brandon.svg'
