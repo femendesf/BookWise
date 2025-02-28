@@ -13,7 +13,7 @@ export const lastBookReading = [
         title: 'O Hobbit',
         author: 'J.R.R. Tolkien',
         cover: Tolkien,
-        rating: 4,
+        rating: 4.5,
         description: 'Semper et sapien proin vitae nisi. Feugiat neque integer donec et aenean posuere amet ultrices. Cras fermentum id pulvinar varius leo a in. Amet libero pharetra nunc elementum fringilla velit ipsum. Sed vulputate massa velit nibhasdas',
         user: {
             idUser: 'Jaxson Dias',
@@ -26,7 +26,7 @@ export const lastBookReading = [
         title: 'O guia do mochileiro das galáxias',
         author: 'Douglas Adams',
         cover: Douglas,
-        rating: 4,
+        rating: 3.5,
         description: 'Nec tempor nunc in egestas. Euismod nisi eleifend at et in sagittis. Penatibus id vestibulum imperdiet a at imperdiet lectus leo. Sit porta eget nec vitae sit vulputate eget',
         user: {
             idUser: 'Brandon Botosh',

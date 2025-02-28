@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { PhotoProfile } from "./PhotoProfile";
 import { StarRating } from "./StarRating";
 

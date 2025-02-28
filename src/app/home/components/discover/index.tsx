@@ -16,7 +16,6 @@ interface DiscoverProps{
 
 export function Discover({setSelectedBook} : DiscoverProps){
 
-    
     const [genderSelected, setGenderSelected] = useState('Tudo')
     const [textSearch, setTextSearch] = useState('')
 
@@ -64,8 +63,6 @@ export function Discover({setSelectedBook} : DiscoverProps){
         book.title.toLowerCase().includes(textSearch.toLowerCase())  || 
         book.author.toLowerCase().includes(textSearch.toLowerCase())
     ); // Filtrando os livros por pesquisa
-
-    console.log(`LIVRO PESQUISADO: ${textSearch}`)
 
     useEffect(() => {
         
@@ -179,7 +176,6 @@ export function Discover({setSelectedBook} : DiscoverProps){
                 )
                 }
             </div> {/* Grid Books */}
-            
         </div>
     )
 }

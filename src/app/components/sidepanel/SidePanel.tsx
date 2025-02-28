@@ -25,7 +25,6 @@ interface SidePanelProps{
     login: boolean;
 }
 
-
 export function SidePanel({imgCover, title, author, rating, index, category, pages, login, setLogin, clickedExitBook} : SidePanelProps){
 
     // const [sendComment, setSendComment] = useState(false)
@@ -62,8 +61,6 @@ console.log(`ATUAL LOGGEDIN NO SIDE PANEL ${showLogin}`)
     }, [clickedExitBook]); // Adiciona um evento de clique fora do painel para fechá-lo
 
   
- 
-    console.log(`category: ${category}`)
     return(
         <div className="fixed inset-0 flex bg-black bg-opacity-70 z-50">
 
@@ -116,9 +113,10 @@ console.log(`ATUAL LOGGEDIN NO SIDE PANEL ${showLogin}`)
 
                 </div>{/*Card Book*/}
 
-                <div className="flex flex-col mt-10 gap-4">
+                <div className="flex flex-col mt-10 gap-4  ">
 
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center">
+
                         <h2 className="text-sm text-gray-200">Avaliações</h2>
 
                         
@@ -135,7 +133,7 @@ console.log(`ATUAL LOGGEDIN NO SIDE PANEL ${showLogin}`)
                                     }
                                  } }
 
-                                className="text-base text-purple-100">
+                                className="text-base text-purple-100 hover:text-purple-hoover hover:bg-purple-100 hover:bg-opacity-10 p-1 rounded">
                                 Avaliar
                             </button>
                         }
@@ -153,9 +151,7 @@ console.log(`ATUAL LOGGEDIN NO SIDE PANEL ${showLogin}`)
                             }}
                             setCloseLogin={setShowLogin}
                         />
-                    }{/*Deixar Avalição*/ }
-                
-                   
+                    }{/*Mostra tela de login se tentar avaliar sem estar logado*/}
                    
                     {reviewButton && 
                         <SendReview
@@ -167,7 +163,7 @@ console.log(`ATUAL LOGGEDIN NO SIDE PANEL ${showLogin}`)
                             key={title}
                             handleNewComment={handleNewComment}
                         />
-                    }
+                    }{/*Deixar Avalição*/ }
                     
 
                     {[...comments].reverse().map((user, key) => (
@@ -187,6 +183,5 @@ console.log(`ATUAL LOGGEDIN NO SIDE PANEL ${showLogin}`)
                 </div>
             </div>
         </div>
-        
     )
 }

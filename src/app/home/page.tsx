@@ -8,7 +8,6 @@ import { Discover } from "./components/discover"
 import { Login } from "../components/Login"
 import { SidePanel } from "../components/sidepanel/SidePanel"
 
-
 export default function Home() {
 
     const [loggedIn, setLoggedIn] = useState(false)// Verifica se o usuario esta logado
@@ -49,7 +48,6 @@ export default function Home() {
     //     setComments((prevComments) => [...prevComments, commentData]);
     // } // Adiciona um novo comentário
 
-   
 
     return(
 

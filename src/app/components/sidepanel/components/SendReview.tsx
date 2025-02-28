@@ -23,8 +23,6 @@ export function SendReview({imgAvatar, nameUser, setCloseReview, handleNewCommen
     const [commentText, setCommentText] = useState('')// Texto do comentário
 
     const [quantityStarsRating, setQuantityStarsRating] = useState<number | null >(null)
-
-    const [comment, setComment] = useState(listComments)
     
     function handleSendComment(){
         console.log(`COMPONENTE SendReview: ${quantityStarsRating}`)

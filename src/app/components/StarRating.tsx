@@ -23,7 +23,6 @@ export function StarRating({ rating, size, userRating, setQuantityStarsRating } 
         }
     };
 
-
     return(
 
         <div className='flex gap-1 text-purple-100 '>
@@ -41,7 +40,6 @@ export function StarRating({ rating, size, userRating, setQuantityStarsRating } 
                                 starSelected !== null &&
                                 index + 0.5 <= starSelected &&
                                 index + 1 > starSelected; // Verifica se a estrela atual é a metade da estrela hoverada
-
 
                         return(
                             <div

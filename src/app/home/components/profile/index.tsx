@@ -13,7 +13,6 @@ import { bookSearch } from "@/utils/bookSearch";
 
 export function Profile() {
 
-
     // const [buttonSearch, setButtonSearch] = useState(false)//Verifica se o botao de pesquisa foi clicado
     const [textSearch, setTextSearch] = useState('')
 

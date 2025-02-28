@@ -1,11 +1,8 @@
-'use client'
-
 import Image from 'next/image'
 import { motion } from 'framer-motion';
 import { ReviewUser } from '../../../../components/ReviewUser';
 
 import { MotionCard } from '@/utils/motionDiv';
-import { PopularBooks } from '../../../../components/PopularBooks';
 interface RecentReviewsProps {
     imgProfile: string;
     name: string;
@@ -18,11 +15,8 @@ interface RecentReviewsProps {
     index: number;  // Novo índice para controlar o delay
 }
 
-// Definição dos efeitos de animação
-
 export function RecentReviews({ name, imgProfile, when, title, author, imgBook, rating, description, index }: RecentReviewsProps) {
     
-
     return (
         <motion.div
             variants={MotionCard}

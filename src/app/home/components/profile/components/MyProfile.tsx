@@ -2,7 +2,6 @@ import { BookmarkSimple, BookOpen, Books, UserList } from "@phosphor-icons/react
 import Avatar from "../../../../../public/assets/rick.jpg";
 import { PhotoProfile } from "../../../../components/PhotoProfile";
 
-
 export function MyProfile(){
 
     const imageUrl = Avatar.src;
