@@ -7,6 +7,7 @@ import { Sidebar } from "../components/Sidebar"
 import { Discover } from "./components/discover"
 import { Login } from "../components/Login"
 import { SidePanel } from "../components/sidepanel/SidePanel"
+import { useSession } from "next-auth/react"
 
 export default function Home() {
 
@@ -30,7 +31,17 @@ export default function Home() {
         cover?: string;
     } | null>(null);
 
-    // const [ comments, setComments] = useState(initialComments)
+    const session = useSession()
+
+   
+    
+    useEffect(() => {
+        if(session.status === 'authenticated'){
+            setLoggedIn(true)
+        }else{
+            setLoggedIn(false)
+        }
+    } ,[session])
 
     useEffect(()=>{
 

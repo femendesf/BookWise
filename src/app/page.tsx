@@ -5,10 +5,26 @@ import LogoGoogle from "../public/assets/logo-google.svg";
 import LogoGitHub from "../public/assets/logo-github.svg";
 import { User } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function Login() {
   const router = useRouter()
 
+  async function handleLoginGoogle(){
+    await signIn('google', {
+      redirect: true,
+      callbackUrl: '/home'
+    })
+  }
+
+  async function handleLoginGitHub(){
+    await signIn('github', {
+      redirect: true,
+      callbackUrl: '/home'
+    })
+  }
+
+  
   return (
     <div id="login" className="flex  items-center justify-center gap-56 w-full h-screen max-md:flex-col max-md:gap-3">
 
@@ -29,11 +45,11 @@ export default function Login() {
         
           <div className="flex flex-col items-center justify-center gap-4">
 
-            <button> 
+            <button onClick={() => handleLoginGoogle()}> 
               <Image src={LogoGoogle} alt="logo" width={32} height={32}/>  Entrar com Google
             </button>
 
-            <button>
+            <button >
               <Image src={LogoGitHub} alt="logo" width={32} height={32}/>
               Entrar com GitHub
             </button>

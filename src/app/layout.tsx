@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Nunito_Sans } from "next/font/google";
 import "../app/styles/globals.css";
+import AuthProvider from "./providers/SessionProvider";
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-geist-sans",
@@ -17,14 +18,19 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>, 
+
+
+) {
   return (
-    <html lang="en">
-      <body
-        className={`${nunitoSans.variable} bg-gray-800 antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <AuthProvider>
+      <html lang="en">
+        <body
+          className={`${nunitoSans.variable} bg-gray-800 antialiased`}
+        >
+          {children}
+        </body>
+      </html>
+    </AuthProvider>
   );
 }

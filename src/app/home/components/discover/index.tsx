@@ -103,11 +103,11 @@ export function Discover({setSelectedBook} : DiscoverProps){
                 ))}
             </div>
             
-            <div className="grid grid-cols-3 w-[69rem] gap-5" key={genderSelected}>
+            <div className="grid grid-cols-3 w-[69rem] gap-5 mb-10" key={genderSelected}>
                 
                { textSearch != '' ? (
                     // Exibe livros filtrados pela pesquisa
-                    searchedBooks.map((book, index) => (
+                    searchedBooks.slice(0, 15).map((book, index) => (
                         <motion.div
                             variants={MotionCard}
                             initial="hidden"
@@ -142,7 +142,7 @@ export function Discover({setSelectedBook} : DiscoverProps){
                 : (
                     // Exibe livros filtrados pelo gênero
                     
-                    filteredBooks.map((book, index) => (
+                    filteredBooks.slice(0, 15).map((book, index) => (
                         <motion.div
                             variants={MotionCard}
                             initial="hidden"

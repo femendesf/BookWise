@@ -2,6 +2,7 @@ import Image from "next/image";
 import LogoGoogle from "../../public/assets/logo-google.svg";
 import LogoGitHub from "../../public/assets/logo-github.svg";
 import { X } from "@phosphor-icons/react";
+import { signIn } from "next-auth/react";
 
 interface LoginProps{
     setLogin: (value: boolean) => void;
@@ -11,6 +12,10 @@ interface LoginProps{
 export function Login({setLogin, setCloseLogin} : LoginProps){
 
     function handleButtonLogin(){
+        signIn('google', {
+            redirect: true,
+            callbackUrl: '/home'
+        })
         setLogin(true)
         setCloseLogin(false)
         
