@@ -8,8 +8,21 @@ export function buildNextAuthOptions(): NextAuthOptions{
         providers: [
             GoogleProvider({
                 clientId: process.env.GOOGLE_CLIENT_ID ?? '',
-                clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',    
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+                authorization:{
+                    params:{
+                        scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/books'
+                    }
+                }
             })
-        ]
+        ],
+        callbacks:{
+            async signIn({ account }){
+                if(!account?.scope?.includes('https://www.googleapis.com/auth/books')){
+                    return '/home/?error=permissions'
+                }
+                return true
+            }
+        }
     }
 }
