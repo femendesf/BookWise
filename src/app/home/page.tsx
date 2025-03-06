@@ -1,20 +1,17 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Start } from "./components/start"
 import { Profile } from "./components/profile"
 import { Sidebar } from "../components/Sidebar"
 import { Discover } from "./components/discover"
 import { Login } from "../components/Login"
 import { SidePanel } from "../components/sidepanel/SidePanel"
-import { useSession } from "next-auth/react"
 
+import { useIsAuthenticated  } from '@/utils/isAuthenticated';
 export default function Home() {
 
-    const [loggedIn, setLoggedIn] = useState(false)// Verifica se o usuario esta logado
-
     const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
-
     const [activePage, setActivePage] = useState<'inicio' | 'perfil' | 'explorar'>('inicio') //Para mostrar os componentes na tela conforme esta clicado no Sidebar
 
     const [selectedBook, setSelectedBook] = useState<{
@@ -31,25 +28,7 @@ export default function Home() {
         cover?: string;
     } | null>(null);
 
-    const session = useSession()
-
-   
-    
-    useEffect(() => {
-        if(session.status === 'authenticated'){
-            setLoggedIn(true)
-        }else{
-            setLoggedIn(false)
-        }
-    } ,[session])
-
-    useEffect(()=>{
-
-        if(activePage === 'perfil'){
-            setActivePage('inicio')
-        }
-
-    },[loggedIn]) // Atualiza a marcação do SideBar para voltando ao inicio quando o usuario esta no componente perfil e aperta para desconectar
+    const isAuthenticated = useIsAuthenticated();
 
     function handleChangeComponent(page: 'inicio' | 'perfil' | 'explorar') {
         setActivePage(page);
@@ -59,7 +38,6 @@ export default function Home() {
     //     setComments((prevComments) => [...prevComments, commentData]);
     // } // Adiciona um novo comentário
 
-
     return(
 
         <div className="flex w-full h-full">
@@ -67,18 +45,16 @@ export default function Home() {
             <Sidebar 
                 activePage={activePage}
                 setActivePage={handleChangeComponent}
-                loggedIn={loggedIn}
                 setClickedButtonLogin={setShowLogin}
-                setExitLogin={setLoggedIn}
             />
         
             <div className="mt-12 ml-16 xxl:ml-24" id="home">
-                {activePage === 'inicio' ? <Start setButtonSeeAll={handleChangeComponent} loggedIn={loggedIn} setSelectedBook={setSelectedBook}/> : activePage === 'perfil' ? <Profile/> : <Discover setSelectedBook={setSelectedBook}/>}
+                {activePage === 'inicio' ? <Start setButtonSeeAll={handleChangeComponent} loggedIn={isAuthenticated} setSelectedBook={setSelectedBook}/> : activePage === 'perfil' ? <Profile/> : <Discover setSelectedBook={setSelectedBook}/>}
             </div>
 
             {showLogin && 
                 <Login 
-                    setLogin={setLoggedIn}
+                   
                     setCloseLogin={setShowLogin}
                 /> 
             }{/*Mostra a tela de login se tiver clicado no botão de fazer login */}
@@ -95,8 +71,6 @@ export default function Home() {
                         category={selectedBook.description.category}
                         pages={selectedBook.description.pages}
                         clickedExitBook={() => setSelectedBook(null)}
-                        login={loggedIn}
-                        setLogin={setLoggedIn}
                     />
                 }
         </div>

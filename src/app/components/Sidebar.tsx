@@ -7,15 +7,16 @@ import { PhotoProfile } from "./PhotoProfile";
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
 
+import { signOut } from "next-auth/react";
+import { useIsAuthenticated } from "@/utils/isAuthenticated";
 interface SidebarProps{
   activePage: 'inicio' | 'perfil' | 'explorar' ;
   setActivePage : (page: 'inicio' | 'perfil' | 'explorar') => void;
   setClickedButtonLogin: (clicked: boolean) => void;
-  setExitLogin: (exit: boolean) => void;
-  loggedIn: boolean;
+ 
 }
 
-export function Sidebar({activePage, setActivePage, loggedIn, setClickedButtonLogin, setExitLogin} : SidebarProps) {
+export function Sidebar({activePage, setActivePage, setClickedButtonLogin} : SidebarProps) {
 
   const imgUrl = Avatar.src;
 
@@ -26,13 +27,17 @@ export function Sidebar({activePage, setActivePage, loggedIn, setClickedButtonLo
     { id: "perfil", label: "Perfil", icon: <User size={24} />, requiresAuth: true },
   ];
 
+  const isAuthenticated = useIsAuthenticated()
+
   function handleButtonClick(buttonName: 'inicio' | 'perfil' | 'explorar') {
     setActivePage(buttonName); 
   }
 
-  function handleExitLogin(){
-    setExitLogin(false)
-    setActivePage("inicio"); 
+  console.log(activePage);
+  async function handleLogout() {
+    await fetch("/api/auth/logout"); // Remove os cookies no backend
+    await signOut({ redirect: true, callbackUrl: "/home" }); // Faz logout no NextAuth
+    setActivePage(activePage); 
   }
   return (
 
@@ -66,7 +71,7 @@ export function Sidebar({activePage, setActivePage, loggedIn, setClickedButtonLo
               {/* Botões */}
 
               {buttons
-                .filter((btn) => !btn.requiresAuth || loggedIn)
+                .filter((btn) => !btn.requiresAuth || isAuthenticated)
                 .map((btn) => (
                   
                   <div className="flex items-center gap-4" key={btn.id}>
@@ -76,7 +81,7 @@ export function Sidebar({activePage, setActivePage, loggedIn, setClickedButtonLo
                       }`}
                       onClick={() => handleButtonClick(btn.id as "inicio" | "perfil" | 'explorar')}
                     >
-                      {btn.icon}
+                      <span className={`${activePage === btn.id && 'text-green-100'}`}>{btn.icon}</span>
                       {btn.label}
                     </button>
                   </div>
@@ -84,13 +89,13 @@ export function Sidebar({activePage, setActivePage, loggedIn, setClickedButtonLo
           </div>
         </div>
         
-        {/* Botão de Login */}
+       
         <motion.div
-          key={loggedIn ? "clicked" : "default"}
+          key={isAuthenticated ? "clicked" : "default"}
           {...fadeIn}
         >
           {
-            !loggedIn ?  
+            !isAuthenticated ?  
               <button 
                 className="flex gap-3 mb-12 text-gray-200"
                 onClick={() => setClickedButtonLogin(true)}
@@ -102,7 +107,7 @@ export function Sidebar({activePage, setActivePage, loggedIn, setClickedButtonLo
               <button 
                 className="flex items-center gap-3 mb-12 
             text-gray-200"
-                onClick={() => handleExitLogin()}
+                onClick={() => handleLogout()}
               >
                 <PhotoProfile 
                   imageUrl={imgUrl}
@@ -112,8 +117,8 @@ export function Sidebar({activePage, setActivePage, loggedIn, setClickedButtonLo
                   <span>Felipe</span>
                   <SignIn className="text-red-exit" size={24}/>
               </button>
-          }
-        </motion.div>
+          } 
+        </motion.div>{/* Botão de Login */}
     </motion.div>
   );
 }

@@ -5,28 +5,27 @@ import { X } from "@phosphor-icons/react";
 import { signIn } from "next-auth/react";
 
 interface LoginProps{
-    setLogin: (value: boolean) => void;
+   
     setCloseLogin: (value: boolean) => void;
 }
 
-export function Login({setLogin, setCloseLogin} : LoginProps){
+export function Login({setCloseLogin} : LoginProps){
 
-    function handleButtonLogin(){
-        signIn('google', {
-            redirect: true,
-            callbackUrl: '/home'
-        })
-        setLogin(true)
-        setCloseLogin(false)
+    async function handleButtonLogin(provider: "google" | "github") {
         
+        const result = await signIn(provider, { redirect: false });
+
+        if (result?.ok) {
+            setCloseLogin(false); // Fecha somente se o login foi bem-sucedido
+        } 
     }
     
     return(
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70">
-            <div className="relative flex flex-col w-[32.25rem] h-[21.0625rem] bg-gray-700 gap-4 p-3 rounded-lg shadow-lg">
+            <div className="relative flex flex-col w-[32.25rem] h-[21.0625rem] bg-gray-750 gap-4 p-3 rounded-lg shadow-lg">
 
-                <button onClick={() => setCloseLogin(false)} className="absolute top-4 right-4">
-                    <X className="text-gray-400" width={24} height={24}/>
+                <button onClick={() => setCloseLogin(false)} className="absolute top-4 right-4 bg-gray-650 p-2 rounded hover:bg-gray-500">
+                    <X className="text-purple-100 " width={24} height={24}/>
                 </button>
 
                 <div className=" flex flex-col items-center justify-center mt-12 gap-10">
@@ -34,12 +33,12 @@ export function Login({setLogin, setCloseLogin} : LoginProps){
                     <span className="text-base text-gray-200">Faça login para deixar sua avaliação</span>
     
                     <div className="flex flex-col gap-3" id="login">
-                        <button onClick={() => handleButtonLogin()}> 
+                        <button onClick={() => handleButtonLogin('google')}> 
                 <           Image src={LogoGoogle} alt="logo" width={32} height={32}/>  
                             Entrar com Google
                         </button>
 
-                        <button onClick={() => handleButtonLogin()}>
+                        <button onClick={() => handleButtonLogin('github')}>
                             <Image src={LogoGitHub} alt="logo" width={32} height={32}/>
                             Entrar com GitHub
                         </button>

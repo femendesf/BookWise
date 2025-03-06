@@ -9,7 +9,7 @@ import { Login } from '../Login';
 
 import { ReviewUser } from '../ReviewUser';
 import { SendReview } from './components/SendReview';
-
+import { useIsAuthenticated  } from '@/utils/isAuthenticated';
 
 interface SidePanelProps{
     title: string;
@@ -20,13 +20,11 @@ interface SidePanelProps{
     category: string[];
     pages: number;
     clickedExitBook: (clicked: boolean) => void;
-
-    setLogin: (logged: boolean) => void;
-    login: boolean;
 }
 
-export function SidePanel({imgCover, title, author, rating, index, category, pages, login, setLogin, clickedExitBook} : SidePanelProps){
 
+export function SidePanel({imgCover, title, author, rating, index, category, pages, clickedExitBook} : SidePanelProps){
+    
     // const [sendComment, setSendComment] = useState(false)
     const [reviewButton, setReviewButton] = useState(false)
     const [comments, setComments] = useState(initialComments)
@@ -34,11 +32,12 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
 
     const panelRef = useRef<HTMLDivElement>(null)// Criando uma referência para o painel
 
+    const isAuthenticated = useIsAuthenticated(); // Agora é um booleano
+
     function handleNewComment(commentData: {avatar: string, nameUser: string, comment: string, rating: number }){
         setComments((prevComments) => [...prevComments, commentData]);
     } // Adiciona um novo comentário
-    
-console.log(`ATUAL LOGGEDIN NO SIDE PANEL ${showLogin}`)
+
     useEffect(() => {
         document.body.style.overflow = 'hidden'
 
@@ -60,6 +59,7 @@ console.log(`ATUAL LOGGEDIN NO SIDE PANEL ${showLogin}`)
         };
     }, [clickedExitBook]); // Adiciona um evento de clique fora do painel para fechá-lo
 
+   console.log(`autenticado do sidepanel: ${isAuthenticated}`)
   
     return(
         <div className="fixed inset-0 flex bg-black bg-opacity-70 z-50">
@@ -124,7 +124,7 @@ console.log(`ATUAL LOGGEDIN NO SIDE PANEL ${showLogin}`)
 
                             <button 
                                 onClick={() => {
-                                    if(!login){
+                                    if(!isAuthenticated){
                                         setShowLogin(true)
                                         
                                     }else{
@@ -143,12 +143,7 @@ console.log(`ATUAL LOGGEDIN NO SIDE PANEL ${showLogin}`)
                 
                     {showLogin &&
                         <Login
-                            setLogin={() => {
-                                setLogin(true)
-                                setReviewButton(true)
-                                setShowLogin(false);
-
-                            }}
+                            
                             setCloseLogin={setShowLogin}
                         />
                     }{/*Mostra tela de login se tentar avaliar sem estar logado*/}

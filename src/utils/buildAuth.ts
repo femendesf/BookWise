@@ -5,7 +5,6 @@ import GoogleProvider from "next-auth/providers/google";
 export function buildNextAuthOptions(): NextAuthOptions{
 
     return{
-        
         providers: [
             GoogleProvider({
                 clientId: process.env.GOOGLE_CLIENT_ID ?? '',
