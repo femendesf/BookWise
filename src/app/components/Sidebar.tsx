@@ -43,7 +43,7 @@ export function Sidebar({activePage, setActivePage, setClickedButtonLogin} : Sid
 
       <motion.div 
         className="
-            flex flex-col items-center gap-10 justify-between text-gray-100 w-[14.5rem] h-[90vh] ml-6 mt-5 rounded-xl
+            flex flex-col items-center gap-10 justify-between text-gray-100 min-w-[14.5rem] h-[90vh] ml-6 mt-5 rounded-xl
             bg-gradient-to-b from-purple-200/20 to-green-200/20 
             shadow-custom-dual
         "

@@ -25,7 +25,7 @@ export function Profile() {
     return(
         <div className="flex justify-start gap-16">
 
-            <div className="xxl:max-w-[51.25rem] w-[48.75rem]">
+            <div className="xxl:min-w-[60rem] w-[48.75rem]">
                 <motion.div
                     key={textSearch ? "clicked" : "default"}
                     {...fadeIn}
