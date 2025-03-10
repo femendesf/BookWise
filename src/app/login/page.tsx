@@ -1,10 +1,11 @@
 'use client'
 import Image from "next/image";
 import ImageHome from "../../public/assets/imagem-home.svg";
+import Logo from "../../public/assets/logo.svg";
 import LogoGoogle from "../../public/assets/logo-google.svg";
 import LogoGitHub from "../../public/assets/logo-github.svg";
 import { User } from "@phosphor-icons/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
 import { useIsAuthenticated } from "@/utils/isAuthenticated";
@@ -29,13 +30,25 @@ export default function Login() {
   const isAuthenticated = useIsAuthenticated()
 
   console.log(isAuthenticated);
+
+  const searchParams = useSearchParams()
+  const error = searchParams.get('error')
+
+
   
   return (
     <>
         {isAuthenticated ? 
         
-            <div>
-                <h1 className="text-gray-100">VOCE JA ESTA LOGADO</h1>
+            <div className="flex flex-col items-center justify-center h-screen gap-6" >
+                <Image src={Logo} alt="logo" width={200} height={200} />
+                <h1 className="text-green-100 text-2xl font-bold">Você já esta logado!</h1>
+                <button 
+                  className="flex bg-gray-600 p-3 rounded text-gray-100 hover:bg-gray-500"
+                  onClick={() => router.push('/home')}
+                >
+                   Voltar para o menu
+                </button>
             </div>
 
           :
@@ -47,7 +60,7 @@ export default function Login() {
 
                 <div className="flex flex-col w-full h-full items-center justify-center">
 
-                <div className="flex flex-col justify-start gap-10">
+                  <div className="flex flex-col justify-start gap-10">
 
                     <div className="flex flex-col justify-start gap-1">
                         <h1 className="text-gray-100 text-2xl">Boas vindas!</h1>
@@ -72,8 +85,8 @@ export default function Login() {
                         </button>
                     </div>
                 </div>
+              </div>
             </div>
-        </div>
     }
     </>
     
