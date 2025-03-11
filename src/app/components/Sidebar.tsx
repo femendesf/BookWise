@@ -36,7 +36,7 @@ export function Sidebar({activePage, setActivePage, setClickedButtonLogin} : Sid
   console.log(activePage);
   async function handleLogout() {
     await fetch("/api/auth/logout"); // Remove os cookies no backend
-    await signOut({ redirect: true, callbackUrl: "/home" }); // Faz logout no NextAuth
+    await signOut({ redirect: true, callbackUrl: "/feed" }); // Faz logout no NextAuth
     setActivePage(activePage); 
   }
   return (
@@ -50,7 +50,7 @@ export function Sidebar({activePage, setActivePage, setClickedButtonLogin} : Sid
         {...fadeIn}
       >
         <div className="flex flex-col gap-16 items-center">
-          <Image className="mt-[2.5rem]" src={Logo} alt="image-home" />
+          <Image className="mt-[2.5rem] hover:cursor-pointer" src={Logo} alt="image-home" onClick={() => setActivePage('inicio')} />
 
           <div className="relative flex flex-col gap-6 text-gray-400" id="sidebar">
 

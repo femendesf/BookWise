@@ -5,11 +5,13 @@ import { useEffect, useRef, useState } from "react"
 
 import { listComments as initialComments } from '@/utils/listComments'
 import { PopularBooks } from '../PopularBooks';
-import { Login } from '../Login';
+
 
 import { ReviewUser } from '../ReviewUser';
 import { SendReview } from './components/SendReview';
 import { useIsAuthenticated  } from '@/utils/isAuthenticated';
+import { BoxLogin } from '../BoxLogin';
+
 
 interface SidePanelProps{
     title: string;
@@ -142,7 +144,7 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
 
                 
                     {showLogin &&
-                        <Login
+                        <BoxLogin
                             
                             setCloseLogin={setShowLogin}
                         />

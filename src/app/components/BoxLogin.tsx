@@ -1,23 +1,26 @@
+'use client'
+
 import Image from "next/image";
 import LogoGoogle from "../../public/assets/logo-google.svg";
 import LogoGitHub from "../../public/assets/logo-github.svg";
 import { X } from "@phosphor-icons/react";
 import { signIn } from "next-auth/react";
+import { useState } from "react";
 
 interface LoginProps{
    
     setCloseLogin: (value: boolean) => void;
 }
 
-export function Login({setCloseLogin} : LoginProps){
+export function BoxLogin({setCloseLogin} : LoginProps){
 
     async function handleButtonLogin(provider: "google" | "github") {
         
         const result = await signIn(provider, { redirect: false });
 
         if (result?.ok) {
-            setCloseLogin(false); // Fecha somente se o login foi bem-sucedido
-        } 
+           setCloseLogin(false)
+        }
     }
     
     return(
@@ -42,6 +45,7 @@ export function Login({setCloseLogin} : LoginProps){
                             <Image src={LogoGitHub} alt="logo" width={32} height={32}/>
                             Entrar com GitHub
                         </button>
+                        
                     </div>
                 </div>
             </div>

@@ -5,11 +5,13 @@ import { Start } from "./components/start"
 import { Profile } from "./components/profile"
 import { Sidebar } from "../components/Sidebar"
 import { Discover } from "./components/discover"
-import { Login } from "../components/Login"
+
 import { SidePanel } from "../components/sidepanel/SidePanel"
 
 import { useIsAuthenticated  } from '@/utils/isAuthenticated';
-export default function Home() {
+import { BoxLogin } from "../components/BoxLogin"
+
+export default function Feed() {
 
     const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
     const [activePage, setActivePage] = useState<'inicio' | 'perfil' | 'explorar'>('inicio') //Para mostrar os componentes na tela conforme esta clicado no Sidebar
@@ -38,6 +40,7 @@ export default function Home() {
     //     setComments((prevComments) => [...prevComments, commentData]);
     // } // Adiciona um novo comentário
 
+    console.log(isAuthenticated)
     return(
 
         <div className="flex w-full h-full">
@@ -53,11 +56,12 @@ export default function Home() {
             </div>
 
             {showLogin && 
-                <Login 
+                <BoxLogin
                    
                     setCloseLogin={setShowLogin}
                 /> 
             }{/*Mostra a tela de login se tiver clicado no botão de fazer login */}
+            
             
             
                 {selectedBook && 

@@ -28,7 +28,7 @@ export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps)
 
                 <div className="flex flex-col gap-10 w-full">
 
-                    <h1 className="flex gap-3">
+                    <h1 className="flex gap-3 text-gray-100">
                         <ChartLineUp size={32} className="text-green-100"/>
                         Início
                     </h1>

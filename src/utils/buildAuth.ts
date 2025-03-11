@@ -16,10 +16,13 @@ export function buildNextAuthOptions(): NextAuthOptions{
                 }
             })
         ],
+        pages:{
+            error: '/'
+        },
         callbacks:{
             async signIn({ account }){
                 if(!account?.scope?.includes('https://www.googleapis.com/auth/books')){
-                    return '/home/?error=permissions'
+                    return false
                 }
                 return true
             }
