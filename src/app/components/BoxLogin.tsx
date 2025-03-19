@@ -6,6 +6,7 @@ import LogoGitHub from "../../public/assets/logo-github.svg";
 import { X } from "@phosphor-icons/react";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { api } from "@/lib/axios";
 
 interface LoginProps{
    
@@ -19,7 +20,12 @@ export function BoxLogin({setCloseLogin} : LoginProps){
         const result = await signIn(provider, { redirect: false });
 
         if (result?.ok) {
+
+           
+
            setCloseLogin(false)
+
+
         }
     }
     

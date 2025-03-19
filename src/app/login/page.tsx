@@ -5,7 +5,7 @@ import ImageHome from "../../public/assets/imagem-home.svg";
 import Logo from "../../public/assets/logo.svg";
 import LogoGoogle from "../../public/assets/logo-google.svg";
 import LogoGitHub from "../../public/assets/logo-github.svg";
-import { User } from "@phosphor-icons/react";
+import { ArrowArcRight, ArrowRight, User } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
@@ -43,10 +43,10 @@ export default function Login() {
                         Você já está logado!
                     </h1>
                     <button
-                        className="flex bg-gray-600 p-3 rounded text-gray-100 hover:bg-gray-500"
+                        className="flex bg-gray-600 p-3 rounded text-gray-100 hover:bg-gray-500 gap-2"
                         onClick={() => router.push("/feed")}
                     >
-                        Voltar para o menu
+                        Ir para o menu <ArrowRight size={24} />
                     </button>
                 </div>
             ) : (

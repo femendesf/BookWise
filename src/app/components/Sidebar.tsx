@@ -9,6 +9,7 @@ import { fadeIn } from "@/utils/fadeOut";
 
 import { signOut } from "next-auth/react";
 import { useIsAuthenticated } from "@/utils/isAuthenticated";
+import { api } from "@/lib/axios";
 interface SidebarProps{
   activePage: 'inicio' | 'perfil' | 'explorar' ;
   setActivePage : (page: 'inicio' | 'perfil' | 'explorar') => void;
@@ -35,8 +36,10 @@ export function Sidebar({activePage, setActivePage, setClickedButtonLogin} : Sid
 
   console.log(activePage);
   async function handleLogout() {
-    await fetch("/api/auth/logout"); // Remove os cookies no backend
+
+    await api.get("/auth/logout"); // Remove os cookies no backend
     await signOut({ redirect: true, callbackUrl: "/feed" }); // Faz logout no NextAuth
+
     setActivePage(activePage); 
   }
   return (
