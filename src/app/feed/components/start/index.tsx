@@ -35,7 +35,7 @@ export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps)
             
                     <div className="flex justify-between ">
 
-                        <div className="flex gap-10 flex-col w-[48.75rem] xxl:w-[51.25rem] mb-10">
+                        <div className="flex gap-10 flex-col w-[48rem] xxl:w-[51.25rem] mb-10">
 
                             {loggedIn && <LastReading />}
                             
@@ -64,7 +64,7 @@ export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps)
 
                         </div>{/* Recent Reviews */}
 
-                        <div className="flex flex-col gap-3 w-96 ml-16 xxl:20 overflow-hidden">
+                        <div className="flex flex-col gap-3 w-80 ml-16 xxl:20 overflow-hidden">
 
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-gray-100">Livros populares</span>

@@ -5,7 +5,7 @@ import ImageHome from "../../public/assets/imagem-home.svg";
 import Logo from "../../public/assets/logo.svg";
 import LogoGoogle from "../../public/assets/logo-google.svg";
 import LogoGitHub from "../../public/assets/logo-github.svg";
-import { ArrowArcRight, ArrowRight, User } from "@phosphor-icons/react";
+import { ArrowRight, User } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useState } from "react";

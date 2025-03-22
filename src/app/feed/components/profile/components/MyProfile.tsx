@@ -1,20 +1,22 @@
 import { BookmarkSimple, BookOpen, Books, UserList } from "@phosphor-icons/react";
-import Avatar from "../../../../../public/assets/rick.jpg";
 import { PhotoProfile } from "../../../../components/PhotoProfile";
 
-export function MyProfile(){
+interface MyProfileProps{
+    avatar_url: string;
+    name: string;
+}
+export function MyProfile({avatar_url, name}: MyProfileProps){
 
-    const imageUrl = Avatar.src;
-
+   
     return(
-        <div className="flex flex-col items-center gap-10 border-l-[1px] border-gray-700 w-[19.25rem] h-[34.75rem]">
+        <div className="flex flex-col items-center  gap-10 border-l-[1px] border-gray-700 w-[19.25rem] h-[34.75rem]">
 
             <div className="flex flex-col items-center gap-5">
 
-                <PhotoProfile imageUrl={imageUrl} size="4.5rem"/>
+                <PhotoProfile imageUrl={avatar_url} size="4.5rem"/>
 
                 <div className="flex flex-col items-center gap-1">
-                    <span className="text-xl text-gray-100">Felipe Mendes Fosneca</span>
+                    <span className="items-center justify-center truncate max-w-72 text-xl text-gray-100">{name.split(" ").slice(0, 3).join(" ")}</span>
                     <h3 className="text-gray-400 text-sm">membro desde 2025</h3>
 
                     <div className="w-[32px] h-[4px] bg-gradient-to-r from-[#7FD1CC] to-[#9694F5] rounded-full mt-9"></div>

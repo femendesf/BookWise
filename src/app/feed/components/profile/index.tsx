@@ -11,7 +11,11 @@ import { InputSearchBook } from "../../../components/InputSearchBook";
 
 import { bookSearch } from "@/utils/bookSearch";
 
-export function Profile() {
+interface ProfileProps{
+    avatar_url: string;
+    name: string;
+}
+export function Profile({avatar_url, name} : ProfileProps) {
 
     // const [buttonSearch, setButtonSearch] = useState(false)//Verifica se o botao de pesquisa foi clicado
     const [textSearch, setTextSearch] = useState('')
@@ -102,7 +106,7 @@ export function Profile() {
 
             </div>
 
-            <MyProfile/>
+            <MyProfile avatar_url={avatar_url} name={name}/>
         </div>
     )
 }

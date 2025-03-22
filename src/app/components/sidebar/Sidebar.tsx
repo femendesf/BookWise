@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { Binoculars, ChartLineUp, SignIn, User } from "@phosphor-icons/react";
-import Logo from "../../public/assets/logo.svg";
-import Avatar from "../../public/assets/rick.jpg";
-import { PhotoProfile } from "./PhotoProfile";
+import Logo from "../../../public/assets/logo.svg";
+import Avatar from "../../../public/assets/rick.jpg";
+import { PhotoProfile } from "../PhotoProfile";
 
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
@@ -12,14 +12,17 @@ import { useIsAuthenticated } from "@/utils/isAuthenticated";
 import { api } from "@/lib/axios";
 interface SidebarProps{
   activePage: 'inicio' | 'perfil' | 'explorar' ;
+  avatar_url: string;
+  name: string;
+
   setActivePage : (page: 'inicio' | 'perfil' | 'explorar') => void;
   setClickedButtonLogin: (clicked: boolean) => void;
+  isAuthenticated: boolean;
  
 }
 
-export function Sidebar({activePage, setActivePage, setClickedButtonLogin} : SidebarProps) {
+export function Sidebar({activePage,avatar_url, name, isAuthenticated, setActivePage, setClickedButtonLogin,} : SidebarProps) {
 
-  const imgUrl = Avatar.src;
 
   // Mapeamento para associar cada botão a um identificador único
   const buttons = [
@@ -27,8 +30,6 @@ export function Sidebar({activePage, setActivePage, setClickedButtonLogin} : Sid
     { id: "explorar", label: "Explorar", icon: <Binoculars size={24} /> },
     { id: "perfil", label: "Perfil", icon: <User size={24} />, requiresAuth: true },
   ];
-
-  const isAuthenticated = useIsAuthenticated()
 
   function handleButtonClick(buttonName: 'inicio' | 'perfil' | 'explorar') {
     setActivePage(buttonName); 
@@ -42,13 +43,16 @@ export function Sidebar({activePage, setActivePage, setClickedButtonLogin} : Sid
 
     setActivePage(activePage); 
   }
+
+
+
   return (
 
       <motion.div 
         className="
-            flex flex-col items-center gap-10 justify-between text-gray-100 min-w-[14.5rem] h-[90vh] ml-6 mt-5 rounded-xl
+            flex flex-col items-center gap-10 justify-between text-gray-100 min-w-60 h-[90vh] max-w-64 ml-6 mt-5 rounded-xl
             bg-gradient-to-b from-purple-200/20 to-green-200/20 
-            shadow-custom-dual
+            shadow-custom-dual px-6
         "
         {...fadeIn}
       >
@@ -100,7 +104,7 @@ export function Sidebar({activePage, setActivePage, setClickedButtonLogin} : Sid
           {
             !isAuthenticated ?  
               <button 
-                className="flex gap-3 mb-12 text-gray-200"
+                className="flex items-center justify-center gap-3 mb-12 text-gray-200"
                 onClick={() => setClickedButtonLogin(true)}
               >
                 Fazer login 
@@ -108,16 +112,16 @@ export function Sidebar({activePage, setActivePage, setClickedButtonLogin} : Sid
               </button> : 
               
               <button 
-                className="flex items-center gap-3 mb-12 
-            text-gray-200"
+                className="flex flex-shrink-0 items-center justify-center gap-3  mb-12 
+            text-gray-200 overflow-hidden"
                 onClick={() => handleLogout()}
               >
                 <PhotoProfile 
-                  imageUrl={imgUrl}
+                  imageUrl={avatar_url}
                   size='2rem'
-                 
+
                 /> 
-                  <span>Felipe</span>
+                  <span className="truncate max-w-[120px]">{name.split(" ")[0]}</span>
                   <SignIn className="text-red-exit" size={24}/>
               </button>
           } 

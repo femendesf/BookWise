@@ -1,28 +1,27 @@
-'use client'
+// 
+// COMPONENTE TESTE
+// 
+// 'use client'
 
-import { useIsAuthenticated } from "@/utils/isAuthenticated";
-import { useRouter, useSearchParams } from "next/navigation";
-import Feed from "../feed/page";
-import Login from "../login/page";
-import { useEffect, useState } from "react";
+// import { useIsAuthenticated } from "@/utils/isAuthenticated";
+// import { useRouter } from "next/navigation";
+// import { useEffect} from "react";
 
-export function Home() {
-  const isAuthenticated = useIsAuthenticated();
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
+// import PageFeed from "../feed/page";
+// import Login from "../login/page";
+// export function Home() {
+//   const isAuthenticated = useIsAuthenticated();
 
-  useEffect(() => {
-    const errorMessage = searchParams.get("error");
+//   const router = useRouter();
+  
+//   useEffect(() => {
 
-    if (errorMessage) {
-      setError(errorMessage);
-    }
+//     if (isAuthenticated) {
+//       return router.push("/feed"); // Redireciona para Feed
+//     } else{
+//       return router.push("/login"); // Redireciona para Login
+//     }
+//   }, [isAuthenticated, router,]);
 
-    if (isAuthenticated) {
-      router.push("/feed"); // Redireciona para Feed
-    }
-  }, [isAuthenticated, router, searchParams]);
-
-  return isAuthenticated ? <Feed /> : <Login />;
-}
+//   return isAuthenticated ? <PageFeed /> : <Login />;
+// }

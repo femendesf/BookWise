@@ -38,6 +38,13 @@ export function buildNextAuthOptions(): NextAuthOptions{
                     return false
                 }
                 return true
+            },
+
+            async session({ session, user }){
+                return{
+                    ...session,
+                    user
+                }
             }
         }
     }

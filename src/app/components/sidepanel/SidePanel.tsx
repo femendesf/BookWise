@@ -21,11 +21,13 @@ interface SidePanelProps{
     index: number;
     category: string[];
     pages: number;
+
+    isAuthenticated: boolean;
     clickedExitBook: (clicked: boolean) => void;
 }
 
 
-export function SidePanel({imgCover, title, author, rating, index, category, pages, clickedExitBook} : SidePanelProps){
+export function SidePanel({imgCover, title, author, rating, index, category, pages, isAuthenticated, clickedExitBook} : SidePanelProps){
     
     // const [sendComment, setSendComment] = useState(false)
     const [reviewButton, setReviewButton] = useState(false)
@@ -34,7 +36,7 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
 
     const panelRef = useRef<HTMLDivElement>(null)// Criando uma referência para o painel
 
-    const isAuthenticated = useIsAuthenticated(); // Agora é um booleano
+
 
     function handleNewComment(commentData: {avatar: string, nameUser: string, comment: string, rating: number }){
         setComments((prevComments) => [...prevComments, commentData]);
