@@ -1,6 +1,7 @@
 import { PhotoProfile } from "./PhotoProfile";
 import { StarRating } from "./StarRating";
 
+
 interface Reviews{
     imgProfile: string;
     sizeImageUser?: string;
@@ -32,7 +33,7 @@ export function ReviewUser({imgProfile, sizeImageUser, nameUser, when, rating, c
                 <div className='flex gap-4 items-center'>
                     <PhotoProfile imageUrl={imgProfile} size={sizeImageUser}  />
                     <div>
-                        <h2>{nameUser}</h2>
+                        <h2 className="truncate max-w-44">{nameUser.split(' ').slice(0, 3).join(' ')}</h2>
                         <h3>{when}</h3>
                     </div>
                 </div>

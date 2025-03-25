@@ -12,7 +12,7 @@ export function PhotoProfile({ imageUrl, size}: PhotoProfileProps) {
     return (
         <div
             className="flex items-center justify-center rounded-full bg-gradient-to-b from-[#7FD1CC] to-[#9694F5] p-[2px]"
-            style={{ width: `${size}.rem`, height: `${size}.rem` }} // Aplica o tamanho diretamente
+            style={{ width: size, height:size }} // Aplica o tamanho diretamente
         >
             <div className="flex items-center justify-center w-full h-full bg-black rounded-full overflow-hidden">
                 <Image

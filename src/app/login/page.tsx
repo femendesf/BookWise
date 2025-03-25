@@ -20,13 +20,13 @@ export default function Login() {
     async function handleLoginGoogle() {
         setError(null);
 
-        const result = await signIn("google", { redirect: false, callbackUrl: "/login" });
+        const result = await signIn("google", { redirect: true, callbackUrl: "/feed" });
 
-        if (!result?.error)
-          {
-           if (isAuthenticated) {
-            router.push("/feed");
-          }
+    
+
+        if (result?.error)
+            if (result.error === "OAuthSignin") {
+                setError("Você precisa aceitar as permissões de acesso ao Google Book!");
         }
     }
 

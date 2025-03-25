@@ -64,7 +64,7 @@ export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps)
 
                         </div>{/* Recent Reviews */}
 
-                        <div className="flex flex-col gap-3 w-80 ml-16 xxl:20 overflow-hidden">
+                        <div className="flex flex-col gap-3 w-96 ml-16  overflow-hidden">
 
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-gray-100">Livros populares</span>

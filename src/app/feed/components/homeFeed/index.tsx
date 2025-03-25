@@ -74,6 +74,8 @@ export function Feed({session}: SessionFeed) {
                 {selectedBook && 
                 
                     <SidePanel
+                        nameUser={name}
+                        imgAvatar={avatar_url}
                         title={selectedBook.title}
                         author={selectedBook.author}
                         imgCover={selectedBook.cover || ''}

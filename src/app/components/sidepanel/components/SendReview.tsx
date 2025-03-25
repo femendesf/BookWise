@@ -54,7 +54,7 @@ export function SendReview({imgAvatar, nameUser, setCloseReview, handleNewCommen
 
                  <div className="flex items-center justify-center gap-4">
                     <PhotoProfile imageUrl={imgAvatar} size="2.5rem"/>
-                    <h2 className="text-gray-100 text-base">{nameUser}</h2>
+                    <h2 className="truncate max-w-44 text-base text-gray-100">{nameUser.split(' ').slice(0, 3).join(' ')}</h2>
                 </div>
                 
                 <div>

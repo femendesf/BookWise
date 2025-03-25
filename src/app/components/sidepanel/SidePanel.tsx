@@ -6,14 +6,15 @@ import { useEffect, useRef, useState } from "react"
 import { listComments as initialComments } from '@/utils/listComments'
 import { PopularBooks } from '../PopularBooks';
 
-
-import { ReviewUser } from '../ReviewUser';
 import { SendReview } from './components/SendReview';
-import { useIsAuthenticated  } from '@/utils/isAuthenticated';
-import { BoxLogin } from '../BoxLogin';
 
+import { BoxLogin } from '../BoxLogin';
+import { ReviewUser } from '../ReviewUser';
 
 interface SidePanelProps{
+    nameUser: string;
+    imgAvatar: string;
+
     title: string;
     author: string;
     imgCover: string;
@@ -27,7 +28,7 @@ interface SidePanelProps{
 }
 
 
-export function SidePanel({imgCover, title, author, rating, index, category, pages, isAuthenticated, clickedExitBook} : SidePanelProps){
+export function SidePanel({imgCover, title, author, rating, index, category, pages, isAuthenticated, nameUser, imgAvatar, clickedExitBook} : SidePanelProps){
     
     // const [sendComment, setSendComment] = useState(false)
     const [reviewButton, setReviewButton] = useState(false)
@@ -35,8 +36,6 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
     const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
 
     const panelRef = useRef<HTMLDivElement>(null)// Criando uma referência para o painel
-
-
 
     function handleNewComment(commentData: {avatar: string, nameUser: string, comment: string, rating: number }){
         setComments((prevComments) => [...prevComments, commentData]);
@@ -63,8 +62,6 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
         };
     }, [clickedExitBook]); // Adiciona um evento de clique fora do painel para fechá-lo
 
-   console.log(`autenticado do sidepanel: ${isAuthenticated}`)
-  
     return(
         <div className="fixed inset-0 flex bg-black bg-opacity-70 z-50">
 
@@ -111,7 +108,6 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
                                 <span className="text-sm text-gray-300">Páginas</span>
                                 <h2 className="text-gray-200 text-base">{pages || 'N/A'}</h2>
                             </div>
-                            
                         </div>
                     </div>
 
@@ -123,9 +119,7 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
 
                         <h2 className="text-sm text-gray-200">Avaliações</h2>
 
-                        
                         {!reviewButton && 
-
                             <button 
                                 onClick={() => {
                                     if(!isAuthenticated){
@@ -144,18 +138,16 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
                         
                     </div>
 
-                
                     {showLogin &&
                         <BoxLogin
-                            
                             setCloseLogin={setShowLogin}
                         />
                     }{/*Mostra tela de login se tentar avaliar sem estar logado*/}
                    
                     {reviewButton && 
                         <SendReview
-                            imgAvatar={Avatar.src}
-                            nameUser='Felipe Mendes'
+                            imgAvatar={imgAvatar}
+                            nameUser={nameUser}
                             rating={0}
                             sizeStarRating={24}
                             setCloseReview={setReviewButton}
@@ -168,7 +160,7 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
                     {[...comments].reverse().map((user, key) => (
                         <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews" key={key}>
                         
-                            <ReviewUser 
+                            <ReviewUser
                                 imgProfile={user.avatar}
                                 nameUser={user.nameUser}
                                 when="Hoje"
