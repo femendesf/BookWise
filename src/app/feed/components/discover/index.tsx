@@ -1,31 +1,60 @@
 'use client'
 
-import { Binoculars } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
+import { Binoculars } from "@phosphor-icons/react";
+import { useSession } from "next-auth/react";
 import { InputSearchBook } from "../../../components/InputSearchBook";
-
-import { listBooks } from "@/utils/listBooks";
 import { PopularBooks } from "../../../components/PopularBooks";
-
-import {motion} from 'framer-motion'
 import { MotionCard } from "@/utils/motionDiv";
-
-interface DiscoverProps{
+import {motion} from 'framer-motion'
+import axios from "axios";
+interface DiscoverProps {
     setSelectedBook: (book: any) => void;
 }
 
-export function Discover({setSelectedBook} : DiscoverProps){
-
+export function Discover({ setSelectedBook }: DiscoverProps) {
+    
+    const [textSearch, setTextSearch] = useState("");
     const [genderSelected, setGenderSelected] = useState('Tudo')
-    const [textSearch, setTextSearch] = useState('')
+    const [books, setBooks] = useState<any[]>([]); // Armazenando os livros
+   
+    const fetchBooks = async (query: string) => {
+        console.log('Buscando livros com a query:');
+        try {
+            const response = await axios.get(`/api/books?q=${query}`);
 
+            console.log('Livros recebidos:', response.data);
+            const data = response.data;
+           
+            if (data.error) {
+                console.error(data.error);
+                setBooks([]);  // Reseta os livros em caso de erro
+            } else {
+                setBooks(data);  // Atualiza o estado com os livros recebidos
+            }
+        } catch (error) {
+            console.error("Erro ao buscar livros:", error);
+            setBooks([]);  // Reseta os livros em caso de erro
+        }
+    };
+    
+    useEffect(() => {
+        if (genderSelected === "Tudo") {
+            fetchBooks("best+seller+brazil"); // Carregar livros populares automaticamente
+        } else {
+            fetchBooks(genderSelected); // Buscar livros específicos do gênero
+        }
+    }, [ genderSelected]);
+
+
+    console.log(`LIVROS ${books}`);
     const buttons = [
         {
             id: 'Tudo',
             label: 'Tudo',
         },
         {
-            id: 'Computação',
+            id: 'Tecnology',
             label: 'Computação',
         },
         {
@@ -55,29 +84,24 @@ export function Discover({setSelectedBook} : DiscoverProps){
         
     ]
 
-    const filteredBooks = genderSelected === 'Tudo' 
-    ? listBooks
-    : listBooks.filter(book => book.description.category.includes(genderSelected)); // Filtrando os livros por genero
+    const searchedBooks = books.filter(book =>
+        (book.title && typeof book.title === "string" && book.title.toLowerCase().includes(textSearch.toLowerCase())) ||
+        (book.author && typeof book.author === "string" && book.author.toLowerCase().includes(textSearch.toLowerCase()))
+    );
 
-    const searchedBooks = filteredBooks.filter(book => 
-        book.title.toLowerCase().includes(textSearch.toLowerCase())  || 
-        book.author.toLowerCase().includes(textSearch.toLowerCase())
-    ); // Filtrando os livros por pesquisa
+    console.log("Livros no estado:", books);
 
-    useEffect(() => {
-        
-    } , [textSearch])
 
-    return(
-        <div className=" flex flex-col w-[75rem] xxl:w-[80rem]" id="style-info-cards"> 
-
+    console.log(`GENERO SELECIONADO: ${genderSelected}`);
+    return (
+       <div className=" flex flex-col w-[75rem] xxl:w-[80rem]" id="style-info-cards">
             <div className="flex items-center justify-between">
 
                 <div className="flex gap-3 items-center">
                     <Binoculars className="text-green-100" size={32}/>
                     <h1>Explorar</h1>
                 </div>
-                
+
                 <div className=" w-[28.75rem] h-12 ">
                     <InputSearchBook
                         placeholder="Buscar livro ou autor"
@@ -91,10 +115,7 @@ export function Discover({setSelectedBook} : DiscoverProps){
                 {buttons.map(({id, label})=> (
                     <button 
                         key={id}
-                        className={`${genderSelected === id ?   
-                            'text-gray-100 bg-purple-200'
-                            : 
-                            'border-purple-100 text-purple-100 border hover:bg-purple-200 hover:text-gray-100'}
+                        className={`${genderSelected === id ? 'text-gray-100 bg-purple-200': 'border-purple-100 text-purple-100 border hover:bg-purple-200 hover:text-gray-100'}
                             px-4 py-1 rounded-full`}
                         onClick={() => setGenderSelected(id)}
                     >
@@ -102,9 +123,9 @@ export function Discover({setSelectedBook} : DiscoverProps){
                     </button>
                 ))}
             </div>
+
+            <div className="grid grid-cols-3 w-[69rem] gap-5 mb-10">
             
-            <div className="grid grid-cols-3 w-[69rem] gap-5 mb-10" key={genderSelected}>
-                
                { textSearch != '' ? (
                     // Exibe livros filtrados pela pesquisa
                     searchedBooks.slice(0, 15).map((book, index) => (
@@ -123,18 +144,18 @@ export function Discover({setSelectedBook} : DiscoverProps){
                             })}
                         >
                             <PopularBooks
-                            key={book.id}
-                            imgBook={book.cover}
-                            index={index}
-                            title={book.title}
-                            alt={`Capa livro ${book.title}`}
-                            author={book.author}
-                            rating={book.rating}
-                            sizeStar={20}
-                            widthAvatar={108}
-                            heightAvatar={152}
-                            category={book.description.category}
-                            pages={book.description.pages}
+                                key={book.id}
+                                imgBook={book.cover}
+                                index={index}
+                                title={book.title}
+                                alt={`Capa livro ${book.title}`}
+                                author={book.author}
+                                rating={book.rating}
+                                sizeStar={20}
+                                widthAvatar={108}
+                                heightAvatar={152}
+                                category={book.description.category}
+                                pages={book.description.pages}
                             />
                         </motion.div>
                       ))
@@ -142,7 +163,7 @@ export function Discover({setSelectedBook} : DiscoverProps){
                 : (
                     // Exibe livros filtrados pelo gênero
                     
-                    filteredBooks.slice(0, 15).map((book, index) => (
+                    books.map((book, index) => (
                         <motion.div
                             variants={MotionCard}
                             initial="hidden"
@@ -176,6 +197,7 @@ export function Discover({setSelectedBook} : DiscoverProps){
                 )
                 }
             </div> {/* Grid Books */}
-        </div>
-    )
+
+       </div>
+    );
 }
