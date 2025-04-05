@@ -34,7 +34,7 @@ export function PopularBooks({title, author, rating, alt, imgBook, widthAvatar, 
             <div className="flex flex-col justify-between">
                 <div> 
                     <h2 className={`line-clamp-2 ${styleH2 ? styleH2 : `text-base`} text-gray-100  `}>{title}</h2>
-                    <h3 className={`${styleH3 ? styleH3 : `text-sm`} text-gray-400`}>{author}</h3>
+                    <h3 className={`${styleH3 ? styleH3 : `text-sm`} text-gray-400 line-clamp-2`}>{author}</h3>
                 </div>
 
                 <StarRating rating={rating} size={sizeStar}/>

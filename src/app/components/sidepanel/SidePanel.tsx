@@ -97,7 +97,7 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
 
                             <div className='w-56'>
                                 <span className="text-sm text-gray-300">Categoria</span>
-                                <h2 className="text-gray-200 text-base line-clamp-2">{category?.length ? category.join(', ') : 'Sem categoria'}</h2>
+                                <h2 className="text-gray-200 text-base line-clamp-2">{category?.length ? category.join(', ') : ''}</h2>
                             </div>
                         </div>
 
