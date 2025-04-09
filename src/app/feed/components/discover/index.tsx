@@ -148,80 +148,42 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
                     </div>
                   
                 ) : 
-                        <div className="grid grid-cols-3 w-[69rem] gap-5 mb-10" >
+                    <div className="grid grid-cols-3 w-[69rem] gap-5 mb-10" >
                             {
-                                 textSearch != '' ? (
-                                    // Exibe livros filtrados pela pesquisa
-                                    searchedBooks.slice(0, 15).map((book, index) => (
-                                        <motion.div
-                                            className="max-w-[22.5rem] max-h-52 "
-                                            variants={MotionCard}
-                                            initial="hidden"
-                                            animate="visible"
-                                            custom={index} 
-                                            key={index}
-                                            onClick={() => setSelectedBook({
-                                                ...book,
-                                                description:{
-                                                    category: book.description.category || [],
-                                                    pages: book.description.pages || 0,
-                                                }
-                                            })}
-                                        >
-                                            <PopularBooks
-                                                key={book.id}
-                                                imgBook={book.cover}
-                                                index={index}
-                                                title={book.title}
-                                                alt={`Capa livro ${book.title}`}
-                                                author={book.author}
-                                                rating={book.rating}
-                                                sizeStar={20}
-                                                widthAvatar={108}
-                                                heightAvatar={152}
-                                                category={book.description.category}
-                                                pages={book.description.pages}
-                                            />
-                                        </motion.div>
-                                      ))
-                                )
-                                : (
-                                    // Exibe livros filtrados pelo gênero
-                                    
-                                    books.map((book, index) => (
-                                        <motion.div
-                                            variants={MotionCard}
-                                            initial="hidden"
-                                            animate="visible"
-                                            custom={index} 
-                                            key={index}
-                                            onClick={() => setSelectedBook({
-                                                ...book,
-                                                description:{
-                                                    category: book.description.category || [],
-                                                    pages: book.description.pages || 0,
-                                                }
-                                            })}
-                                        >
-                                            <PopularBooks
-                                                key={book.id}
-                                                imgBook={book.cover}
-                                                index={index}
-                                                title={book.title}
-                                                alt={`Capa livro ${book.title}`}
-                                                author={book.author}
-                                                rating={book.rating}
-                                                sizeStar={20}
-                                                widthAvatar={108}
-                                                heightAvatar={152}
-                                                category={book.description.category}
-                                                pages={book.description.pages}
-                                            />
-                                        </motion.div>
-                                    ))
-                                )
+                                books.map((book, index) => (
+                                    <motion.div
+                                    className="max-w-[22.5rem] max-h-52 min-h-48"
+                                        variants={MotionCard}
+                                        initial="hidden"
+                                        animate="visible"
+                                        custom={index} 
+                                        key={index}
+                                        onClick={() => setSelectedBook({
+                                            ...book,
+                                            description:{
+                                                category: book.description.category || [],
+                                                pages: book.description.pages || 0,
+                                            }
+                                        })}
+                                    >
+                                        <PopularBooks
+                                            key={book.id}
+                                            imgBook={book.cover}
+                                            index={index}
+                                            title={book.title}
+                                            alt={`Capa livro ${book.title}`}
+                                            author={book.author}
+                                            rating={book.rating}
+                                            sizeStar={20}
+                                            widthAvatar={108}
+                                            heightAvatar={152}
+                                            category={book.description.category}
+                                            pages={book.description.pages}
+                                        />
+                                    </motion.div>
+                                ))
                             }
-                        </div>
+                    </div>
                 }
        </div>
     );
