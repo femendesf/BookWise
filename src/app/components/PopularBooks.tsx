@@ -29,7 +29,7 @@ export function PopularBooks({title, author, rating, alt, imgBook, widthAvatar, 
         <div 
             className={`flex gap-5 bg-gray-700 p-5 rounded-lg overflow-hidden h-full border border-x-2 border-gray-700 ${!blockedClick && `hover:cursor-pointer hover:border hover:border-x-2 hover:border-gray-600`}`}
         >
-            <Image className="rounded-md" src={imgBook} alt={alt} width={widthAvatar} height={heightAvatar} />
+            <Image className="rounded-md object-cover w-[108px] h-[152px]" src={imgBook} alt={alt} width={widthAvatar} height={heightAvatar} />
 
             <div className="flex flex-col justify-between">
                 <div> 
