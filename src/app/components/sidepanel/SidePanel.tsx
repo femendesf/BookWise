@@ -4,7 +4,7 @@ import Avatar from '../../../public/assets/rick.jpg'
 import { useEffect, useRef, useState } from "react"
 
 import { listComments as initialComments } from '@/utils/listComments'
-import { PopularBooks } from '../PopularBooks';
+import { CardBook } from '../CardBook';
 
 import { SendReview } from './components/SendReview';
 
@@ -72,8 +72,8 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
                 </button>
 
                 <div className="flex flex-col bg-gray-700 py-6 px-8 rounded-lg gap-10">
-                    
-                    <PopularBooks
+
+                    <CardBook
                         title={title}
                         alt={title}
                         index={index}
@@ -89,7 +89,7 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
                         category={category}
                         pages={pages}
                     />
-
+                   
                     <div className="flex gap-[3.75rem] border-t-[1px] border-gray-600 py-6"> 
 
                         <div className="flex gap-4 items-center">

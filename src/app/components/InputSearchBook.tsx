@@ -9,30 +9,31 @@ interface inputSearchBook{
 
     isClickable?: boolean; 
 
-    buttonSearch?: () => void; // Adicionando a propriedade buttonSearch
+    // buttonSearch?: () => void; // Adicionando a propriedade buttonSearch
 }
 
-export function InputSearchBook({ placeholder , textSearch, isClickable, setTextSearch, buttonSearch} : inputSearchBook){
+export function InputSearchBook({ placeholder , textSearch, isClickable, setTextSearch} : inputSearchBook){
 
     const [inputValue, setInputValue] = useState("");
 
     function handleInputChange(event: React.ChangeEvent<HTMLInputElement>){ //Verificar eventos do input
         
         const value = event.target.value;
+
         !isClickable && setTextSearch(value)
 
+        value === '' && setTextSearch(value)
+        
         setInputValue(value)
     }
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) { //Verifica se a tecla pressionada é Enter
         if (event.key === 'Enter') {
            setTextSearch(inputValue)
-           buttonSearch && buttonSearch()
         }
     }
 
     function handleButtonSearch(){
-        buttonSearch && buttonSearch()
         setTextSearch(inputValue)
     }
     

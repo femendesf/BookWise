@@ -7,7 +7,7 @@ import { fadeIn } from "@/utils/fadeOut";
 import { MotionCard } from "@/utils/motionDiv";
 
 import { listBooks } from "@/utils/listBooks";
-import { PopularBooks } from "../../../components/PopularBooks";
+import { CardBook } from "../../../components/CardBook";
 import { lastBookReading } from "@/utils/lastBookReading";
 
 interface StartProps{
@@ -95,7 +95,7 @@ export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps)
                                             }
                                         })}>
                                         
-                                        <PopularBooks
+                                        <CardBook
                                             key={book.id}
                                             imgBook={book.cover}
                                             alt={`Capa livro ${book.title}`}

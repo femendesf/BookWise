@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Binoculars } from "@phosphor-icons/react";
 import { InputSearchBook } from "../../../components/InputSearchBook";
-import { PopularBooks } from "../../../components/PopularBooks";
+import { CardBook } from "../../../components/CardBook";
 import { MotionCard } from "@/utils/motionDiv";
 import {motion} from 'framer-motion'
 import axios from "axios";
@@ -23,6 +23,8 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
 
     const [loading, setLoading] = useState(true);// Armazenando o estado de carregamento
 
+    const [livroPesquisado, setLivroPesquisado] = useState('') // Armazenando o livro pesquisado
+    
     const fetchBooks = async () => { 
 
         setLoading(true);
@@ -33,11 +35,6 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
 
             const formattedQuery = textSearch.trim().split(/\s+/).join('+');
             const response = await axios.get(`api/books?q=${formattedQuery}&subject=${category}`);
-
-
-            console.log('Query formatada:', formattedQuery)
-            console.log('Livros recebidos:', response.data);
-
             
             const data = response.data;
 
@@ -55,12 +52,9 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
         }
     };
 
-    console.log('TEXTSEARCH FORA DO useEffect:', textSearch);
-    useEffect(() => {
-        
-        fetchBooks();
-        console.log('TEXTSEARCH DENTRO DO useEffect:', textSearch);
 
+    useEffect(() => {
+        fetchBooks();
     }, [genderSelected, textSearch]);
 
     const buttons = [
@@ -99,10 +93,7 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
         
     ]
 
-    function handleButtonSearch(){
-        fetchBooks();
-    }
-
+    console.log('TEXTO DA BUSCAR:', textSearch);
  // const searchedBooks = books.filter(book =>
     //     (book.title && typeof book.title === "string" && book.title.toLowerCase().includes(textSearch.toLowerCase())) ||
     //     (book.author && typeof book.author === "string" && book.author.toLowerCase().includes(textSearch.toLowerCase()))
@@ -115,7 +106,7 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
 
                 <div className="flex gap-3 items-center">
                     <Binoculars className="text-green-100" size={32}/>
-                    <h1>Explorar</h1>
+                    <h1 >Explorar</h1>
                 </div>
 
                 <div className=" w-[28.75rem] h-12 ">
@@ -124,7 +115,7 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
                         setTextSearch={setTextSearch}
                         textSearch={textSearch}
                         isClickable
-                        buttonSearch={handleButtonSearch}
+                       
                     />
                 </div>
             </div>
@@ -147,45 +138,53 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
                        <DotStream
                             size="60"
                             speed="2.5"
-                            color="#50B2C0" 
+                            color="#8381D9" 
                         />
                     </div>
                   
                 ) : 
-                    <div className="grid grid-cols-3 w-[69rem] gap-5 mb-10" >
-                        {
-                            books.map((book, index) => (
-                                <motion.div
-                                className="max-w-[22.5rem] min-h-48"
-                                    variants={MotionCard}
-                                    initial="hidden"
-                                    animate="visible"
-                                    custom={index} 
-                                    key={index}
-                                    onClick={() => setSelectedBook({
-                                        ...book,
-                                        description:{
-                                            category: book.description.category || [],
-                                            pages: book.description.pages || 0,
-                                        }
-                                    })}
-                                >
-                                    <PopularBooks
-                                        key={book.id}
-                                        imgBook={book.cover}
-                                        index={index}
-                                        title={book.title}
-                                        alt={`Capa livro ${book.title}`}
-                                        author={book.author}
-                                        rating={book.rating}
-                                        sizeStar={20}
-                                        widthAvatar={108}
-                                        heightAvatar={152}
-                                        category={book.description.category}
-                                        pages={book.description.pages}
-                                    />
-                                </motion.div>
-                            ))
+                    <div>
+                        {books.length <= 0 ? 
+                            <div className="flex items-center justify-center mt-56">
+                                <span className="text-purple-100 text-center text-xl font-bold">Nenhum livro encontrado</span>
+                            </div>
+                        : 
+                            <div className="grid grid-cols-3 w-[69rem] gap-5 mb-10" >
+                            {
+                                books.map((book, index) => (
+                                    <motion.div
+                                    className="max-w-[22.5rem] min-h-48"
+                                        variants={MotionCard}
+                                        initial="hidden"
+                                        animate="visible"
+                                        custom={index} 
+                                        key={index}
+                                        onClick={() => setSelectedBook({
+                                            ...book,
+                                            description:{
+                                                category: book.description.category || [],
+                                                pages: book.description.pages || 0,
+                                            }
+                                        })}
+                                    >
+                                        <CardBook
+                                            key={book.id}
+                                            imgBook={book.cover}
+                                            index={index}
+                                            title={book.title}
+                                            alt={`Capa livro ${book.title}`}
+                                            author={book.author}
+                                            rating={book.rating}
+                                            sizeStar={20}
+                                            widthAvatar={108}
+                                            heightAvatar={152}
+                                            category={book.description.category}
+                                            pages={book.description.pages}
+                                        />
+                                    </motion.div>
+                                ))
+                            }
+                            </div>
                         }
                     </div>
                 }
