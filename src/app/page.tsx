@@ -3,7 +3,12 @@
 import { useIsAuthenticated } from "@/utils/isAuthenticated";
 import { useRouter } from "next/navigation";
 import { useEffect} from "react";
+
+
+// Para forçar logout e resetar a sessão:
+
 export default function Home() {
+  
   const isAuthenticated = useIsAuthenticated();
 
   const router = useRouter();

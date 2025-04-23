@@ -1,13 +1,50 @@
 import { BookmarkSimple, BookOpen, Books, UserList } from "@phosphor-icons/react";
 import { PhotoProfile } from "../../../../components/PhotoProfile";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
-interface MyProfileProps{
-    avatar_url: string;
-    name: string;
-}
-export function MyProfile({avatar_url, name}: MyProfileProps){
+import { Session } from "next-auth";
+import axios from "axios";
 
+type MyProfileProps ={session: Session | null}
+export function MyProfile({session}: MyProfileProps){
+
+    const { data: sessionData } = useSession();
    
+    const avatar_url = session?.user?.avatar_url || sessionData?.user?.avatar_url || "/default-avatar.png"; // Avatar padrão caso session seja null
+    const name = session?.user?.name || sessionData?.user?.name || "Convidado"; // Nome padrão para usuários não autenticados
+    const [createdAt, setCreatedAt] = useState<Date | null>(null);
+    const [booksRead, setBooksRead] = useState<number>(0);
+
+    useEffect(() => {
+
+        const fetchUserData = async () => {
+          try {
+            const [createdAtRes, bookReadRes] = await Promise.all([
+                axios.get('/api/user/created_at'),
+                axios.get('/api/user/booksRead')
+            ]);
+            
+            if (createdAtRes.data.createdAt) {
+              setCreatedAt(new Date(createdAtRes.data.createdAt));
+            }
+
+            if(bookReadRes.data.totalBooksRead) {
+                setBooksRead(bookReadRes.data.totalBooksRead);
+            }
+
+          } catch (error) {
+            console.error("Erro ao buscar data de criação do usuário", error);
+          }
+        }; 
+    
+        fetchUserData();
+    }, []);
+    
+    const year = createdAt?.getFullYear() || "2025"; // fallback padrão
+    console.log(booksRead)
+
+
     return(
         <div className="flex flex-col items-center  gap-10 border-l-[1px] border-gray-700 w-[19.25rem] h-[34.75rem]">
 
@@ -17,7 +54,7 @@ export function MyProfile({avatar_url, name}: MyProfileProps){
 
                 <div className="flex flex-col items-center gap-1">
                     <span className="items-center justify-center truncate max-w-72 text-xl text-gray-100">{name.split(" ").slice(0, 3).join(" ")}</span>
-                    <h3 className="text-gray-400 text-sm">membro desde 2025</h3>
+                    <h3 className="text-gray-400 text-sm">membro desde {year}</h3>
 
                     <div className="w-[32px] h-[4px] bg-gradient-to-r from-[#7FD1CC] to-[#9694F5] rounded-full mt-9"></div>
                 </div>

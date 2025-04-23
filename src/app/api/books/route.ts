@@ -22,8 +22,6 @@ export async function GET(req: Request) {
             
             const categories = item.volumeInfo.categories || [];
            
-            const cover = !item.volumeInfo.imageLinks?.thumbnail ? "/errorCover.svg" : item.volumeInfo.imageLinks.thumbnail;
-           
             return {
                 id: item.id,
                 title: item.volumeInfo.title,

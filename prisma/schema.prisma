@@ -18,6 +18,9 @@ model User {
 
   created_at DateTime @default(now())
 
+  totalBookRead     Int?
+  last_synced_books DateTime?
+
   account             Account[]
   list_books_reviewed Post[]
   session             Session[]

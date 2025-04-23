@@ -22,9 +22,6 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
     const [books, setBooks] = useState<any[]>([]); // Armazenando os livros
 
     const [loading, setLoading] = useState(true);// Armazenando o estado de carregamento
-
-    const [livroPesquisado, setLivroPesquisado] = useState('') // Armazenando o livro pesquisado
-    
     const fetchBooks = async () => { 
 
         setLoading(true);

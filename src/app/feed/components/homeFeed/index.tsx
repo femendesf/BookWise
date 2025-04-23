@@ -48,8 +48,10 @@ export function Feed({session}: SessionFeed) {
 
     return(
 
-        <div className="flex w-full h-full">
 
+
+        <div className="flex w-full h-full">
+            <span className="text-2xl">{session?.user.id}</span>
             <Sidebar
                 activePage={activePage}
                 setActivePage={handleChangeComponent}
@@ -60,7 +62,7 @@ export function Feed({session}: SessionFeed) {
             />
         
             <div className="mt-12 ml-16 xxl:ml-24" id="home">
-                {activePage === 'inicio' ? <Start setButtonSeeAll={handleChangeComponent} loggedIn={isAuthenticated} setSelectedBook={setSelectedBook}/> : activePage === 'perfil' ? <Profile avatar_url={avatar_url} name={name}/> : <Discover setSelectedBook={setSelectedBook}/>}
+                {activePage === 'inicio' ? <Start setButtonSeeAll={handleChangeComponent} loggedIn={isAuthenticated} setSelectedBook={setSelectedBook}/> : activePage === 'perfil' ? <Profile session={session}/> : <Discover setSelectedBook={setSelectedBook}/>}
             </div>
 
             {showLogin && 

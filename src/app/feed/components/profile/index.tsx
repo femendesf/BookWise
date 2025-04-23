@@ -10,12 +10,10 @@ import { fadeIn } from "@/utils/fadeOut";
 import { InputSearchBook } from "../../../components/InputSearchBook";
 
 import { bookSearch } from "@/utils/bookSearch";
+import { Session } from "next-auth";
 
-interface ProfileProps{
-    avatar_url: string;
-    name: string;
-}
-export function Profile({avatar_url, name} : ProfileProps) {
+type ProfileProps ={session: Session | null}
+export function Profile({session} : ProfileProps) {
 
     // const [buttonSearch, setButtonSearch] = useState(false)//Verifica se o botao de pesquisa foi clicado
     const [textSearch, setTextSearch] = useState('')
@@ -106,7 +104,7 @@ export function Profile({avatar_url, name} : ProfileProps) {
 
             </div>
 
-            <MyProfile avatar_url={avatar_url} name={name}/>
+            <MyProfile session={session}/>
         </div>
     )
 }

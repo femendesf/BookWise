@@ -1,14 +1,13 @@
 import Image from "next/image";
 import { Binoculars, ChartLineUp, SignIn, User } from "@phosphor-icons/react";
 import Logo from "../../../public/assets/logo.svg";
-import Avatar from "../../../public/assets/rick.jpg";
 import { PhotoProfile } from "../PhotoProfile";
 
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
 
 import { signOut } from "next-auth/react";
-import { useIsAuthenticated } from "@/utils/isAuthenticated";
+
 import { api } from "@/lib/axios";
 interface SidebarProps{
   activePage: 'inicio' | 'perfil' | 'explorar' ;
