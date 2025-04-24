@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { Session } from "next-auth";
 import axios from "axios";
+import { categoryTranslations } from "@/utils/categoriesTranslated";
 
 type MyProfileProps ={session: Session | null}
 export function MyProfile({session}: MyProfileProps){
@@ -20,8 +21,6 @@ export function MyProfile({session}: MyProfileProps){
     const [uniqueAuthors, setUniqueAuthors] = useState<string[]>([])
     const [categoryMoreRead, setCategoryMoreRead] = useState<string | null>(null);
 
-    
-
     useEffect(() => {
 
         const fetchUserData = async () => {
@@ -36,9 +35,10 @@ export function MyProfile({session}: MyProfileProps){
             }
 
             const authorsSet = new Set<string>(); // ← Cria um Set para armazenar autores únicos
+            const categoryCount: Record<string, number> = {}
 
             if (bookReadRes.data.books) {
-                setBookItems(bookReadRes.data.books);
+                setBookItems(bookReadRes.data.books); // ← salva os livros
 
                 bookReadRes.data.books.forEach((book: any) => {
                     const volumeInfo = book.volumeInfo;
@@ -48,12 +48,36 @@ export function MyProfile({session}: MyProfileProps){
                     if (volumeInfo.authors && Array.isArray(volumeInfo.authors)) {
                         volumeInfo.authors.forEach((author: string) => {
                           authorsSet.add(author); // ← evita duplicados automaticamente
+                        });// ← adiciona cada autor ao Set
+                    }
+
+                    if(volumeInfo.categories && Array.isArray(volumeInfo.categories)){
+                        volumeInfo.categories.forEach((category: string) => {
+
+                            let matchedKey = Object.keys(categoryTranslations).find(key =>
+                                category.toLowerCase().includes(key.toLowerCase())
+                            ); // Guarda o valor correspondente da chave traduzida
+                          
+                            if (matchedKey) {
+                                const translated = categoryTranslations[matchedKey]; 
+                                
+                                categoryCount[translated] = (categoryCount[translated] || 0) + 1; // Incrementa a contagem da categoria traduzida
+
+                              
+                            } else {
+                                // Se não encontrar correspondência, pode salvar como está (ou ignorar se preferir)
+                                categoryCount[category] = (categoryCount[category] || 0) + 1;
+                            }
                         });
                     }
+
                 });
+
                 setUniqueAuthors(Array.from(authorsSet)); // ← salva a lista
-                console.log("Livros lidos:", bookReadRes.data.books); // Aqui está o log!
-                console.log("Autores LIDOS", uniqueAuthors); // Aqui está o log!
+                
+                // Encontra a categoria com maior contagem
+                const mostReadCategory = Object.entries(categoryCount).reduce((a, b) => (b[1] > a[1] ? b : a), ["", 0]);
+                setCategoryMoreRead(mostReadCategory[0]);
             }
 
              // Atualiza o estado com o número de autores lidos
@@ -66,9 +90,10 @@ export function MyProfile({session}: MyProfileProps){
         fetchUserData();
     }, []);
     
-    const year = createdAt?.getFullYear() || "2025"; // fallback padrão
+    const year = createdAt?.getFullYear() || "2025"; // Formata o ano de criação do usuário ou define um padrão
     console.log("Autores LIDOS", uniqueAuthors);
-//    console.log("Livros lidos:", bookItems); // Aqui está o log!
+   console.log("Livros lidos:", bookItems); // Aqui está o log!
+   console.log("CATEGORIAS:", categoryMoreRead); // Aqui está o log!
 //    console.log("Quantidade de paginas lidas:", totPagesRead); // Aqui está o log!
 //    console.log("Quantidade de AUTORES lidOs:", totAuthRead); // Aqui está o log!
    
@@ -117,7 +142,7 @@ export function MyProfile({session}: MyProfileProps){
                 <div className="flex gap-5 items-center">
                     <BookmarkSimple size={32}/>
                     <div>
-                        <h4>Horror</h4>
+                        <h4>{categoryTranslations[categoryMoreRead ?? ""] ?? categoryMoreRead ?? "N/A"}</h4>
                         <span>Categoria mais lida</span>
                     </div>
                 </div>
