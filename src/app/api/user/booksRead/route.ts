@@ -1,3 +1,4 @@
+import { getGoogleOAuthToken } from "@/lib/google";
 import { prisma } from "@/lib/prisma";
 import { buildNextAuthOptions } from "@/utils/buildAuth";
 import axios from "axios";
@@ -26,20 +27,22 @@ export async function GET(req: NextResponse){
         return NextResponse.json({error: 'Usuário não autenticado'}, {status: 405});
     }
 
-    console.log(`*******************************************************************************************************************************************`, account.access_token)
     try{
-        const response = await fetch('https://www.googleapis.com/books/v1/mylibrary/bookshelves', {
-            headers: {
-                Authorization: `Bearer ${account.access_token}`
+       
+        const accessToken = await getGoogleOAuthToken(session.user.id);
+
+        const response = await axios.get(
+            'https://www.googleapis.com/books/v1/mylibrary/bookshelves/4/volumes?maxResults=40',
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken.credentials.access_token}`,
+              },
             }
-        })
+          );
+      
+        const data = response.data;
 
-        if(!response.ok){
-            return NextResponse.json({error: 'Usuário não autenticado'}, {status: 405});
-        }
-        
-        const data = await response.json()
-
+        const books = response.data.items || [];
         const totalBooksRead = data.totalItems || 0;
 
         await prisma.user.update({
@@ -49,7 +52,7 @@ export async function GET(req: NextResponse){
             }
         })
 
-        return NextResponse.json({totalBooksRead}, {status: 200});
+        return NextResponse.json({totalBooksRead, books}, {status: 200});
 
     }catch(error){
         console.log(error)

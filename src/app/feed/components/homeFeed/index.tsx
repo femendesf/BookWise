@@ -51,7 +51,7 @@ export function Feed({session}: SessionFeed) {
 
 
         <div className="flex w-full h-full">
-            <span className="text-2xl">{session?.user.id}</span>
+            
             <Sidebar
                 activePage={activePage}
                 setActivePage={handleChangeComponent}
