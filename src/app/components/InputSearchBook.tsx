@@ -5,7 +5,7 @@ import { set } from "zod";
 interface inputSearchBook{
     setTextSearch: (text: string) => void;
     placeholder: string;
-    textSearch: string;
+    textSearch?: string;
 
     isClickable?: boolean; 
 

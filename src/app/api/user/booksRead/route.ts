@@ -42,17 +42,26 @@ export async function GET(req: NextResponse){
       
         const data = response.data;
 
-        const books = response.data.items || [];
-        const totalBooksRead = data.totalItems || 0;
+        const books = data.items?.map((item: any) => {
+                    
+                    console.log("*************** ITEM COMPLETO ***************");
+                    console.log(JSON.stringify(item, null, 2));
+                    console.log("*********************************************");
+                    
+                    return {
+                        id: item.id,
+                        title: item.volumeInfo.title,
+                        author: item.volumeInfo.authors || [],
+                        cover: item.volumeInfo.imageLinks?.thumbnail || "/errorCover.svg",
+                        rating: item.volumeInfo.averageRating || 0,
+                        description: item.volumeInfo.description || "Descrição não disponível",
+                        categories: item.volumeInfo.categories || [],
+                        pages: item.volumeInfo.pageCount || 0,
+                        dateLastReading: item.userInfo.updated || "Data não disponível",
+                    };
+        }) || [];
 
-        await prisma.user.update({
-            where:{id: session.user.id},
-            data:{
-                totalBookRead: totalBooksRead
-            }
-        })
-
-        return NextResponse.json({totalBooksRead, books}, {status: 200});
+        return NextResponse.json({books}, {status: 200});
 
     }catch(error){
         console.log(error)

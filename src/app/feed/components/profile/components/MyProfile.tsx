@@ -1,102 +1,20 @@
 import { BookmarkSimple, BookOpen, Books, UserList } from "@phosphor-icons/react";
 import { PhotoProfile } from "../../../../components/PhotoProfile";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 
-import { Session } from "next-auth";
-import axios from "axios";
 import { categoryTranslations } from "@/utils/categoriesTranslated";
 
-type MyProfileProps ={session: Session | null}
-export function MyProfile({session}: MyProfileProps){
+interface MyProfileProps {
+    name: string;
+    createdAt?: string;
+    avatar_url: string;
 
-    const { data: sessionData } = useSession();
-   
-    const avatar_url = session?.user?.avatar_url || sessionData?.user?.avatar_url || "/default-avatar.png"; // Avatar padrão caso session seja null
-    const name = session?.user?.name || sessionData?.user?.name || "Convidado"; // Nome padrão para usuários não autenticados
-    const [createdAt, setCreatedAt] = useState<Date | null>(null);
-    
-    const [bookItems, setBookItems] = useState<any[]>([]);
-    const [totPagesRead, setTotPagesRead] = useState(0);
-    const [uniqueAuthors, setUniqueAuthors] = useState<string[]>([])
-    const [categoryMoreRead, setCategoryMoreRead] = useState<string | null>(null);
+    totPagesRead: number;
+    reviewedBooks?: number;
+    totAuthorsRead: number;
+    categoryMoreRead: string | null;
+}
+export function MyProfile({name, createdAt, avatar_url, totPagesRead, reviewedBooks, totAuthorsRead, categoryMoreRead}: MyProfileProps){
 
-    useEffect(() => {
-
-        const fetchUserData = async () => {
-          try {
-            const [createdAtRes, bookReadRes] = await Promise.all([
-                axios.get('/api/user/created_at'),
-                axios.get('/api/user/booksRead')
-            ]);
-            
-            if (createdAtRes.data.createdAt) {
-              setCreatedAt(new Date(createdAtRes.data.createdAt));
-            }
-
-            const authorsSet = new Set<string>(); // ← Cria um Set para armazenar autores únicos
-            const categoryCount: Record<string, number> = {}
-
-            if (bookReadRes.data.books) {
-                setBookItems(bookReadRes.data.books); // ← salva os livros
-
-                bookReadRes.data.books.forEach((book: any) => {
-                    const volumeInfo = book.volumeInfo;
-
-                    setTotPagesRead((prev) => prev + volumeInfo.pageCount); // Soma as páginas lidas
-                    
-                    if (volumeInfo.authors && Array.isArray(volumeInfo.authors)) {
-                        volumeInfo.authors.forEach((author: string) => {
-                          authorsSet.add(author); // ← evita duplicados automaticamente
-                        });// ← adiciona cada autor ao Set
-                    }
-
-                    if(volumeInfo.categories && Array.isArray(volumeInfo.categories)){
-                        volumeInfo.categories.forEach((category: string) => {
-
-                            let matchedKey = Object.keys(categoryTranslations).find(key =>
-                                category.toLowerCase().includes(key.toLowerCase())
-                            ); // Guarda o valor correspondente da chave traduzida
-                          
-                            if (matchedKey) {
-                                const translated = categoryTranslations[matchedKey]; 
-                                
-                                categoryCount[translated] = (categoryCount[translated] || 0) + 1; // Incrementa a contagem da categoria traduzida
-
-                              
-                            } else {
-                                // Se não encontrar correspondência, pode salvar como está (ou ignorar se preferir)
-                                categoryCount[category] = (categoryCount[category] || 0) + 1;
-                            }
-                        });
-                    }
-
-                });
-
-                setUniqueAuthors(Array.from(authorsSet)); // ← salva a lista
-                
-                // Encontra a categoria com maior contagem
-                const mostReadCategory = Object.entries(categoryCount).reduce((a, b) => (b[1] > a[1] ? b : a), ["", 0]);
-                setCategoryMoreRead(mostReadCategory[0]);
-            }
-
-             // Atualiza o estado com o número de autores lidos
-
-          } catch (error) {
-            console.error("Erro ao buscar data de criação do usuário", error);
-          }
-        }; 
-    
-        fetchUserData();
-    }, []);
-    
-    const year = createdAt?.getFullYear() || "2025"; // Formata o ano de criação do usuário ou define um padrão
-    console.log("Autores LIDOS", uniqueAuthors);
-   console.log("Livros lidos:", bookItems); // Aqui está o log!
-   console.log("CATEGORIAS:", categoryMoreRead); // Aqui está o log!
-//    console.log("Quantidade de paginas lidas:", totPagesRead); // Aqui está o log!
-//    console.log("Quantidade de AUTORES lidOs:", totAuthRead); // Aqui está o log!
-   
     return(
         <div className="flex flex-col items-center  gap-10 border-l-[1px] border-gray-700 w-[19.25rem] h-[34.75rem]">
 
@@ -106,7 +24,7 @@ export function MyProfile({session}: MyProfileProps){
 
                 <div className="flex flex-col items-center gap-1">
                     <span className="items-center justify-center truncate max-w-72 text-xl text-gray-100">{name.split(" ").slice(0, 3).join(" ")}</span>
-                    <h3 className="text-gray-400 text-sm">membro desde {year}</h3>
+                    <h3 className="text-gray-400 text-sm">membro desde {createdAt}</h3>
 
                     <div className="w-[32px] h-[4px] bg-gradient-to-r from-[#7FD1CC] to-[#9694F5] rounded-full mt-9"></div>
                 </div>
@@ -134,7 +52,7 @@ export function MyProfile({session}: MyProfileProps){
                 <div className="flex gap-5 items-center">
                     <UserList size={32}/>
                     <div>
-                        <h4>{uniqueAuthors.length}</h4>
+                        <h4>{totAuthorsRead}</h4>
                         <span>Autores lidos</span>
                     </div>
                 </div>

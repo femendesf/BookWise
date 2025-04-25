@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { motion } from 'framer-motion';
 import { StarRating } from "../../../../components/StarRating";
+import dayjs from "dayjs";
 
 interface MyBooksProps {
     title: string;
-    author: string;
+    author: string[];
     img: string;
     rating: number;
     description: string;
@@ -27,10 +28,16 @@ const cardVariants = {
 
 export function MyBooks({title, author, img, rating, description, dateLastReading, index}: MyBooksProps) {
 
+    const lastReadingDate = dayjs(dateLastReading)
+    const today = dayjs()
+
+    const isToday = lastReadingDate === today;
+    const daysSinceLastReading = today.diff(lastReadingDate, 'day');
+   
     return(
 
         <div className="flex flex-col w-full h-auto mt-8 gap-2"> 
-            <span className="text-sm text-gray-300">{dateLastReading != 'Hoje' ? `Há ${dateLastReading}` : dateLastReading}</span>
+            <span className="text-sm text-gray-300">{isToday ? 'Hoje' : `${daysSinceLastReading} dia${daysSinceLastReading > 1 ? 's' : ''} `}</span>
             
             <motion.div
                 variants={cardVariants}
@@ -48,7 +55,7 @@ export function MyBooks({title, author, img, rating, description, dateLastReadin
 
                         <div className="flex flex-col">
                             <h2>{title}</h2>
-                            <h3>{author}</h3>
+                            <h3>{author.join(", ")}</h3>
                         </div>
 
                         <StarRating rating={rating}/>

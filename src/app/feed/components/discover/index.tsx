@@ -90,7 +90,7 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
         
     ]
 
-    console.log('TEXTO DA BUSCAR:', textSearch);
+    console.log('LIVROS:', books);
  // const searchedBooks = books.filter(book =>
     //     (book.title && typeof book.title === "string" && book.title.toLowerCase().includes(textSearch.toLowerCase())) ||
     //     (book.author && typeof book.author === "string" && book.author.toLowerCase().includes(textSearch.toLowerCase()))
