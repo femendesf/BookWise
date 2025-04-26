@@ -14,28 +14,34 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import { categoryTranslations } from "@/utils/categoriesTranslated";
 
+import { DotStream } from 'ldrs/react'
+import 'ldrs/react/DotStream.css'
+
 type ProfileProps ={session: Session | null}
 
 export function Profile({session} : ProfileProps) {
 
     const { data: sessionData } = useSession();
+
+    // Perfil do usuário
     const avatar_url = session?.user?.avatar_url || sessionData?.user?.avatar_url || "/default-avatar.png"; // Avatar padrão caso session seja null
     const name = session?.user?.name || sessionData?.user?.name || "Convidado"; // Nome padrão para usuários não autenticados
     const [createdAt, setCreatedAt] = useState<Date | null>(null);
-    
+    // -----------------------------------------------------------------
+
+    // Dados biblioteca usuario
     const [bookItems, setBookItems] = useState<any[]>([]);
     const [totPagesRead, setTotPagesRead] = useState(0);
     const [uniqueAuthors, setUniqueAuthors] = useState<string[]>([])
     const [categoryMoreRead, setCategoryMoreRead] = useState<string | null>(null);
-    // const [buttonSearch, setButtonSearch] = useState(false)//Verifica se o botao de pesquisa foi clicado
+    // -----------------------------------------------------------------
+    const [isLoading, setIsLoading] = useState(true);
     const [textSearch, setTextSearch] = useState('')
-  
-    const resultSearch = bookItems.filter(book => book.title.toLowerCase().includes(textSearch.toLowerCase()))
-
+    
+  // const [buttonSearch, setButtonSearch] = useState(false)//Verifica se o botao de pesquisa foi clicado
     function handleTextSearch(){
         setTextSearch('')
     }
-
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -52,13 +58,14 @@ export function Profile({session} : ProfileProps) {
               const categoryCount: Record<string, number> = {} 
               console.log("LIVROS recebidos *******************************:", bookReadRes.data.books)
 
+              
+
               if (bookReadRes.data.books) {
                     
                     setBookItems(bookReadRes.data.books); // ← salva os livros lidos
   
                     bookReadRes.data.books.forEach((book: any) => {
-                        
-    
+
                         setTotPagesRead((prev) => prev + book.pages); // Soma as páginas lidas
                         
                         if (book.author && Array.isArray(book.author)) {
@@ -98,96 +105,124 @@ export function Profile({session} : ProfileProps) {
   
             } catch (error) {
               console.error("Erro ao buscar data de criação do usuário", error);
+            } finally {
+                setIsLoading(false);
             }
           }; 
       
           fetchUserData();
     }, [])
 
+    const resultSearch = bookItems.filter(
+        book =>
+                (book.title && typeof book.title === "string" && book.title.toLowerCase().includes(textSearch.toLowerCase())) ||
+                (book.author &&
+                    (typeof book.author === "string"
+                        ? book.author.toLowerCase().includes(textSearch.toLowerCase())
+                        : Array.isArray(book.author) && book.author.some((a : any) => a.toLowerCase().includes(textSearch.toLowerCase()))
+                    )
+                )
+    );
+    
     const year = (createdAt?.getFullYear() || "2025").toString(); // Garante que o ano seja sempre uma string
 
-    console.log('LIVROS:', bookItems)
+
     return(
-        <div className="flex justify-start gap-16">
 
-            <div className="xxl:min-w-[60rem] w-[48.75rem]">
-                <motion.div
-                    key={textSearch ? "clicked" : "default"}
-                    {...fadeIn}
-                >
-                    {!textSearch ?
-
-                        <h1 className="flex items-center gap-3 ">
-                            <User className="text-green-100" size={32}/>
-                            Perfil
-                        </h1>
-                        :
-                        <button
-                            className="flex items-center text-base text-gray-200 gap-3"
-                            onClick={handleTextSearch}
-                        >
-                            <CaretLeft size={20}/>
-                            Voltar
-                        </button>
-                    }
-                </motion.div>
-
-                <div className="h-12 mt-10 w-full">
-                    {/* Search bar */}
-                    <InputSearchBook
-                    placeholder="Buscar livro avaliado" setTextSearch={setTextSearch} textSearch={textSearch}/>
+        <>
+            {isLoading ? 
+                <div className="flex items-center justify-center w-full h-full mt-20">
+                    <DotStream
+                        size="60"
+                        speed="2.5"
+                        color="#8381D9" 
+                    />
                 </div>
-                
-              
-                {!textSearch ?
-                    <div>
-                        {[...bookItems].slice(0, 3).map(({title, author, cover, rating, description, dateLastReading}, index) => (
-                            <motion.div
-                                {...fadeIn}
-                                key={index}
+                :
+                <div className="flex justify-start gap-16">
+
+                <div className="xxl:min-w-[60rem] w-[48.75rem]">
+                    <motion.div
+                        key={textSearch ? "clicked" : "default"}
+                        {...fadeIn}
+                    >
+                        {!textSearch ?
+    
+                            <h1 className="flex items-center gap-3 ">
+                                <User className="text-green-100" size={32}/>
+                                Perfil
+                            </h1>
+                            :
+                            <button
+                                className="flex items-center text-base text-gray-200 gap-3"
+                                onClick={handleTextSearch}
                             >
-                                <MyBooks
-                                    title={title}
-                                    author={author}
-                                    img={cover}
-                                    rating={rating}
-                                    description={description}
-                                    dateLastReading={dateLastReading}
-                                    index={index}
-                                    
-                                />
-                            </motion.div>
-                        ))}
+                                <CaretLeft size={20}/>
+                                Voltar
+                            </button>
+                        }
+                    </motion.div>
+    
+                    <div className="h-12 mt-10 w-full">
+                        {/* Search bar */}
+                        <InputSearchBook
+                        placeholder="Buscar livro avaliado" setTextSearch={setTextSearch} textSearch={textSearch}/>
                     </div>
-
-                    :
-                    <div>
-                        {[...resultSearch].reverse().map(({title, author, img, rating, description, dateLastReading}, index) => {
-
-                            return(
+                    
+                  
+                    {!textSearch ?
+                        <div className="mb-24">
+                            {bookItems.slice(0, 3).map(({title, author, cover, rating, description, dateLastReading}, index) => (
                                 <motion.div
-                                    {...fadeIn} 
+                                    {...fadeIn}
                                     key={index}
                                 >
                                     <MyBooks
                                         title={title}
                                         author={author}
-                                        img={img}
+                                        img={cover}
                                         rating={rating}
                                         description={description}
                                         dateLastReading={dateLastReading}
                                         index={index}
-                                       
+                                        
                                     />
                                 </motion.div>
-                            )
-                        })}
-                    </div>
-                }
-
+                            ))}
+                        </div>
+    
+                        :
+                        <div>
+                            {resultSearch.map(({title, author, cover, rating, description, dateLastReading}, index) => {
+    
+                                return(
+                                    <motion.div
+                                        {...fadeIn} 
+                                        key={index}
+                                    >
+                                        <MyBooks
+                                            title={title}
+                                            author={author}
+                                            img={cover}
+                                            rating={rating}
+                                            description={description}
+                                            dateLastReading={dateLastReading}
+                                            index={index}
+                                           
+                                        />
+                                    </motion.div>
+                                )
+                            })}
+                        </div>
+                    }
+    
+                </div>
+    
+                <MyProfile name={name} avatar_url={avatar_url} totPagesRead={totPagesRead} totAuthorsRead={uniqueAuthors.length} categoryMoreRead={categoryMoreRead} createdAt={year}/>
             </div>
+            }
+        </>
 
-            <MyProfile name={name} avatar_url={avatar_url} totPagesRead={totPagesRead} totAuthorsRead={uniqueAuthors.length} categoryMoreRead={categoryMoreRead} createdAt={year}/>
-        </div>
+       
     )
 }

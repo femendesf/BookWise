@@ -16,7 +16,6 @@ interface StartProps{
     setSelectedBook: (book: any) => void;
 }
 
-
 export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps){
 
     return(
@@ -24,7 +23,7 @@ export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps)
         <motion.div
             {...fadeIn}
         >
-            <div id="start" className="flex justify-between items-center">
+            <div id="start" className="flex items-center">
 
                 <div className="flex flex-col gap-10 w-full">
 
@@ -33,11 +32,11 @@ export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps)
                         Início
                     </h1>
             
-                    <div className="flex justify-between ">
+                    <div className="flex gap-16">
 
                         <div className="flex gap-10 flex-col w-[48rem] xxl:w-[51.25rem] mb-10">
 
-                            {loggedIn && <LastReading />}
+                            {loggedIn && <LastReading setButtonSeeAll={setButtonSeeAll}/>}
                             
                             <div className="flex flex-col gap-3">
                                 <span className="text-gray-100 text-sm">Avaliações mais recentes</span>
@@ -64,7 +63,7 @@ export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps)
 
                         </div>{/* Recent Reviews */}
 
-                        <div className="flex flex-col gap-3 w-96 ml-16  overflow-hidden">
+                        <div className="flex flex-col gap-3 w-96 overflow-hidden">
 
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-gray-100">Livros populares</span>

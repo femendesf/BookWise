@@ -1,6 +1,6 @@
 import { MagnifyingGlass } from "@phosphor-icons/react";
-import { useState } from "react";
-import { set } from "zod";
+import { useEffect, useState } from "react";
+// import { set } from "zod";
 
 interface inputSearchBook{
     setTextSearch: (text: string) => void;
@@ -12,10 +12,14 @@ interface inputSearchBook{
     // buttonSearch?: () => void; // Adicionando a propriedade buttonSearch
 }
 
-export function InputSearchBook({ placeholder , textSearch, isClickable, setTextSearch} : inputSearchBook){
+export function InputSearchBook({ placeholder, textSearch, isClickable, setTextSearch} : inputSearchBook){
 
     const [inputValue, setInputValue] = useState("");
-
+  
+    useEffect(() => {
+        setInputValue(textSearch ?? '');
+    }, [textSearch]);
+    
     function handleInputChange(event: React.ChangeEvent<HTMLInputElement>){ //Verificar eventos do input
         
         const value = event.target.value;
@@ -37,14 +41,14 @@ export function InputSearchBook({ placeholder , textSearch, isClickable, setText
         setTextSearch(inputValue)
     }
     
-    
     return(
         <div className="flex items-center justify-between w-full h-full px-5 border border-gray-500 rounded-md focus-within:border-green-200 focus-within:text-green-200" id="input-search-book"> {/* Search bar */}
+            
             <input 
                 className="text-gray-200 focus:outline-none text-sm bg-transparent w-full"
                 type="text"
                 placeholder={placeholder}
-                value={inputValue}
+                value={ inputValue}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown} // Adiciona o evento de tecla pressionada
             />
@@ -54,14 +58,10 @@ export function InputSearchBook({ placeholder , textSearch, isClickable, setText
                     <button className="text-gray-500 focus-within:text-green-200" onClick={() => handleButtonSearch()}>
                         <MagnifyingGlass size={20}/>
                     </button>
-                ) : 
-
-                textSearch === '' && (
+                ) :
                     <MagnifyingGlass className={`text-gray-500 focus-within:text-green-200 `} size={20}/>
-                )
             }
-           
-
+        
         </div>
     )
 }

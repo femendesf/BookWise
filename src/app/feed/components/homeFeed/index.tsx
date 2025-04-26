@@ -47,9 +47,6 @@ export function Feed({session}: SessionFeed) {
     // } // Adiciona um novo comentário
 
     return(
-
-
-
         <div className="flex w-full h-full">
             
             <Sidebar
@@ -61,7 +58,7 @@ export function Feed({session}: SessionFeed) {
                 isAuthenticated={isAuthenticated}
             />
         
-            <div className="mt-12 ml-16 xxl:ml-24" id="home">
+            <div className="mt-12 ml-16 xxl:ml-24 w-full" id="home">
                 {activePage === 'inicio' ? <Start setButtonSeeAll={handleChangeComponent} loggedIn={isAuthenticated} setSelectedBook={setSelectedBook}/> : activePage === 'perfil' ? <Profile session={session}/> : <Discover setSelectedBook={setSelectedBook}/>}
             </div>
 

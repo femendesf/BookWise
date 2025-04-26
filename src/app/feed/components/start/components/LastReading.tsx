@@ -3,7 +3,10 @@ import Cover from '@/public/assets/livrosAlgoritmos.svg'
 import { motion } from "framer-motion";
 import { StarRating } from "../../../../components/StarRating";
 
-export function LastReading(){
+interface LastReadingProps {
+    setButtonSeeAll: (page: 'inicio' | 'perfil' | 'explorar') => void
+}
+export function LastReading({setButtonSeeAll} : LastReadingProps){
     return(
 
         <motion.div
@@ -15,7 +18,12 @@ export function LastReading(){
             <div className="flex flex-col gap-5">
                 <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-200">Sua última leitura</span>
-                    <button className="text-purple-100 hover:text-purple-hoover hover:bg-purple-100 hover:bg-opacity-10 p-1 rounded">Ver todas</button>
+                    <button 
+                        className="text-purple-100 hover:text-purple-hoover hover:bg-purple-100 hover:bg-opacity-10 p-1 rounded"
+                        onClick={() => setButtonSeeAll('perfil')}
+                        >
+                            Ver todas
+                    </button>
                 </div>
 
                 <div
