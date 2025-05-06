@@ -1,35 +1,30 @@
-// src/store/profileStore.ts
-import { create } from 'zustand';
+import { create } from 'zustand'
 
-type Book = {
-  title: string;
-  author: string | string[];
-  cover: string;
-  rating: number;
-  description: string;
-  dateLastReading: string;
-  pages: number;
-  categories: string[];
-};
+interface ProfileData {
+  createdAt: Date | null
+  bookItems: any[]
+  totPagesRead: number
+  uniqueAuthors: string[]
+  categoryMoreRead: string
+}
 
-type ProfileState = {
-  hasFetched: boolean;
-  createdAt: Date | null;
-  bookItems: Book[];
-  totPagesRead: number;
-  uniqueAuthors: string[];
-  categoryMoreRead: string | null;
-  setProfileData: (data: Omit<ProfileState, 'hasFetched' | 'setProfileData'>) => void;
-  setHasFetched: () => void;
-};
+interface ProfileState extends ProfileData {
+  hasFetched: boolean
+  setProfileData: (data: ProfileData) => void
+  setHasFetched: (value: boolean) => void
+}
 
 export const useProfileStore = create<ProfileState>((set) => ({
-  hasFetched: false,
   createdAt: null,
   bookItems: [],
   totPagesRead: 0,
   uniqueAuthors: [],
-  categoryMoreRead: null,
-  setProfileData: (data) => set({ ...data }),
-  setHasFetched: () => set({ hasFetched: true }),
-}));
+  categoryMoreRead: '',
+  hasFetched: false,
+
+  setProfileData: (data) => set(() => ({
+    ...data
+  })),
+
+  setHasFetched: (value) => set({ hasFetched: value })
+}))
