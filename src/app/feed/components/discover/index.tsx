@@ -11,6 +11,9 @@ import axios from "axios";
 import { DotStream } from 'ldrs/react'
 import 'ldrs/react/DotStream.css'
 
+import { useBookStore } from '@/store/BookStore';
+
+
 interface DiscoverProps {
     setSelectedBook: (book: any) => void;
 }
@@ -21,10 +24,12 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
     const [genderSelected, setGenderSelected] = useState('Tudo') // Armazenando o gênero selecionado
     const [books, setBooks] = useState<any[]>([]); // Armazenando os livros
 
+    const { getBooksForGenre, setBooksForGenre } = useBookStore();
+
     const [loading, setLoading] = useState(true);// Armazenando o estado de carregamento
     const fetchBooks = async () => { 
 
-        setLoading(true);
+        /*setLoading(true);
 
         const category = genderSelected === 'Tudo' ? '' : genderSelected;
         console.log('Categoria selecionada:', category);
@@ -46,6 +51,49 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
             setBooks([]);
         }finally{
             setLoading(false); 
+        }
+        */
+
+        // 🌀 Fazendo a busca na API usando ChatGPT
+        setLoading(true);
+        const category = genderSelected === 'Tudo' ? '' : genderSelected;
+        const trimmedSearch = textSearch.trim();
+
+        // 🧠 Verifica se a busca está vazia
+        if (trimmedSearch === "") {
+            const cachedBooks = getBooksForGenre(category);
+
+            if (cachedBooks && cachedBooks.length > 0) {
+            // Se já tem livros no store para o gênero selecionado, usa eles
+                setBooks(cachedBooks);
+                setLoading(false);
+                return;
+            }
+        }
+
+        // 🌀 Busca na API se:
+        // 1. Está buscando por texto
+        // 2. Ou ainda não temos os livros no cache
+        try {
+            const formattedQuery = trimmedSearch.split(/\s+/).join('+');
+            const response = await axios.get(`/api/books?q=${formattedQuery}&subject=${category}`);
+            const data = response.data;
+
+            if (data.error) {
+                setBooks([]);
+            } else {
+                setBooks(data);
+
+            // Se não for busca por texto, salva no cache
+            if (trimmedSearch === "") {
+                setBooksForGenre(category, data);
+            }
+            }
+        } catch (error) {
+            console.error("Erro ao buscar livros:", error);
+            setBooks([]);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -148,39 +196,41 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
                         : 
                             <div className="grid grid-cols-3 w-[69rem] gap-5 mb-10" >
                             {
-                                books.map((book, index) => (
-                                    <motion.div
-                                    className="max-w-[22.5rem] min-h-48"
-                                        variants={MotionCard}
-                                        initial="hidden"
-                                        animate="visible"
-                                        custom={index} 
-                                        key={index}
-                                        onClick={() => setSelectedBook({
-                                            ...book,
-                                            description:{
-                                                category: book.description.category || [],
-                                                pages: book.description.pages || 0,
-                                            }
-                                        })}
-                                    >
-                                        <CardBook
-                                            key={book.id}
-                                            imgBook={book.cover}
-                                            index={index}
-                                            title={book.title}
-                                            alt={`Capa livro ${book.title}`}
-                                            author={book.author}
-                                            rating={book.rating}
-                                            sizeStar={20}
-                                            widthAvatar={108}
-                                            heightAvatar={152}
-                                            category={book.description.category}
-                                            pages={book.description.pages}
-                                        />
-                                    </motion.div>
-                                ))
-                            }
+                                books.map((book, index) => {
+                                    
+                                    const uniqueKey = `${book.googleId || book.title}-${index}`; // Use um ID se disponível
+                                    return(
+                                        <motion.div
+                                            className="max-w-[22.5rem] min-h-48"
+                                            variants={MotionCard}
+                                            initial="hidden"
+                                            animate="visible"
+                                            custom={index} 
+                                            key={uniqueKey} // 🔑 isso força a recriação quando muda categoria ou busca
+                                            onClick={() => setSelectedBook({
+                                                ...book,
+                                                description:{
+                                                    category: book.description.category || [],
+                                                    pages: book.description.pages || 0,
+                                                }
+                                            })}
+                                        >
+                                            <CardBook
+                                                key={book.id}
+                                                imgBook={book.cover}
+                                                index={index}
+                                                title={book.title}
+                                                alt={`Capa livro ${book.title}`}
+                                                author={book.author}
+                                                rating={book.rating}
+                                                sizeStar={20}
+                                                widthAvatar={108}
+                                                heightAvatar={152}
+                                                category={book.description.category}
+                                                pages={book.description.pages}
+                                            />
+                                        </motion.div>
+                                )})}
                             </div>
                         }
                     </div>

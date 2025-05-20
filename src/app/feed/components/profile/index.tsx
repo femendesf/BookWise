@@ -18,28 +18,33 @@ import { DotStream } from 'ldrs/react'
 import 'ldrs/react/DotStream.css'
 import { useProfileStore } from "@/store/profileStore";
 
-type ProfileProps ={session: Session | null}
+type ProfileProps = {session: Session | null}
 
 export function Profile({session} : ProfileProps) {
 
     const { data: sessionData } = useSession();
     const { setProfileData, setHasFetched, hasFetched } = useProfileStore()
-    // Perfil do usuário
     const avatar_url = session?.user?.avatar_url || sessionData?.user?.avatar_url || "/default-avatar.png"; // Avatar padrão caso session seja null
     const name = session?.user?.name || sessionData?.user?.name || "Convidado"; // Nome padrão para usuários não autenticados
-    // const [createdAt, setCreatedAt] = useState<Date | null>(null);
-    // // -----------------------------------------------------------------
 
-    // // Dados biblioteca usuario
-    // const [bookItems, setBookItems] = useState<any[]>([]);
-    // const [totPagesRead, setTotPagesRead] = useState(0);
-    // const [uniqueAuthors, setUniqueAuthors] = useState<string[]>([])
-    // const [categoryMoreRead, setCategoryMoreRead] = useState<string | null>(null);
-    // -----------------------------------------------------------------
     const [isLoading, setIsLoading] = useState(true);
     const [textSearch, setTextSearch] = useState('')
     
-  // const [buttonSearch, setButtonSearch] = useState(false)//Verifica se o botao de pesquisa foi clicado
+    const [visibleBooks, setVisibleBooks] = useState(3);
+    // // -----------------------------------------------------------------
+
+    /* Dados biblioteca usuario sem o Store
+        const [bookItems, setBookItems] = useState<any[]>([]);
+        const [totPagesRead, setTotPagesRead] = useState(0);
+        const [uniqueAuthors, setUniqueAuthors] = useState<string[]>([])
+        const [categoryMoreRead, setCategoryMoreRead] = useState<string | null>(null);
+        const [createdAt, setCreatedAt] = useState<Date | null>(null);
+
+
+        Para caso queira fazer a pesquisa clicando no botão:
+        const [buttonSearch, setButtonSearch] = useState(false)//Verifica se o botao de pesquisa foi clicado
+    // -----------------------------------------------------------------
+    */
 
     const {
         createdAt,
@@ -126,8 +131,7 @@ export function Profile({session} : ProfileProps) {
                 )
     );
     
-    const year = (createdAt?.getFullYear() || "2025").toString(); // Garante que o ano seja sempre uma string
-
+    const year = createdAt?.getFullYear().toString(); // Garante que o ano seja sempre uma string
 
     return(
 
@@ -174,7 +178,7 @@ export function Profile({session} : ProfileProps) {
                   
                     {!textSearch ?
                         <div className="mb-24">
-                            {bookItems.slice(0, 3).map(({title, author, cover, rating, description, dateLastReading}, index) => (
+                            {bookItems.slice(0, visibleBooks).map(({title, author, cover, rating, description, dateLastReading}, index) => (
                                 <motion.div
                                     {...fadeIn}
                                     key={index}
@@ -186,11 +190,20 @@ export function Profile({session} : ProfileProps) {
                                         rating={rating}
                                         description={description}
                                         dateLastReading={dateLastReading}
-                                        index={index}
+                                        
                                         
                                     />
                                 </motion.div>
+                                
                             ))}
+
+                            {bookItems.length > visibleBooks &&  <button
+                                className="flex items-center justify-center w-full h-12 mt-10 text-gray-200 bg-gray-600 rounded-md hover:bg-gray-500"
+                                onClick={() => setVisibleBooks(visibleBooks + 3)}
+                            >
+                                Ver mais
+                            </button>}
+                           
                         </div>
     
                         :
@@ -209,7 +222,7 @@ export function Profile({session} : ProfileProps) {
                                             rating={rating}
                                             description={description}
                                             dateLastReading={dateLastReading}
-                                            index={index}
+                                           
                                            
                                         />
                                     </motion.div>

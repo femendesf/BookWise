@@ -10,7 +10,7 @@ interface MyBooksProps {
     rating: number;
     description: string;
     dateLastReading: string;
-    index: number;
+    
 }
 
 const cardVariants = {
@@ -26,24 +26,40 @@ const cardVariants = {
     })
 }
 
-export function MyBooks({title, author, img, rating, description, dateLastReading, index}: MyBooksProps) {
+export function MyBooks({title, author, img, rating, description, dateLastReading}: MyBooksProps) {
 
+  
     const lastReadingDate = dayjs(dateLastReading)
     const today = dayjs()
 
-    const isToday = lastReadingDate === today;
-    const daysSinceLastReading = today.diff(lastReadingDate, 'day');
-   
+    let formattedDate: string;
+
+    if (lastReadingDate.isSame(today, 'day')) {
+    formattedDate = 'Hoje';
+    } else {
+        const daysDiff = today.diff(lastReadingDate, 'day');
+        const monthsDiff = today.diff(lastReadingDate, 'month');
+        const yearsDiff = today.diff(lastReadingDate, 'year');
+
+        if (daysDiff < 30) {
+            formattedDate = `Há ${daysDiff} dia${daysDiff > 1 ? 's' : ''}`;
+        } else if (monthsDiff < 12) {
+            formattedDate = `Há ${monthsDiff} mês${monthsDiff > 1 ? 'es' : ''}`;
+        } else {
+            formattedDate = `Há ${yearsDiff} ano${yearsDiff > 1 ? 's' : ''}`;
+        }
+    }
+
     return(
 
         <div className="flex flex-col w-full h-auto mt-8 gap-2"> 
-            <span className="text-sm text-gray-300">{isToday ? 'Hoje' : `${daysSinceLastReading} dia${daysSinceLastReading > 1 ? 's' : ''} `}</span>
+            <span className="text-sm text-gray-300">{formattedDate}</span>
             
             <motion.div
                 variants={cardVariants}
                 initial="hidden"
                 animate="visible"
-                custom={index}
+               
                 className="flex flex-col bg-gray-700 gap-6 p-6 rounded-lg"
             >{/* Card*/}
 
