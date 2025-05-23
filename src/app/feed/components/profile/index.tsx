@@ -3,7 +3,7 @@ import { CaretLeft, User } from "@phosphor-icons/react";
 import { MyBooks } from "./components/MyBooks";
 import { MyProfile } from "./components/MyProfile";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
@@ -11,8 +11,6 @@ import { InputSearchBook } from "../../../components/InputSearchBook";
 
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
-import axios from "axios";
-import { categoryTranslations } from "@/utils/categoriesTranslated";
 
 import { DotStream } from 'ldrs/react'
 import 'ldrs/react/DotStream.css'
@@ -23,11 +21,10 @@ type ProfileProps = {session: Session | null}
 export function Profile({session} : ProfileProps) {
 
     const { data: sessionData } = useSession();
-    const { setProfileData, setHasFetched, hasFetched } = useProfileStore()
     const avatar_url = session?.user?.avatar_url || sessionData?.user?.avatar_url || "/default-avatar.png"; // Avatar padrão caso session seja null
     const name = session?.user?.name || sessionData?.user?.name || "Convidado"; // Nome padrão para usuários não autenticados
 
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [textSearch, setTextSearch] = useState('')
     
     const [visibleBooks, setVisibleBooks] = useState(3);
@@ -53,72 +50,10 @@ export function Profile({session} : ProfileProps) {
         uniqueAuthors,
         categoryMoreRead
     } = useProfileStore()
+
     function handleTextSearch(){
         setTextSearch('')
     }
-
-    console.log("bookItems", bookItems)
-    useEffect(() => {
-        if (hasFetched){
-            setIsLoading(false)
-            return;
-        };
-
-        const fetchUserData = async () => {
-            try {
-              const [createdAtRes, bookReadRes] = await Promise.all([
-                  axios.get('/api/user/created_at'),
-                  axios.get('/api/user/booksRead')
-              ]);
-              
-              const createdAt = createdAtRes.data.createdAt ? new Date(createdAtRes.data.createdAt) : null;
-              const books = bookReadRes.data.books || [];
-
-              let totPages = 0;
-              const authorsSet = new Set<string>(); // ← Cria um Set para armazenar autores únicos
-              const categoryCount: Record<string, number> = {} // ← Cria um objeto para armazenar contagens de categorias
-
-              books.forEach((book: any) => {
-                totPages += book.pages || 0;
-        
-                if (Array.isArray(book.author)) {
-                  book.author.forEach((a: string) => authorsSet.add(a));
-                }
-        
-                if (Array.isArray(book.categories)) {
-                  book.categories.forEach((category: string) => {
-                    const matchedKey = Object.keys(categoryTranslations).find(key =>
-                      category.toLowerCase().includes(key.toLowerCase())
-                    );
-                    const translated = matchedKey ? categoryTranslations[matchedKey] : category;
-                    categoryCount[translated] = (categoryCount[translated] || 0) + 1;
-                  });
-                }
-              });
-              
-              const mostReadCategory = Object.entries(categoryCount).reduce(
-                (a, b) => (b[1] > a[1] ? b : a), ["", 0]
-              )[0];
-               // Atualiza o estado com o número de autores lidos
-              
-               setProfileData({
-                createdAt,
-                bookItems: books,
-                totPagesRead: totPages,
-                uniqueAuthors: Array.from(authorsSet),
-                categoryMoreRead: mostReadCategory
-              });
-
-              setHasFetched(true); // Marca como já buscado
-            } catch (error) {
-              console.error("Erro ao buscar data de criação do usuário", error);
-            } finally {
-                setIsLoading(false);
-            }
-          }; 
-      
-          fetchUserData();
-    }, [hasFetched, setProfileData, setHasFetched])
 
     const resultSearch = bookItems.filter(
         book =>
@@ -131,8 +66,8 @@ export function Profile({session} : ProfileProps) {
                 )
     );
     
-    const year = createdAt?.getFullYear().toString(); // Garante que o ano seja sempre uma string
-
+    const year = createdAt! // Garante que o ano seja sempre uma string
+   
     return(
 
         <>
@@ -209,7 +144,6 @@ export function Profile({session} : ProfileProps) {
                         :
                         <div>
                             {resultSearch.map(({title, author, cover, rating, description, dateLastReading}, index) => {
-    
                                 return(
                                     <motion.div
                                         {...fadeIn} 
@@ -222,15 +156,12 @@ export function Profile({session} : ProfileProps) {
                                             rating={rating}
                                             description={description}
                                             dateLastReading={dateLastReading}
-                                           
-                                           
                                         />
                                     </motion.div>
                                 )
                             })}
                         </div>
                     }
-    
                 </div>
     
                 <MyProfile name={name} avatar_url={avatar_url} totPagesRead={totPagesRead} totAuthorsRead={uniqueAuthors.length} categoryMoreRead={categoryMoreRead} createdAt={year}/>

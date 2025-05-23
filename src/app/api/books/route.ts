@@ -8,7 +8,6 @@ export async function GET(req: Request) {
     const query = searchParams.get('q');
     const category = searchParams.get('subject');
     
-
     const API_URL = query ? `https://www.googleapis.com/books/v1/volumes?q=${query}+subject:${category}+intitle:${query}&orderBy=relevance&printType=books&maxResults=15&langRestrict=pt&key=${process.env.GOOGLE_BOOKS_API_KEY}` : `https://www.googleapis.com/books/v1/volumes?q=${query}+subject:${category}&orderBy=relevance&printType=books&maxResults=15&langRestrict=pt&key=${process.env.GOOGLE_BOOKS_API_KEY}`;
 
     try {

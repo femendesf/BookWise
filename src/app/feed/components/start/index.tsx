@@ -6,9 +6,9 @@ import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
 import { MotionCard } from "@/utils/motionDiv";
 
-import { listBooks } from "@/utils/listBooks";
 import { CardBook } from "../../../components/CardBook";
 import { lastBookReading } from "@/utils/lastBookReading";
+import { useBookStore } from "@/store/BookStore";
 
 interface StartProps{
     loggedIn: boolean;
@@ -18,6 +18,10 @@ interface StartProps{
 
 export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps){
 
+    const { booksByGenre } = useBookStore();
+    
+    const popularBooks = booksByGenre['Tudo'] || []; // Livros populares
+    
     return(
 
         <motion.div
@@ -78,7 +82,7 @@ export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps)
                             </div>
                             
                             <div className="flex flex-col gap-4">
-                                {listBooks.slice(0, 4).map((book, index) => (
+                                {popularBooks.slice(0, 4).map((book, index) => (
                                     <motion.div 
                                         variants={MotionCard}
                                         initial="hidden"

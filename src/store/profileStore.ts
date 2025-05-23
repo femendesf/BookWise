@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 interface ProfileData {
-  createdAt: Date | null
+   createdAt: string | null
   bookItems: any[]
   totPagesRead: number
   uniqueAuthors: string[]

@@ -20,5 +20,5 @@ export async function GET(req: NextResponse) {
     return NextResponse.json({error: 'Usuário não autenticado'}, {status: 405});
   }
 
-  return NextResponse.json({message: 'Perfil atualizado com sucesso'}, {status: 200});
+  return NextResponse.json({user}, {status: 200});
 }

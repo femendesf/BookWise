@@ -13,7 +13,6 @@ import 'ldrs/react/DotStream.css'
 
 import { useBookStore } from '@/store/BookStore';
 
-
 interface DiscoverProps {
     setSelectedBook: (book: any) => void;
 }
@@ -27,7 +26,7 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
     const { getBooksForGenre, setBooksForGenre } = useBookStore();
 
     const [loading, setLoading] = useState(true);// Armazenando o estado de carregamento
-    const fetchBooks = async () => { 
+    const fetchBooks = async (force = false) => { 
 
         /*setLoading(true);
 
@@ -59,12 +58,10 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
         const category = genderSelected === 'Tudo' ? '' : genderSelected;
         const trimmedSearch = textSearch.trim();
 
-        // 🧠 Verifica se a busca está vazia
-        if (trimmedSearch === "") {
+        if (!force && trimmedSearch === '') {
             const cachedBooks = getBooksForGenre(category);
 
             if (cachedBooks && cachedBooks.length > 0) {
-            // Se já tem livros no store para o gênero selecionado, usa eles
                 setBooks(cachedBooks);
                 setLoading(false);
                 return;
@@ -97,9 +94,16 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
         }
     };
 
-
     useEffect(() => {
-        fetchBooks();
+        const cachedBooks = getBooksForGenre(genderSelected === 'Tudo' ? '' : genderSelected);
+
+        if (cachedBooks && cachedBooks.length > 0 && textSearch.trim() === '') {
+            setBooks(cachedBooks);
+            setLoading(false);
+        } else {
+            fetchBooks();
+        }
+
     }, [genderSelected, textSearch]);
 
     const buttons = [
@@ -139,7 +143,7 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
     ]
 
     console.log('LIVROS:', books);
- // const searchedBooks = books.filter(book =>
+    // const searchedBooks = books.filter(book =>
     //     (book.title && typeof book.title === "string" && book.title.toLowerCase().includes(textSearch.toLowerCase())) ||
     //     (book.author && typeof book.author === "string" && book.author.toLowerCase().includes(textSearch.toLowerCase()))
     // );
