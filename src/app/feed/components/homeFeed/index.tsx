@@ -152,7 +152,7 @@ export function Feed({session}: SessionFeed) {
                 isAuthenticated={isAuthenticated}
             />
             {isLoading ?
-              <div className="flex items-center justify-center w-full h-full mt-20">
+              <div className="flex items-center justify-center w-full h-full mt-96">
                     <DotStream
                         size="60"
                         speed="2.5"
@@ -189,6 +189,7 @@ export function Feed({session}: SessionFeed) {
                         pages={selectedBook.description.pages}
                         isAuthenticated={isAuthenticated}
                         clickedExitBook={() => setSelectedBook(null)}
+                        id={selectedBook.id.toString() || ''}
 
                     />
                 }

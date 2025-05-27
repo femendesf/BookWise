@@ -21,9 +21,9 @@ model User {
   totalBookRead     Int?
   last_synced_books DateTime?
 
-  account             Account[]
-  list_books_reviewed Post[]
-  session             Session[]
+  account Account[]
+  reviews Review[] // Adicionado: Um usuário pode ter várias avaliações
+  session Session[]
 
   @@map("users")
 }
@@ -58,15 +58,30 @@ model Session {
   @@map("sessions")
 }
 
-model Post {
-  id          String @id @default(uuid())
-  user_id     String
-  cover_book  String
-  title_book  String
-  author_book String
-  rating      Int
+model Book {
+  id        String   @id @default(uuid())
+  title     String
+  author    String
+  cover_url String
+  pages     Int?
+  category  String? // Mudado para String? ou String
+  rating    Float
+  reviews   Review[]
 
-  listReviews User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  @@unique([title, author])
+  @@map("books")
+}
 
-  @@map("posts")
+model Review {
+  id         String   @id @default(uuid())
+  user_id    String
+  book_id    String
+  rating     Int
+  comment    String? // O comentário da avaliação
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [book_id], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
 }

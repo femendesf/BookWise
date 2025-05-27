@@ -10,11 +10,13 @@ import { SendReview } from './components/SendReview';
 
 import { BoxLogin } from '../BoxLogin';
 import { ReviewUser } from '../ReviewUser';
+import axios from 'axios';
 
 interface SidePanelProps{
     nameUser: string;
     imgAvatar: string;
 
+    id: string;
     title: string;
     author: string;
     imgCover: string;
@@ -32,14 +34,67 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
     
     // const [sendComment, setSendComment] = useState(false)
     const [reviewButton, setReviewButton] = useState(false)
-    const [comments, setComments] = useState(initialComments)
+    const [comments, setComments] = useState<any[]>([]);
     const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
-
     const panelRef = useRef<HTMLDivElement>(null)// Criando uma referência para o painel
 
-    function handleNewComment(commentData: {avatar: string, nameUser: string, comment: string, rating: number }){
-        setComments((prevComments) => [...prevComments, commentData]);
-    } // Adiciona um novo comentário
+    const [bookId, setBookId] = useState<string | null>(null); // Estado para armazenar o ID do livro do DB
+
+    const fetchBookAndReviews = async () => {
+        try {
+            // Primeiro, vamos tentar obter o ID do livro do backend.
+            // Poderíamos ter uma rota GET /api/books?title=X&author=Y
+            const bookResponse = await axios.get('/api/books', {
+                params: { title, author }
+            });
+
+            let currentBookId = bookResponse.data?.id;
+
+            if (!currentBookId) {
+                // Se o livro não existe, podemos criá-lo aqui ou deixar a rota de review fazer isso
+                // Por agora, vamos assumir que a rota de review vai lidar com a criação do livro.
+                // Mas para buscar avaliações, precisamos de um bookId.
+                // Uma alternativa seria criar o livro aqui se ele não existir
+                // ou passar os dados do livro para a rota de review e deixar ela lidar com a criação.
+                // Por simplicidade, vamos passar o bookId como null inicialmente e deixar a rota POST /reviewdBooks criar/encontrar o livro.
+            } else {
+                setBookId(currentBookId);
+                // Se o livro existe, busque as avaliações
+                const reviewsResponse = await axios.get(`/api/user/reviewedBooks?bookId=${currentBookId}`);
+                setComments(reviewsResponse.data);
+            }
+        } catch (error) {
+            console.error('Erro ao buscar livro ou avaliações:', error);
+            // setComments(initialComments); // Fallback para comentários iniciais se houver um erro
+        }
+    };
+
+
+    async function handleNewComment(commentData: { avatar: string, nameUser: string, comment: string, rating: number }) {
+        
+        const categoriesArray: string[] = category || []; // Garante que é um array, mesmo que vazio
+        const categoriesString = categoriesArray.join(', '); // Converte o array em uma string separada por vírgulas
+        try {
+            const response = await axios.post('/api/user/reviewedBooks', {
+                title: title,
+                author: author,
+                imgCover: imgCover,
+                rating: commentData.rating,
+                comment: commentData.comment,
+                category: categoriesString,
+                
+            });
+
+            // Atualize o estado local dos comentários com o novo comentário vindo do banco de dados
+            // O comentário retornado pelo backend já deve ter as informações do usuário.
+            setComments((prevComments) => [response.data, ...prevComments]);
+            setReviewButton(false); // Fechar o formulário de avaliação após o envio
+
+        } catch (error) {
+            console.error('Erro ao enviar comentário:', error);
+            // Lide com o erro, talvez mostrando uma mensagem ao usuário
+        }
+    }
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'
