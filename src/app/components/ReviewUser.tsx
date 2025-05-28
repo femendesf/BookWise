@@ -1,3 +1,4 @@
+import { convertDateRead } from "@/utils/convertDateRead";
 import { PhotoProfile } from "./PhotoProfile";
 import { StarRating } from "./StarRating";
 
@@ -6,17 +7,17 @@ interface Reviews{
     imgProfile: string;
     sizeImageUser?: string;
     nameUser: string;
-    when?: string;
+    dateReview?: string;
     rating?: number;
     sizeStarRating?: number;
     comment?:  string;
-    userRating?: boolean;
-    quantityStarsRating?: (quantity: number | null) => void;
+  
     
 }
 
-export function ReviewUser({imgProfile, sizeImageUser, nameUser, when, rating, comment, sizeStarRating, userRating, quantityStarsRating} : Reviews){
+export function ReviewUser({imgProfile, sizeImageUser, nameUser, dateReview, rating, comment, sizeStarRating } : Reviews){
 
+    const formattedDate = convertDateRead(dateReview || new Date().toISOString());
     if(!rating){
         rating = 0
     }
@@ -34,7 +35,7 @@ export function ReviewUser({imgProfile, sizeImageUser, nameUser, when, rating, c
                     <PhotoProfile imageUrl={imgProfile} size={sizeImageUser}  />
                     <div>
                         <h2 className="truncate max-w-44">{nameUser.split(' ').slice(0, 3).join(' ')}</h2>
-                        <h3>{when}</h3>
+                        <span className="text-gray-400 text-sm">{formattedDate}</span>
                     </div>
                 </div>
 

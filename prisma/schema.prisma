@@ -59,16 +59,18 @@ model Session {
 }
 
 model Book {
-  id        String   @id @default(uuid())
-  title     String
-  author    String
-  cover_url String
-  pages     Int?
-  category  String? // Mudado para String? ou String
-  rating    Float
-  reviews   Review[]
+  id          String   @id @default(uuid())
+  book_id     String   @unique
+  title       String
+  author      String
+  cover_url   String
+  description String?
+  sinopse     String?
+  pages       Int?
+  category    String? // Mudado para String? ou String
+  rating      Float
+  reviews     Review[]
 
-  @@unique([title, author])
   @@map("books")
 }
 

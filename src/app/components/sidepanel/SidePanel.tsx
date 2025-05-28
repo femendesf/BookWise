@@ -12,13 +12,26 @@ import { BoxLogin } from '../BoxLogin';
 import { ReviewUser } from '../ReviewUser';
 import axios from 'axios';
 
+interface Review {
+  id: number
+  rating: number
+  comment: string
+  createdAt: string
+  user: {
+    id: string
+    name: string
+    avatar_url: string
+  }
+}
 interface SidePanelProps{
+    userId: string; // ID do usuário autenticado
     nameUser: string;
-    imgAvatar: string;
+    userAvatar: string;
 
-    id: string;
+    bookId: string;
     title: string;
     author: string;
+    sinopse: string;
     imgCover: string;
     rating: number;
     index: number;
@@ -30,65 +43,48 @@ interface SidePanelProps{
 }
 
 
-export function SidePanel({imgCover, title, author, rating, index, category, pages, isAuthenticated, nameUser, imgAvatar, clickedExitBook} : SidePanelProps){
+export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title, author, sinopse, rating, index, category, pages, isAuthenticated,  clickedExitBook} : SidePanelProps){
     
-    // const [sendComment, setSendComment] = useState(false)
     const [reviewButton, setReviewButton] = useState(false)
-    const [comments, setComments] = useState<any[]>([]);
+    const [reviews, setReviews] = useState<Review[]>([])
     const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
     const panelRef = useRef<HTMLDivElement>(null)// Criando uma referência para o painel
-
-    const [bookId, setBookId] = useState<string | null>(null); // Estado para armazenar o ID do livro do DB
-
+    
+    console.log('Avaliações:', reviews) // Verifica as avaliações que estão sendo carregadas
+    console.log('bookId', bookId) // Verifica o bookId que está sendo passado
     const fetchBookAndReviews = async () => {
+
         try {
-            // Primeiro, vamos tentar obter o ID do livro do backend.
-            // Poderíamos ter uma rota GET /api/books?title=X&author=Y
-            const bookResponse = await axios.get('/api/books', {
-                params: { title, author }
-            });
+            const reviewsResponse = await axios.get(`/api/user/reviewedBooks?bookId=${bookId}`); // <--- USA O bookId DA GOOGLE BOOKS
+            console.log('Avaliações recebidas:', reviewsResponse.data); // Verifica as avaliações recebidas
+            setReviews(reviewsResponse.data); // Atualiza o estado de 'reviews'
 
-            let currentBookId = bookResponse.data?.id;
-
-            if (!currentBookId) {
-                // Se o livro não existe, podemos criá-lo aqui ou deixar a rota de review fazer isso
-                // Por agora, vamos assumir que a rota de review vai lidar com a criação do livro.
-                // Mas para buscar avaliações, precisamos de um bookId.
-                // Uma alternativa seria criar o livro aqui se ele não existir
-                // ou passar os dados do livro para a rota de review e deixar ela lidar com a criação.
-                // Por simplicidade, vamos passar o bookId como null inicialmente e deixar a rota POST /reviewdBooks criar/encontrar o livro.
-            } else {
-                setBookId(currentBookId);
-                // Se o livro existe, busque as avaliações
-                const reviewsResponse = await axios.get(`/api/user/reviewedBooks?bookId=${currentBookId}`);
-                setComments(reviewsResponse.data);
-            }
         } catch (error) {
             console.error('Erro ao buscar livro ou avaliações:', error);
-            // setComments(initialComments); // Fallback para comentários iniciais se houver um erro
         }
     };
-
-
-    async function handleNewComment(commentData: { avatar: string, nameUser: string, comment: string, rating: number }) {
-        
-        const categoriesArray: string[] = category || []; // Garante que é um array, mesmo que vazio
-        const categoriesString = categoriesArray.join(', '); // Converte o array em uma string separada por vírgulas
+    
+     const handleNewComment = async (commentData: { avatar: string; nameUser: string; comment: string; rating: number }) => {
         try {
+             const categoriesString = category.join(', '); // Converte o array para string
+
             const response = await axios.post('/api/user/reviewedBooks', {
+                // Passamos o `bookId` da Google Books como `id` para o backend
+                id: bookId, // <--- ENVIA O bookId DA GOOGLE BOOKS COMO `id` NO PAYLOAD
                 title: title,
                 author: author,
+                sinopse: sinopse,
                 imgCover: imgCover,
-                rating: commentData.rating,
+                rating: commentData.rating, // Rating da review
                 comment: commentData.comment,
+                userId: userId,
+                userAvatar: userAvatar,
                 category: categoriesString,
-                
+                pages: pages,
             });
 
-            // Atualize o estado local dos comentários com o novo comentário vindo do banco de dados
-            // O comentário retornado pelo backend já deve ter as informações do usuário.
-            setComments((prevComments) => [response.data, ...prevComments]);
-            setReviewButton(false); // Fechar o formulário de avaliação após o envio
+            setReviews((prevReviews) => [response.data, ...prevReviews]); // Atualiza o estado de 'reviews'
+            setReviewButton(false);
 
         } catch (error) {
             console.error('Erro ao enviar comentário:', error);
@@ -98,11 +94,11 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'
-
+        fetchBookAndReviews(); // Busca o livro e as avaliações quando o componente é montado
         return() => {
             document.body.style.overflow = ''
         }
-    },[]) // Para tirar a barra de rolagem do body quando componente estiver aberto
+    },[bookId]) // Para tirar a barra de rolagem do body quando componente estiver aberto
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -201,7 +197,7 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
                    
                     {reviewButton && 
                         <SendReview
-                            imgAvatar={imgAvatar}
+                            imgAvatar={userAvatar}
                             nameUser={nameUser}
                             rating={0}
                             sizeStarRating={24}
@@ -211,21 +207,20 @@ export function SidePanel({imgCover, title, author, rating, index, category, pag
                         />
                     }{/*Deixar Avalição*/ }
                     
-
-                    {[...comments].reverse().map((user, key) => (
-                        <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews" key={key}>
-                        
+                    {reviews.map((review) => (
+                        <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews" key={review.id}>
                             <ReviewUser
-                                imgProfile={user.avatar}
-                                nameUser={user.nameUser}
-                                when="Hoje"
+                                imgProfile={review.user.avatar_url}
+                                nameUser={review.user.name}
+                                dateReview={review.createdAt}
                                 sizeImageUser="2.5rem"
-                                rating={user.rating}
-                                comment={user.comment}
+                                rating={review.rating}
+                                comment={review.comment}
                             />
                         </div>
-                    ))}{/*Comentarios*/ }
-                   
+                        ))
+                    }{/*Lista de avaliações*/}
+
                 </div>
             </div>
         </div>

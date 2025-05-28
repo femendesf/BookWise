@@ -6,7 +6,7 @@ import { MotionCard } from '@/utils/motionDiv';
 interface RecentReviewsProps {
     imgProfile: string;
     name: string;
-    when: string;
+    dateReview: string;
     title: string;
     author: string;
     imgBook: string;
@@ -15,7 +15,7 @@ interface RecentReviewsProps {
     index: number;  // Novo índice para controlar o delay
 }
 
-export function RecentReviews({ name, imgProfile, when, title, author, imgBook, rating, description, index }: RecentReviewsProps) {
+export function RecentReviews({ name, imgProfile, dateReview, title, author, imgBook, rating, description, index }: RecentReviewsProps) {
     
     return (
         <motion.div
@@ -26,7 +26,7 @@ export function RecentReviews({ name, imgProfile, when, title, author, imgBook, 
             className="flex flex-col gap-8 bg-gray-700 w-full rounded-lg p-6 mt-3 "
             id='recent-reviews'
         >
-            <ReviewUser imgProfile={imgProfile} nameUser={name} when={when} rating={rating} sizeImageUser='2.5rem' />
+            <ReviewUser imgProfile={imgProfile} nameUser={name} dateReview={dateReview} rating={rating} sizeImageUser='2.5rem' />
 
             <div className='flex gap-5'>
 

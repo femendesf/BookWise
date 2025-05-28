@@ -9,19 +9,36 @@ import { MotionCard } from "@/utils/motionDiv";
 import { CardBook } from "../../../components/CardBook";
 import { lastBookReading } from "@/utils/lastBookReading";
 import { useBookStore } from "@/store/BookStore";
+import { useState } from "react";
+import axios from "axios";
 
 interface StartProps{
     loggedIn: boolean;
+    hasBookRead: boolean;
     setButtonSeeAll: (page: 'inicio' | 'perfil' | 'explorar') => void
     setSelectedBook: (book: any) => void;
 }
 
-export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps){
+export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook} : StartProps){
 
+    const [reviews, setReviews] = useState([])
     const { booksByGenre } = useBookStore();
     
     const popularBooks = booksByGenre['Tudo'] || []; // Livros populares
     
+    const fetchReviews = async () => {
+        try{
+            const response = await axios.get('/api/user/reviewedBooks')
+            console.log("Avaliações recebidas:", response.data);
+            setReviews(response.data);
+        }catch(error){
+            console.error("Erro ao buscar avaliações:", error);
+        }
+
+        fetchReviews();
+    }
+
+    console.log("TEM LIVRO LIDO?:", hasBookRead);
     return(
 
         <motion.div
@@ -40,7 +57,7 @@ export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps)
 
                         <div className="flex gap-10 flex-col w-[48rem] xxl:w-[51.25rem] mb-10">
 
-                            {loggedIn && <LastReading setButtonSeeAll={setButtonSeeAll}/>}
+                            {loggedIn && hasBookRead && <LastReading setButtonSeeAll={setButtonSeeAll}/>}
                             
                             <div className="flex flex-col gap-3">
                                 <span className="text-gray-100 text-sm">Avaliações mais recentes</span>
@@ -54,7 +71,7 @@ export function Start({loggedIn, setButtonSeeAll, setSelectedBook} : StartProps)
                                             imgBook={cover}
                                             imgProfile={user.avatarUser}
                                             name={user.idUser}
-                                            when={user.dateReading}
+                                            dateReview={user.dateReading}
                                             rating={rating}
                                             description={description}
                                             index={id}

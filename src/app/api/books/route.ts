@@ -27,6 +27,7 @@ export async function GET(req: Request) {
                 author: item.volumeInfo.authors?.join(", ") || "Desconhecido",
                 cover: item.volumeInfo.imageLinks?.thumbnail || "/errorCover.svg",
                 rating: item.volumeInfo.averageRating || 0,
+                sinopse: item.volumeInfo.description || "Descrição não disponível",
                 description: {
                     category: categories,
                     pages: item.volumeInfo.pageCount || 0,

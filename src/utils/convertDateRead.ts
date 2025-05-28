@@ -8,7 +8,7 @@ export const convertDateRead = (date: string) => {
         let formattedDate: string;
     
         if (lastReadingDate.isSame(today, 'day')) {
-        formattedDate = 'Hoje';
+            formattedDate = 'Hoje';
         } else {
             const daysDiff = today.diff(lastReadingDate, 'day');
             const monthsDiff = today.diff(lastReadingDate, 'month');
@@ -22,6 +22,6 @@ export const convertDateRead = (date: string) => {
                 formattedDate = `Há ${yearsDiff} ano${yearsDiff > 1 ? 's' : ''}`;
             }
     }
-
+    console.log('Formatted Date na função:', formattedDate);
     return formattedDate;
 }

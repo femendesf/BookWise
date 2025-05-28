@@ -29,7 +29,7 @@ export function Feed({session}: SessionFeed) {
     const isAuthenticated = useIsAuthenticated();
     const avatar_url = session?.user?.avatar_url || "/default-avatar.png"; // Avatar padrão caso session seja null
     const name = session?.user?.name || "Convidado"; // Nome padrão para usuários não autenticados
-
+    const [hasBookRead, setHasBookRead] = useState(false); // Estado para verificar se o usuário tem livros lidos
     const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
     const [activePage, setActivePage] = useState<'inicio' | 'perfil' | 'explorar'>('inicio') //Para mostrar os componentes na tela conforme esta clicado no Sidebar
 
@@ -42,14 +42,15 @@ export function Feed({session}: SessionFeed) {
         id: number;
         title: string;
         author: string;
-        imgBook: string;
+        sinopse: string; // Adicionando sinopse obrigatória
+        cover: string;
         rating: number;
         description: {
             category: string[];
             pages: number;
         };
-       
-        cover?: string;
+    
+        
     } | null>(null);
 
     const { setProfileData, setHasFetched, hasFetched } = useProfileStore()
@@ -59,6 +60,12 @@ export function Feed({session}: SessionFeed) {
     }// Função para mudar o componente na tela
 
     useEffect(() => { 
+
+        if(!session){
+          setIsLoading(false)
+          return
+        }
+       
         const fetchUserData = async () => {
             try {
               const [createdAtRes, bookReadRes] = await Promise.all([
@@ -67,10 +74,15 @@ export function Feed({session}: SessionFeed) {
               ]);
               
               console.log("createdAtRes", createdAtRes)
-
               const createdAt = dayjs(createdAtRes.data.user.created_at).year().toString(); // Converte a data para o formato Date
               const books = bookReadRes.data.books || [];
 
+              if (books.length === 0) {
+                setHasBookRead(false);
+                return;
+              }
+              
+              setHasBookRead(true)
               let totPages = 0;
               const authorsSet = new Set<string>(); // ← Cria um Set para armazenar autores únicos
               const categoryCount: Record<string, number> = {} // ← Cria um objeto para armazenar contagens de categorias
@@ -134,12 +146,6 @@ export function Feed({session}: SessionFeed) {
     fetchAllBooks();
     }, []); // Chama a função para buscar todos os livros
 
-
-    // function handleNewComment(commentData: {avatar: string, nameUser: string, comment: string}){
-    //     setComments((prevComments) => [...prevComments, commentData]);
-    // } // Adiciona um novo comentário
-
-
     return(
         <div className="flex w-full h-full">
             
@@ -163,7 +169,7 @@ export function Feed({session}: SessionFeed) {
               :
 
               <div className="mt-12 ml-16 xxl:ml-24 w-full" id="home">
-                {activePage === 'inicio' ? <Start setButtonSeeAll={handleChangeComponent} loggedIn={isAuthenticated} setSelectedBook={setSelectedBook}/> : activePage === 'perfil' ? <Profile session={session}/> : <Discover setSelectedBook={setSelectedBook}/>}
+                {activePage === 'inicio' ? <Start setButtonSeeAll={handleChangeComponent} loggedIn={isAuthenticated} hasBookRead={hasBookRead} setSelectedBook={setSelectedBook}/> : activePage === 'perfil' ? <Profile session={session}/> : <Discover setSelectedBook={setSelectedBook}/>}
               </div>
             }
             
@@ -178,10 +184,12 @@ export function Feed({session}: SessionFeed) {
                 {selectedBook && 
                 
                     <SidePanel
+                        userId={session?.user?.id || ''}
                         nameUser={name}
-                        imgAvatar={avatar_url}
+                        userAvatar={avatar_url}
                         title={selectedBook.title}
                         author={selectedBook.author}
+                        sinopse={selectedBook.sinopse}
                         imgCover={selectedBook.cover || ''}
                         rating={selectedBook.rating}
                         index={selectedBook.id}
@@ -189,7 +197,7 @@ export function Feed({session}: SessionFeed) {
                         pages={selectedBook.description.pages}
                         isAuthenticated={isAuthenticated}
                         clickedExitBook={() => setSelectedBook(null)}
-                        id={selectedBook.id.toString() || ''}
+                        bookId={selectedBook.id.toString() || ''}
 
                     />
                 }
