@@ -9,7 +9,7 @@ interface MyProfileProps {
     avatar_url: string;
 
     totPagesRead: number;
-    reviewedBooks?: number;
+    reviewedBooks: number;
     totAuthorsRead: number;
     categoryMoreRead: string | null;
 }
@@ -44,7 +44,7 @@ export function MyProfile({name, createdAt, avatar_url, totPagesRead, reviewedBo
                 <div className="flex gap-5 items-center">
                     <Books size={32}/>
                     <div>
-                        <h4>3</h4>
+                        <h4>{reviewedBooks}</h4>
                         <span>Livros avaliados</span>
                     </div>
                 </div>

@@ -1,11 +1,12 @@
 import { create } from 'zustand'
 
 interface ProfileData {
-   createdAt: string | null
+  createdAt: string | null
   bookItems: any[]
   totPagesRead: number
-  uniqueAuthors: string[]
+  uniqueAuthors?: string[] 
   categoryMoreRead: string
+  reviews: number
 }
 
 interface ProfileState extends ProfileData {
@@ -21,6 +22,7 @@ export const useProfileStore = create<ProfileState>((set) => ({
   uniqueAuthors: [],
   categoryMoreRead: '',
   hasFetched: false,
+  reviews: 0,
 
   setProfileData: (data) => set(() => ({
     ...data

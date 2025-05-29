@@ -32,12 +32,9 @@ export function Feed({session}: SessionFeed) {
     const [hasBookRead, setHasBookRead] = useState(false); // Estado para verificar se o usuário tem livros lidos
     const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
     const [activePage, setActivePage] = useState<'inicio' | 'perfil' | 'explorar'>('inicio') //Para mostrar os componentes na tela conforme esta clicado no Sidebar
+    const [shouldRefreshRecentReviews, setShouldRefreshRecentReviews] = useState(false); // Atualiza as avaliações recentes no componente Start quando é adicionado uma nova avaliação.
 
-    const { setBooksForGenre, booksByGenre } = useBookStore();
-
-    console.log("booksByGenre", booksByGenre)
-
-    
+    const { setBooksForGenre } = useBookStore();
     const [selectedBook, setSelectedBook] = useState<{
         id: number;
         title: string;
@@ -59,6 +56,14 @@ export function Feed({session}: SessionFeed) {
         setActivePage(page);
     }// Função para mudar o componente na tela
 
+    function handleReviewAddedFromSidePanel() {
+        setShouldRefreshRecentReviews(true);
+    } // Função executada quando é adicionado uma nova review pelo componente SidePanel
+
+    const handleRecentReviewsRefreshed = () => {
+        setShouldRefreshRecentReviews(false); // Reseta o flag depois que o Start fez o refresh
+    };
+    
     useEffect(() => { 
 
         if(!session){
@@ -68,17 +73,26 @@ export function Feed({session}: SessionFeed) {
        
         const fetchUserData = async () => {
             try {
-              const [createdAtRes, bookReadRes] = await Promise.all([
+              const [createdAtRes, bookReadRes, reviews] = await Promise.all([
                   axios.get('/api/user/created_at'),
-                  axios.get('/api/user/booksRead')
+                  axios.get('/api/user/booksRead'),
+                  axios.get('api/user/reviews/reviewsUser')
               ]);
               
-              console.log("createdAtRes", createdAtRes)
               const createdAt = dayjs(createdAtRes.data.user.created_at).year().toString(); // Converte a data para o formato Date
               const books = bookReadRes.data.books || [];
-
+              const reviewsUser = reviews.data;
+              console.log('Reviews do USUARIO: ', reviewsUser);
+           
               if (books.length === 0) {
                 setHasBookRead(false);
+                setProfileData({
+                  createdAt,
+                  bookItems: [],
+                  totPagesRead: 0,
+                  categoryMoreRead: '',
+                  reviews: reviewsUser.length
+                });
                 return;
               }
               
@@ -115,7 +129,8 @@ export function Feed({session}: SessionFeed) {
                 bookItems: books,
                 totPagesRead: totPages,
                 uniqueAuthors: Array.from(authorsSet),
-                categoryMoreRead: mostReadCategory
+                categoryMoreRead: mostReadCategory,
+                reviews: reviewsUser.length
               });
 
               setHasFetched(true); // Marca como já buscado
@@ -169,7 +184,7 @@ export function Feed({session}: SessionFeed) {
               :
 
               <div className="mt-12 ml-16 xxl:ml-24 w-full" id="home">
-                {activePage === 'inicio' ? <Start setButtonSeeAll={handleChangeComponent} loggedIn={isAuthenticated} hasBookRead={hasBookRead} setSelectedBook={setSelectedBook}/> : activePage === 'perfil' ? <Profile session={session}/> : <Discover setSelectedBook={setSelectedBook}/>}
+                {activePage === 'inicio' ? <Start setButtonSeeAll={handleChangeComponent} loggedIn={isAuthenticated} hasBookRead={hasBookRead} shouldRefreshRecentReviews={shouldRefreshRecentReviews} onRecentReviewsRefreshed={handleRecentReviewsRefreshed} setSelectedBook={setSelectedBook}/> : activePage === 'perfil' ? <Profile session={session}/> : <Discover setSelectedBook={setSelectedBook}/>}
               </div>
             }
             
@@ -198,7 +213,7 @@ export function Feed({session}: SessionFeed) {
                         isAuthenticated={isAuthenticated}
                         clickedExitBook={() => setSelectedBook(null)}
                         bookId={selectedBook.id.toString() || ''}
-
+                        onReviewSuccessfullyAdded={handleReviewAddedFromSidePanel}
                     />
                 }
         </div>

@@ -1,44 +1,72 @@
 import {ChartLineUp } from "@phosphor-icons/react";
 import { RecentReviews } from "./components/RecentReviews";
 import { LastReading } from "./components/LastReading";
-
+import { CardBook } from "../../../components/CardBook";
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
 import { MotionCard } from "@/utils/motionDiv";
 
-import { CardBook } from "../../../components/CardBook";
-import { lastBookReading } from "@/utils/lastBookReading";
 import { useBookStore } from "@/store/BookStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+
+interface Review {
+  comment: string; // O comentário da avaliação
+  rating: number; // O rating da avaliação
+  created_at: string; // Data de criação da avaliação (vem como string do Prisma)
+  user: {
+    name: string; // Nome do usuário
+    avatar_url: string; // URL do avatar do usuário
+  };
+  book: {
+    book_id: string; // ID do Google Books
+    title: string;
+    author: string;
+    cover_url: string; // URL da capa do livro
+    category: string; // Categoria do livro
+    sinopse: string;
+    // Não inclua sinopse aqui, pois a review não a possui diretamente.
+    // Se RecentReviews precisar da sinopse, você precisaria de outro fetch ou passar setSelectedBook com os dados do livro completo.
+  };
+}
 
 interface StartProps{
     loggedIn: boolean;
     hasBookRead: boolean;
     setButtonSeeAll: (page: 'inicio' | 'perfil' | 'explorar') => void
     setSelectedBook: (book: any) => void;
+    shouldRefreshRecentReviews: boolean; // NOVA PROP
+    onRecentReviewsRefreshed: () => void; // NOVA PR
 }
 
-export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook} : StartProps){
+export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, onRecentReviewsRefreshed, shouldRefreshRecentReviews} : StartProps){
 
-    const [reviews, setReviews] = useState([])
+    const [reviews, setReviews] = useState<Review[]>([]);
     const { booksByGenre } = useBookStore();
     
     const popularBooks = booksByGenre['Tudo'] || []; // Livros populares
     
     const fetchReviews = async () => {
         try{
-            const response = await axios.get('/api/user/reviewedBooks')
+            const response = await axios.get('/api/user/reviews/recentReviews')
             console.log("Avaliações recebidas:", response.data);
             setReviews(response.data);
         }catch(error){
             console.error("Erro ao buscar avaliações:", error);
         }
 
-        fetchReviews();
     }
+    useEffect(() => {
+        fetchReviews()
+    }, [])
 
-    console.log("TEM LIVRO LIDO?:", hasBookRead);
+    useEffect(() => {
+    if (shouldRefreshRecentReviews) {
+      fetchReviews();
+      onRecentReviewsRefreshed(); // Notifica o Feed que já fez o refresh
+    }
+  }, [shouldRefreshRecentReviews, onRecentReviewsRefreshed]);
+  
     return(
 
         <motion.div
@@ -63,22 +91,54 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook} 
                                 <span className="text-gray-100 text-sm">Avaliações mais recentes</span>
 
                                 <div className="flex flex-col gap-3">
-                                    {lastBookReading.map(({user, title, rating, cover, author, id, description}) => (
+                                    {reviews.map((review, index) => {
 
-                                        <RecentReviews 
-                                            title={title}
-                                            author={author}
-                                            imgBook={cover}
-                                            imgProfile={user.avatarUser}
-                                            name={user.idUser}
-                                            dateReview={user.dateReading}
-                                            rating={rating}
-                                            description={description}
-                                            index={id}
-                                            key={id}
-                                        />
+                                        const {
+                                            comment,
+                                            rating,
+                                            created_at,
+                                            user, // O objeto user da review (com name e avatar_url)
+                                            book, // O objeto book da review (com title, author, cover_url, category)
+                                        } = review;
 
-                                    ))}
+                                        return (
+                                            <div
+                                                key={index}
+                                                /*
+                                                
+                                                onClick={() => setSelectedBook({
+                                                    // Ao clicar na review, você pode querer abrir o livro relacionado
+                                                    // Certifique-se de que setSelectedBook pode lidar com este formato
+                                                    bookId: book.book_id,
+                                                    title: book.title,
+                                                    author: book.author,
+                                                    imgCover: book.cover_url,
+                                                    rating: rating, // Rating do livro, se quiser passar
+                                                    category: book.category ? [book.category] : [], // Garante que é um array
+                                                    pages: 0, // Se não tiver nas reviews, precisaria buscar ou ter um padrão
+                                                    sinopse: '', // Você pode querer carregar a sinopse do livro em setSelectedBook
+                                                    // Adicione o que mais setSelectedBook espera/precisa para o side panel
+                                                })}
+                                                    */
+                                            >
+                                                <RecentReviews 
+                                                title={book.title}
+                                                author={book.author}
+                                                imgBook={book.cover_url}
+                                                imgProfile={user.avatar_url}
+                                                name={user.name}
+                                                dateReview={created_at}
+                                                rating={rating}
+                                                description={book.sinopse}
+                                                index={index}
+                                                key={index}
+                                                
+                                            />
+                                            </div>
+                                            
+                                        )
+                                    }
+                                     )}
                                 </div>
                             </div> 
 

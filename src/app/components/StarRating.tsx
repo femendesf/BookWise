@@ -14,7 +14,7 @@ export function StarRating({ rating, size, userRating, setQuantityStarsRating } 
     const [hoveredStars, setHoveredStars] = useState<number | null>(null);// Estado para armazenar o índice da estrela atualmente hoverada
     const [starSelected, setStarSelected] = useState<number | null>(null); // Estado para armazenar a estrela selecionada pelo usuário
     
-      const handleStarClick = (value: number) => {
+    const handleStarClick = (value: number) => {
 
         setStarSelected(value);
         
@@ -34,12 +34,10 @@ export function StarRating({ rating, size, userRating, setQuantityStarsRating } 
                     Array.from({length: totalStars} ,(_, index) => {
 
                         const isFilled =
-                                starSelected !== null ? index + 1 <= starSelected : false; // Verifica se a estrela atual é preenchida com base no hover
+                                starSelected !== null ? starSelected >= index + 1 : false; // Verifica se a estrela atual é preenchida com base no hover
                                 
                             const isHalf =
-                                starSelected !== null &&
-                                index + 0.5 <= starSelected &&
-                                index + 1 > starSelected; // Verifica se a estrela atual é a metade da estrela hoverada
+                                starSelected !== null ? starSelected >= index + 0.5 && starSelected < index + 1 : false; // Verifica se a estrela atual é a metade da estrela hoverada
 
                         return(
                             <div
@@ -75,12 +73,10 @@ export function StarRating({ rating, size, userRating, setQuantityStarsRating } 
                     >
                         {Array.from({ length: totalStars }, (_, index) => {
                             const isFilled =
-                                hoveredStars !== null ? index + 1 <= hoveredStars : false; // Verifica se a estrela atual é preenchida com base no hover
+                                hoveredStars !== null ? hoveredStars >= index + 1 : false; // Verifica se a estrela atual é preenchida com base no hover
                                 
                             const isHalf =
-                                hoveredStars !== null &&
-                                index + 0.5 <= hoveredStars &&
-                                index + 1 > hoveredStars; // Verifica se a estrela atual é a metade da estrela hoverada
+                               hoveredStars !== null ? hoveredStars >= index + 0.5 && hoveredStars < index + 1 : false; // Verifica se a estrela atual é a metade da estrela hoverada
 
                             return (
                                 <div
@@ -127,8 +123,8 @@ export function StarRating({ rating, size, userRating, setQuantityStarsRating } 
                 :
 
                 Array.from({length: totalStars} ,(_, index) => {
-                    const isFilled = index + 1 <= rating; // Verifica se a estrela deve ser preenchida
-                    const isHalf = index + 0.5 <= rating && index + 1 > rating; // Verifica se a estrela é meio preenchida
+                    const isFilled = rating >= index + 1; // Verifica se a estrela deve ser preenchida
+                    const isHalf = rating >= index + 0.5 && rating < index + 1; // Verifica se a estrela é meio preenchida
 
                     return (
                         <div key={index} className="relative inline-block w-fit">

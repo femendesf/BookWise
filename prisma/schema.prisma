@@ -78,7 +78,7 @@ model Review {
   id         String   @id @default(uuid())
   user_id    String
   book_id    String
-  rating     Int
+  rating     Float
   comment    String? // O comentário da avaliação
   created_at DateTime @default(now())
 

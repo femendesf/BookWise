@@ -22,6 +22,5 @@ export const convertDateRead = (date: string) => {
                 formattedDate = `Há ${yearsDiff} ano${yearsDiff > 1 ? 's' : ''}`;
             }
     }
-    console.log('Formatted Date na função:', formattedDate);
     return formattedDate;
 }

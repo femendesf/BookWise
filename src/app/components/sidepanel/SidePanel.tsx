@@ -1,9 +1,7 @@
 import { BookmarkSimple, BookOpen, X } from '@phosphor-icons/react'
 
-import Avatar from '../../../public/assets/rick.jpg'
 import { useEffect, useRef, useState } from "react"
 
-import { listComments as initialComments } from '@/utils/listComments'
 import { CardBook } from '../CardBook';
 
 import { SendReview } from './components/SendReview';
@@ -40,11 +38,13 @@ interface SidePanelProps{
 
     isAuthenticated: boolean;
     clickedExitBook: (clicked: boolean) => void;
+     onReviewSuccessfullyAdded: () => void;
 }
 
 
-export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title, author, sinopse, rating, index, category, pages, isAuthenticated,  clickedExitBook} : SidePanelProps){
+export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title, author, sinopse, rating, index, category, pages, isAuthenticated,  clickedExitBook, onReviewSuccessfullyAdded} : SidePanelProps){
     
+
     const [reviewButton, setReviewButton] = useState(false)
     const [reviews, setReviews] = useState<Review[]>([])
     const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
@@ -55,7 +55,7 @@ export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title
     const fetchBookAndReviews = async () => {
 
         try {
-            const reviewsResponse = await axios.get(`/api/user/reviewedBooks?bookId=${bookId}`); // <--- USA O bookId DA GOOGLE BOOKS
+            const reviewsResponse = await axios.get(`/api/user/reviews/reviewedBooks?bookId=${bookId}`); // <--- USA O bookId DA GOOGLE BOOKS
             console.log('Avaliações recebidas:', reviewsResponse.data); // Verifica as avaliações recebidas
             setReviews(reviewsResponse.data); // Atualiza o estado de 'reviews'
 
@@ -66,9 +66,10 @@ export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title
     
      const handleNewComment = async (commentData: { avatar: string; nameUser: string; comment: string; rating: number }) => {
         try {
-             const categoriesString = category.join(', '); // Converte o array para string
 
-            const response = await axios.post('/api/user/reviewedBooks', {
+            const categoriesString = category.length <= 0 ? [] : category.join(', '); // Converte o array para string
+
+            const response = await axios.post('/api/user/reviews/reviewedBooks', {
                 // Passamos o `bookId` da Google Books como `id` para o backend
                 id: bookId, // <--- ENVIA O bookId DA GOOGLE BOOKS COMO `id` NO PAYLOAD
                 title: title,
@@ -85,6 +86,7 @@ export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title
 
             setReviews((prevReviews) => [response.data, ...prevReviews]); // Atualiza o estado de 'reviews'
             setReviewButton(false);
+            onReviewSuccessfullyAdded()
 
         } catch (error) {
             console.error('Erro ao enviar comentário:', error);
@@ -113,6 +115,22 @@ export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title
         };
     }, [clickedExitBook]); // Adiciona um evento de clique fora do painel para fechá-lo
 
+
+    console.log({
+        'userID': userId,
+        'UserAvatar': userAvatar,
+        'nameUser': nameUser,
+        'bookId': bookId,
+        'imgCover': imgCover,
+        'title': title,
+        'author': author,
+        'sinopse': sinopse,
+        'rating': rating,
+        'index': index,
+        'category': category,
+        'pages': pages,
+
+    })
     return(
         <div className="fixed inset-0 flex bg-black bg-opacity-70 z-50">
 

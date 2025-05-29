@@ -30,7 +30,7 @@ export function RecentReviews({ name, imgProfile, dateReview, title, author, img
 
             <div className='flex gap-5'>
 
-                <Image src={imgBook} alt="image-home" width={280} height={290} />
+                <Image className={`rounded-md object-cover`} src={imgBook} alt="image-home" width={108} height={152} style={{width: `${108}px`, height: `${152}px`,}}/>
                 <div className='flex flex-col justify-between'>
                     <div>
                         <h2>{title}</h2>
