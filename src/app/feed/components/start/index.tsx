@@ -90,56 +90,65 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
                             <div className="flex flex-col gap-3">
                                 <span className="text-gray-100 text-sm">Avaliações mais recentes</span>
 
-                                <div className="flex flex-col gap-3">
-                                    {reviews.map((review, index) => {
+                                {reviews.length > 0 ?
 
-                                        const {
-                                            comment,
-                                            rating,
-                                            created_at,
-                                            user, // O objeto user da review (com name e avatar_url)
-                                            book, // O objeto book da review (com title, author, cover_url, category)
-                                        } = review;
+                                    <div className="flex flex-col gap-3">
+                                        {reviews.map((review, index) => {
 
-                                        return (
-                                            <div
-                                                key={index}
-                                                /*
-                                                
-                                                onClick={() => setSelectedBook({
-                                                    // Ao clicar na review, você pode querer abrir o livro relacionado
-                                                    // Certifique-se de que setSelectedBook pode lidar com este formato
-                                                    bookId: book.book_id,
-                                                    title: book.title,
-                                                    author: book.author,
-                                                    imgCover: book.cover_url,
-                                                    rating: rating, // Rating do livro, se quiser passar
-                                                    category: book.category ? [book.category] : [], // Garante que é um array
-                                                    pages: 0, // Se não tiver nas reviews, precisaria buscar ou ter um padrão
-                                                    sinopse: '', // Você pode querer carregar a sinopse do livro em setSelectedBook
-                                                    // Adicione o que mais setSelectedBook espera/precisa para o side panel
-                                                })}
-                                                    */
-                                            >
-                                                <RecentReviews 
-                                                title={book.title}
-                                                author={book.author}
-                                                imgBook={book.cover_url}
-                                                imgProfile={user.avatar_url}
-                                                name={user.name}
-                                                dateReview={created_at}
-                                                rating={rating}
-                                                description={book.sinopse}
-                                                index={index}
-                                                key={index}
-                                                
-                                            />
-                                            </div>
-                                            
-                                        )
-                                    }
-                                     )}
-                                </div>
+                                            const {
+                                                comment,
+                                                rating,
+                                                created_at,
+                                                user, // O objeto user da review (com name e avatar_url)
+                                                book, // O objeto book da review (com title, author, cover_url, category)
+                                            } = review;
+
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    /*
+                                                    
+                                                    onClick={() => setSelectedBook({
+                                                        // Ao clicar na review, você pode querer abrir o livro relacionado
+                                                        // Certifique-se de que setSelectedBook pode lidar com este formato
+                                                        bookId: book.book_id,
+                                                        title: book.title,
+                                                        author: book.author,
+                                                        imgCover: book.cover_url,
+                                                        rating: rating, // Rating do livro, se quiser passar
+                                                        category: book.category ? [book.category] : [], // Garante que é um array
+                                                        pages: 0, // Se não tiver nas reviews, precisaria buscar ou ter um padrão
+                                                        sinopse: '', // Você pode querer carregar a sinopse do livro em setSelectedBook
+                                                        // Adicione o que mais setSelectedBook espera/precisa para o side panel
+                                                    })}
+                                                        */
+                                                >
+                                                    <RecentReviews 
+                                                    title={book.title}
+                                                    author={book.author}
+                                                    imgBook={book.cover_url}
+                                                    imgProfile={user.avatar_url}
+                                                    name={user.name}
+                                                    dateReview={created_at}
+                                                    rating={rating}
+                                                    description={book.sinopse}
+                                                    index={index}
+                                                    key={index}/>
+                                                </div>
+                                            )
+                                        }
+                                        )}
+                                    </div>
+                                    
+                                    :
+
+                                    <div className="flex items-center justify-center w-full h-full mt-52">
+                                        <p className="text-purple-100 font-bold text-xl">Nenhuma avalição recente disponível!</p>
+                                    </div>
+
+                                
+                                }
+                                
                             </div> 
 
                         </div>{/* Recent Reviews */}

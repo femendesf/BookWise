@@ -11,9 +11,13 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "books.google.com",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
       }
     ],
-    domains: ['books.google.com'],
+    domains: ['books.google.com', 'avatars.githubusercontent.com'],
   },
 
   

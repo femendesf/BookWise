@@ -22,8 +22,6 @@ export default function Login() {
 
         const result = await signIn("google", { redirect: true, callbackUrl: "/feed" });
 
-    
-
         if (result?.error)
             if (result.error === "OAuthSignin") {
                 setError("Você precisa aceitar as permissões de acesso ao Google Book!");
@@ -32,6 +30,7 @@ export default function Login() {
 
     async function handleLoginGitHub() {
         await signIn("github", { redirect: true, callbackUrl: "/home" });
+        
     }
 
     return (

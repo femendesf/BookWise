@@ -20,12 +20,7 @@ export function BoxLogin({setCloseLogin} : LoginProps){
         const result = await signIn(provider, { redirect: false });
 
         if (result?.ok) {
-
-           
-
            setCloseLogin(false)
-
-
         }
     }
     
