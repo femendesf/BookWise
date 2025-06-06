@@ -7,6 +7,28 @@ export function PrismaAdapter(): Adapter{
         async createUser(user: AdapterUser) {
             console.log(user)
 
+            // 1. Verifica se já existe um User com o mesmo e-mail
+            let existingUser = await prisma.user.findUnique({
+                where: {
+                    email: user.email,
+                },
+            });
+
+            if (existingUser) {
+                console.log('User already exists, reusing:', existingUser);
+
+                // Retorna o user existente no formato do Adapter
+                return {
+                    id: existingUser.id,
+                    name: existingUser.name!,
+                    email: existingUser.email!,
+                    avatar_url: existingUser.avatar_url!,
+                    emailVerified: null,
+                };
+            }
+
+
+            // 2. Se não existe, cria o usuário normalmente
             const newUser = await prisma.user.create({
                 data: {
                     name: user.name,

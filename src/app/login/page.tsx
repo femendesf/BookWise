@@ -14,25 +14,41 @@ import { useIsAuthenticated } from "@/utils/isAuthenticated";
 export default function Login() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [error, setError] = useState<string | null>(searchParams.get("error"));
+    const errorUrl = searchParams.get('error');
+    const [error, setError] = useState('');
     const isAuthenticated = useIsAuthenticated();
 
     async function handleLoginGoogle() {
-        setError(null);
+        
 
         const result = await signIn("google", { redirect: true, callbackUrl: "/feed" });
 
-        if (result?.error)
-            if (result.error === "OAuthSignin") {
+        if (result?.error){
+
+             if (result.error! === "OAuthSignin") {
                 setError("Você precisa aceitar as permissões de acesso ao Google Book!");
+            
+            }
+
+            console.log(errorUrl);
         }
     }
 
     async function handleLoginGitHub() {
-        await signIn("github", { redirect: true, callbackUrl: "/home" });
+        const result = await signIn("github", { redirect: true, callbackUrl: "/feed" });
         
+        if (result?.error){
+
+             if (errorUrl === "OAuthSignin") {
+                setError("Você precisa aceitar as permissões de acesso ao Google Book!");
+            
+            }
+
+            console.log(errorUrl);
+        }
     }
 
+    
     return (
         <>
             {isAuthenticated ? (

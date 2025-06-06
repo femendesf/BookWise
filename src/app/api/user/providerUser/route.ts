@@ -19,6 +19,8 @@ export async function GET() {
         }
     })
 
-    return NextResponse.json({provider: response?.provider})
+    const nameProvider = response?.provider.toString()
+
+    return NextResponse.json(nameProvider, {status: 200})
         
 }

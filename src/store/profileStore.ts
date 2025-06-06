@@ -10,9 +10,9 @@ interface ProfileData {
 }
 
 interface ProfileState extends ProfileData {
-  hasFetched: boolean
+  hasFetched: number
   setProfileData: (data: ProfileData) => void
-  setHasFetched: (value: boolean) => void
+  setHasFetched: () => void
 }
 
 export const useProfileStore = create<ProfileState>((set) => ({
@@ -21,12 +21,12 @@ export const useProfileStore = create<ProfileState>((set) => ({
   totPagesRead: 0,
   uniqueAuthors: [],
   categoryMoreRead: '',
-  hasFetched: false,
+  hasFetched: 0,
   reviews: 0,
 
   setProfileData: (data) => set(() => ({
     ...data
   })),
 
-  setHasFetched: (value) => set({ hasFetched: value })
+   setHasFetched: () => set((state) => ({ hasFetched: state.hasFetched + 1 }))
 }))

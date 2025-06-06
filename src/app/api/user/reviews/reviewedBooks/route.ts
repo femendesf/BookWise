@@ -135,8 +135,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: 'Book ID is required' }, { status: 400 });
     }
 
-    const book = await prisma.book.findUnique({
-        where: { book_id: googleBookId }, // <--- Correctly uses Google Book ID
+    const book = await prisma.book.findFirst({
+        where: { book_id: googleBookId }, // <--- Uses Google Book ID (not unique)
         select: { id: true } // Selects the internal Prisma ID
     });
 

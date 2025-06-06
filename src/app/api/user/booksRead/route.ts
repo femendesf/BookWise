@@ -35,7 +35,7 @@ export async function GET(req: NextResponse){
             'https://www.googleapis.com/books/v1/mylibrary/bookshelves/4/volumes?maxResults=40',
             {
               headers: {
-                Authorization: `Bearer ${accessToken.credentials.access_token}`,
+                Authorization: `Bearer ${accessToken!.credentials.access_token}`,
               },
             }
           );

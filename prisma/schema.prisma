@@ -21,6 +21,8 @@ model User {
   totalBookRead     Int?
   last_synced_books DateTime?
 
+  hasGoogleBooksPermission Boolean @default(false)
+
   account Account[]
   reviews Review[] // Adicionado: Um usuário pode ter várias avaliações
   session Session[]
@@ -60,7 +62,7 @@ model Session {
 
 model Book {
   id          String   @id @default(uuid())
-  book_id     String   @unique
+  book_id     String
   title       String
   author      String
   cover_url   String

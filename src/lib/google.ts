@@ -4,13 +4,17 @@ import dayjs from "dayjs";
 
 export async function getGoogleOAuthToken(userId: string){
 
-    const account = await prisma.account.findFirstOrThrow({
+    const account = await prisma.account.findFirst({
         where:{
             provider: 'google',
             user_id: userId
         }
     })
 
+      if (!account) {
+        // Não tem conta Google, retorna null ou lança erro específico
+        return null;
+    }
     // Authenticate with Google using OAuth2
     const auth = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,

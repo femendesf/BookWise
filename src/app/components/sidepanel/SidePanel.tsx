@@ -70,13 +70,13 @@ export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title
             const categoriesString = category.length <= 0 ? [] : category.join(', '); // Converte o array para string
 
             const response = await axios.post('/api/user/reviews/reviewedBooks', {
-                // Passamos o `bookId` da Google Books como `id` para o backend
+               
                 id: bookId, // <--- ENVIA O bookId DA GOOGLE BOOKS COMO `id` NO PAYLOAD
                 title: title,
                 author: author,
                 sinopse: sinopse,
                 imgCover: imgCover,
-                rating: commentData.rating, // Rating da review
+                rating: commentData.rating,
                 comment: commentData.comment,
                 userId: userId,
                 userAvatar: userAvatar,
