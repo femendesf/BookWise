@@ -38,16 +38,13 @@ export async function GET(req: NextResponse){
                 Authorization: `Bearer ${accessToken!.credentials.access_token}`,
               },
             }
-          );
+        );
       
         const data = response.data;
 
         const books = data.items?.map((item: any) => {
                     
-                    console.log("*************** ITEM COMPLETO ***************");
-                    console.log(JSON.stringify(item, null, 2));
-                    console.log("*********************************************");
-                    
+                   
                     return {
                         id: item.id,
                         title: item.volumeInfo.title,

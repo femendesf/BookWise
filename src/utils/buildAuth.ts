@@ -5,11 +5,23 @@ import GitHubProvider from "next-auth/providers/github";
 import { prisma } from "@/lib/prisma";
 import { checkGoogleBooksPermission } from "@/cron/checkGoogleBooksPemission";
 
-
-
 declare module 'next-auth/jwt' {
   interface JWT {
     provider?: string; // Adicione a propriedade 'provider' aqui
+  }
+
+   interface Session {
+    user: {
+      id: string
+      name?: string | null
+      email?: string | null
+      avatar_url?: string | null
+      hasGoogleBooksPermission?: boolean // ← adiciona aqui
+    }
+  }
+
+  interface User {
+    hasGoogleBooksPermission?: boolean
   }
 }
 export function buildNextAuthOptions(): NextAuthOptions {
@@ -60,18 +72,6 @@ export function buildNextAuthOptions(): NextAuthOptions {
     },
 
     callbacks: {
-        async session({ session, user }) {
-
-          return {
-            ...session,
-            user: {
-              ...session.user,
-              id: user.id,
-              avatar_url: user.avatar_url,
-              hasGoogleBooksPermission: user.hasGoogleBooksPermission,
-            },
-          };
-        },
 
         async signIn({ user, account  }) {
             if (!user.email) return false;
@@ -92,9 +92,28 @@ export function buildNextAuthOptions(): NextAuthOptions {
               });
 
               // Se ainda não tiver uma conta vinculada com esse provider, vincula
-              if (!existingAccount) {
-                  await prisma.account.create({
+              if (existingAccount) {
+                await prisma.account.update({
+                  where: {
+                    provider_provider_account_id: {
+                      provider: account!.provider,
+                      provider_account_id: account!.providerAccountId,
+                    },
+                  },
                   data: {
+                    // Preserve o refresh_token antigo se o novo for undefined
+                    refresh_token: account!.refresh_token ?? existingAccount.refresh_token,
+                    access_token: account!.access_token,
+                    expires_at: account!.expires_at,
+                    token_type: account!.token_type,
+                    scope: account!.scope,
+                    id_token: account!.id_token,
+                    session_state: account!.session_state,
+                  },
+                });
+              } else {
+                  await prisma.account.create({
+                    data: {
                       user_id: existingUser.id,
                       type: account!.type,
                       provider: account!.provider,
@@ -106,7 +125,7 @@ export function buildNextAuthOptions(): NextAuthOptions {
                       scope: account!.scope,
                       id_token: account!.id_token,
                       session_state: account!.session_state,
-                  },
+                    },
                   });
               }
 
@@ -121,6 +140,19 @@ export function buildNextAuthOptions(): NextAuthOptions {
             }
 
             return true;
+        },
+
+        async session({ session, user }) {
+
+          return {
+            ...session,
+            user: {
+              ...session.user,
+              id: user.id,
+              avatar_url: user.avatar_url,
+              hasGoogleBooksPermission: user.hasGoogleBooksPermission,
+            },
+          };
         },
 
     },

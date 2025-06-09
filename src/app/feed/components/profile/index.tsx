@@ -3,7 +3,7 @@ import { CaretLeft, User } from "@phosphor-icons/react";
 import { MyBooks } from "./components/MyBooks";
 import { MyProfile } from "./components/MyProfile";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
@@ -24,37 +24,22 @@ export function Profile({session} : ProfileProps) {
 
     const [textSearch, setTextSearch] = useState('')
     const [visibleBooks, setVisibleBooks] = useState(3);
-    // // -----------------------------------------------------------------
-
-    /* Dados biblioteca usuario sem o Store
-        const [bookItems, setBookItems] = useState<any[]>([]);
-        const [totPagesRead, setTotPagesRead] = useState(0);
-        const [uniqueAuthors, setUniqueAuthors] = useState<string[]>([])
-        const [categoryMoreRead, setCategoryMoreRead] = useState<string | null>(null);
-        const [createdAt, setCreatedAt] = useState<Date | null>(null);
-
-
-        Para caso queira fazer a pesquisa clicando no botão:
-        const [buttonSearch, setButtonSearch] = useState(false)//Verifica se o botao de pesquisa foi clicado
-    // -----------------------------------------------------------------
-    */
-
+  
     const {
         createdAt,
         bookItems,
         totPagesRead,
         uniqueAuthors,
         categoryMoreRead,
-        reviews
+        reviews,
+        hasFetched
     } = useProfileStore()
 
-    console.log(bookItems)
-    console.log(reviews)
-    console.log('TESTE')
+    useEffect(() => {console.log('VALOR DE HASFETCHED' , hasFetched)}, [hasFetched])
     function handleTextSearch(){
         setTextSearch('')
     }
-
+   
     const resultSearch = bookItems.filter(
         book =>
                 (book.title && typeof book.title === "string" && book.title.toLowerCase().includes(textSearch.toLowerCase())) ||

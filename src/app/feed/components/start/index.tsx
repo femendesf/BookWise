@@ -9,6 +9,7 @@ import { MotionCard } from "@/utils/motionDiv";
 import { useBookStore } from "@/store/BookStore";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useProfileStore } from "@/store/profileStore";
 
 interface Review {
   comment: string; // O comentário da avaliação
@@ -35,12 +36,12 @@ interface StartProps{
     hasBookRead: boolean;
     setButtonSeeAll: (page: 'inicio' | 'perfil' | 'explorar') => void
     setSelectedBook: (book: any) => void;
-    shouldRefreshRecentReviews: boolean; // NOVA PROP
-    onRecentReviewsRefreshed: () => void; // NOVA PR
+   
 }
 
-export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, onRecentReviewsRefreshed, shouldRefreshRecentReviews} : StartProps){
+export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook} : StartProps){
 
+    const { hasFetched} = useProfileStore()
     const [reviews, setReviews] = useState<Review[]>([]);
     const { booksByGenre } = useBookStore();
     
@@ -58,14 +59,14 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
     }
     useEffect(() => {
         fetchReviews()
-    }, [])
+    }, [hasFetched])
 
-    useEffect(() => {
-    if (shouldRefreshRecentReviews) {
-      fetchReviews();
-      onRecentReviewsRefreshed(); // Notifica o Feed que já fez o refresh
-    }
-  }, [shouldRefreshRecentReviews, onRecentReviewsRefreshed]);
+//     useEffect(() => {
+//     if (shouldRefreshRecentReviews) {
+//       fetchReviews();
+//       onRecentReviewsRefreshed(); // Notifica o Feed que já fez o refresh
+//     }
+//   }, [shouldRefreshRecentReviews, onRecentReviewsRefreshed]);
   
     return(
 
@@ -109,7 +110,7 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
                                                     /*
                                                     
                                                     onClick={() => setSelectedBook({
-                                                        // Ao clicar na review, você pode querer abrir o livro relacionado
+                                                        // Função para abrir o livro selecionado
                                                         // Certifique-se de que setSelectedBook pode lidar com este formato
                                                         bookId: book.book_id,
                                                         title: book.title,

@@ -21,6 +21,8 @@ import { DotStream } from 'ldrs/react'
 import 'ldrs/react/DotStream.css'
 
 import { useBookStore } from "@/store/BookStore";
+import { api } from "@/lib/axios";
+import { signOut } from "next-auth/react";
 
 type SessionFeed ={session: Session | null}
 
@@ -29,10 +31,10 @@ export function Feed({session}: SessionFeed) {
     const isAuthenticated = useIsAuthenticated();
     const avatar_url = session?.user?.avatar_url || "/default-avatar.png"; // Avatar padrão caso session seja null
     const name = session?.user?.name || "Convidado"; // Nome padrão para usuários não autenticados
+    
     const [hasBookRead, setHasBookRead] = useState(false); // Estado para verificar se o usuário tem livros lidos
     const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
     const [activePage, setActivePage] = useState<'inicio' | 'perfil' | 'explorar'>('inicio') //Para mostrar os componentes na tela conforme esta clicado no Sidebar
-    const [shouldRefreshRecentReviews, setShouldRefreshRecentReviews] = useState(false); // Atualiza as avaliações recentes no componente Start quando é adicionado uma nova avaliação.
     const { setBooksForGenre } = useBookStore(); // Acessa o estado do BookStore
     const [selectedBook, setSelectedBook] = useState<{
         id: number;
@@ -52,141 +54,161 @@ export function Feed({session}: SessionFeed) {
     const { setProfileData, setHasFetched, hasFetched } = useProfileStore()
     const [isLoading, setIsLoading] = useState(true);
 
-    const [permissionGoogleBookAccepted, setPermissionGoogleBookAccepted] = useState(true);
+    const [permissionGoogleBookAccepted, setPermissionGoogleBookAccepted] = useState(false);
+
     function handleChangeComponent(page: 'inicio' | 'perfil' | 'explorar') {
         setActivePage(page);
     }// Função para mudar o componente na tela
 
     function handleReviewAddedFromSidePanel() {
-        setShouldRefreshRecentReviews(true);
         setHasFetched()
     } // Função executada quando é adicionado uma nova review pelo componente SidePanel
 
-    const handleRecentReviewsRefreshed = () => {
-        setShouldRefreshRecentReviews(false); // Reseta o flag depois que o Start fez o refresh  
-    };
    
-    useEffect(() => { 
+    useEffect(() => {
 
-          if(!session){
+        if(!session){
             setIsLoading(false)
             return
-          }
+        }
 
-          const fetchUserData = async () => {
+      const fetchPermission = async() => {
+        try{
+          const { data } = await axios.get('/api/user/hasPermission');
+          setPermissionGoogleBookAccepted(data.hasGoogleBooksPermission);
+        }catch(error){
+          setPermissionGoogleBookAccepted(false);
+          console.log(error)
+        }
+      }
 
-              try {
+      fetchPermission()
+
+      console.log('Tem verificação google Book DENTRO', permissionGoogleBookAccepted)
+    } , [])
+
+    console.log('Tem verificação google Book FORA', permissionGoogleBookAccepted)
+  useEffect(() => { 
+
+        if(!session){
+          setIsLoading(false)
+          return
+        }
+        setIsLoading(true);
+        
+        const fetchUserData = async () => {
+          
+          try {
+              if(permissionGoogleBookAccepted){
                   
-                  if(permissionGoogleBookAccepted){
+                  const [createdAtRes, bookReadRes, reviews] = await Promise.all([
+                      axios.get('/api/user/created_at'),
+                      axios.get('/api/user/booksRead'),
+                      axios.get('api/user/reviews/reviewsUser')
+                  ]);
 
-                      const [createdAtRes, bookReadRes, reviews] = await Promise.all([
-                          axios.get('/api/user/created_at'),
-                          axios.get('/api/user/booksRead'),
-                          axios.get('api/user/reviews/reviewsUser')
-                      ]);
-
-                      const createdAt = dayjs(createdAtRes.data.user.created_at).year().toString(); // Converte a data para o formato Date
-                      const books = bookReadRes.data.books || [];
-                      const reviewsUser = reviews.data;
-                    
-                      if (books.length === 0) {
-                        setHasBookRead(false);
-                        setProfileData({
-                          createdAt,
-                          bookItems: [],
-                          totPagesRead: 0,
-                          categoryMoreRead: '',
-                          reviews: reviewsUser.length
-                        });
-                        return;
-                      }
+                  const createdAt = dayjs(createdAtRes.data.user.created_at).year().toString(); // Converte a data para o formato Date
+                  const books = bookReadRes.data.books || [];
+                  const reviewsUser = reviews.data;
                 
-                    setHasBookRead(true)
-                    let totPages = 0;
-                    const authorsSet = new Set<string>(); // ← Cria um Set para armazenar autores únicos
-                    const categoryCount: Record<string, number> = {} // ← Cria um objeto para armazenar contagens de categorias
-
-                    books.forEach((book: any) => {
-                      totPages += book.pages || 0;
-              
-                      if (Array.isArray(book.author)) {
-                        book.author.forEach((a: string) => authorsSet.add(a));
-                      }
-              
-                      if (Array.isArray(book.categories)) {
-                        book.categories.forEach((category: string) => {
-                          const matchedKey = Object.keys(categoryTranslations).find(key =>
-                            category.toLowerCase().includes(key.toLowerCase())
-                          );
-                          const translated = matchedKey ? categoryTranslations[matchedKey] : category;
-                          categoryCount[translated] = (categoryCount[translated] || 0) + 1;
-                        });
-                      }
-                    });
-                    
-                    const mostReadCategory = Object.entries(categoryCount).reduce(
-                      (a, b) => (b[1] > a[1] ? b : a), ["", 0]
-                    )[0];// Atualiza o estado com o número de autores lidos
-                      
-                    
+                  if (books.length === 0) {
+                    setHasBookRead(false);
                     setProfileData({
                       createdAt,
-                      bookItems: books,
-                      totPagesRead: totPages,
-                      uniqueAuthors: Array.from(authorsSet),
-                      categoryMoreRead: mostReadCategory,
+                      bookItems: [],
+                      totPagesRead: 0,
+                      categoryMoreRead: '',
                       reviews: reviewsUser.length
                     });
+                    return;
+                  }
+            
+                setHasBookRead(true)
+                let totPages = 0;
+                const authorsSet = new Set<string>(); // ← Cria um Set para armazenar autores únicos
+                const categoryCount: Record<string, number> = {} // ← Cria um objeto para armazenar contagens de categorias
 
-                     // Marca como já buscado
-
-
-
-                  }else{
-                    const [reviewsUserRes, createdAtToGitHub] = await Promise.all([
-                      axios.get('/api/user/reviews/reviewsUser'),
-                      axios.get('/api/user/created_at')
-                    ]);
-
-                    const reviewsUser = reviewsUserRes.data;
-                    const created_github = dayjs(createdAtToGitHub.data.user.created_at).year().toString(); // Converte a data para o formato Date
-                  
-                    setProfileData({
-                        createdAt: created_github,
-                        bookItems: [],
-                        totPagesRead: 0,
-                        categoryMoreRead: '',
-                        reviews: reviewsUser.length
+                books.forEach((book: any) => {
+                  totPages += book.pages || 0;
+          
+                  if (Array.isArray(book.author)) {
+                    book.author.forEach((a: string) => authorsSet.add(a));
+                  }
+          
+                  if (Array.isArray(book.categories)) {
+                    book.categories.forEach((category: string) => {
+                      const matchedKey = Object.keys(categoryTranslations).find(key =>
+                        category.toLowerCase().includes(key.toLowerCase())
+                      );
+                      const translated = matchedKey ? categoryTranslations[matchedKey] : category;
+                      categoryCount[translated] = (categoryCount[translated] || 0) + 1;
                     });
                   }
-               
-              } catch (error) {
-                console.error("Erro ao buscar data de criação do usuário", error);
-              }finally{
-                  setIsLoading(false); // Define o loading como false após a busca
+                });
+                
+                const mostReadCategory = Object.entries(categoryCount).reduce(
+                  (a, b) => (b[1] > a[1] ? b : a), ["", 0]
+                )[0];// Atualiza o estado com o número de autores lidos
+                  
+                
+                setProfileData({
+                  createdAt,
+                  bookItems: books,
+                  totPagesRead: totPages,
+                  uniqueAuthors: Array.from(authorsSet),
+                  categoryMoreRead: mostReadCategory,
+                  reviews: reviewsUser.length
+                });
+
+                  // Marca como já buscado
+              }else{
+
+                const [reviewsUserRes, createdAt] = await Promise.all([
+                  axios.get('/api/user/reviews/reviewsUser'),
+                  axios.get('/api/user/created_at')
+                ]);
+
+                const reviewsUser = reviewsUserRes.data;
+                const created_github = dayjs(createdAt.data.user.created_at).year().toString(); // Converte a data para o formato Date
+              
+                setProfileData({
+                    createdAt: created_github,
+                    bookItems: [],
+                    totPagesRead: 0,
+                    categoryMoreRead: '',
+                    reviews: reviewsUser.length
+                });
               }
-          }; 
-        
-          fetchUserData();
+            
+          } catch (error) {
+            console.error("Erro ao buscar data de criação do usuário", error);
+            await api.get("/auth/logout"); // Remove os cookies no backend
+            await signOut({ redirect: true, callbackUrl: "/login" })
+          }finally{
+              setIsLoading(false); // Define o loading como false após a busca
+          }
+      }; 
+    
+      fetchUserData();
 
-    }, [hasFetched, setProfileData]) // Chama a função para buscar os dados do usuário, como livros lidos, informações do perfil, etc.
+  }, [ setProfileData, permissionGoogleBookAccepted]) // Chama a função para buscar os dados do usuário, como livros lidos, informações do perfil, etc.
 
-    useEffect(() => {
-    const fetchAllBooks = async () => {
-      try {
-        const response = await axios.get(`/api/books?q=&subject=`);
-        const data = response.data;
+  useEffect(() => {
+  const fetchAllBooks = async () => {
+    try {
+      const response = await axios.get(`/api/books?q=&subject=`);
+      const data = response.data;
 
-        if (!data.error) {
-          setBooksForGenre('Tudo', data);  // salva no store
-        }
-      } catch (error) {
-        console.error("Erro ao buscar livros gerais:", error);
+      if (!data.error) {
+        setBooksForGenre('Tudo', data);  // salva no store
       }
-    };
+    } catch (error) {
+      console.error("Erro ao buscar livros gerais:", error);
+    }
+  };
 
     fetchAllBooks();
-    }, []); // Chama a função para buscar todos os livros
+  }, []); // Chama a função para buscar todos os livros
 
     return(
         <div className="flex w-full h-full">
@@ -211,7 +233,19 @@ export function Feed({session}: SessionFeed) {
               :
 
               <div className="mt-12 ml-16 xxl:ml-24 w-full" id="home">
-                {activePage === 'inicio' ? <Start setButtonSeeAll={handleChangeComponent} loggedIn={isAuthenticated} hasBookRead={hasBookRead} shouldRefreshRecentReviews={shouldRefreshRecentReviews} onRecentReviewsRefreshed={handleRecentReviewsRefreshed} setSelectedBook={setSelectedBook}/> : activePage === 'perfil' ? <Profile session={session}/> : <Discover setSelectedBook={setSelectedBook}/>}
+                 {activePage === 'inicio' ? 
+                  <Start
+                    setButtonSeeAll={handleChangeComponent}
+                    loggedIn={isAuthenticated}
+                    hasBookRead={hasBookRead}
+                   
+                    setSelectedBook={setSelectedBook}
+                   
+                  /> 
+                  : activePage === 'perfil' ? 
+                    <Profile session={session}/> 
+                  : 
+                    <Discover setSelectedBook={setSelectedBook}/>}
               </div>
             }
             

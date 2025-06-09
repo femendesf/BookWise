@@ -39,6 +39,11 @@ export async function getGoogleOAuthToken(userId: string){
 
     // Check if the token is expired
     if(isTokenExpired){
+         if (!account.refresh_token) {
+            console.warn(`Usuário ${userId} não possui refresh_token salvo para renovar o token.`);
+            return null;
+        }
+        
         const { credentials } = await auth.refreshAccessToken()
 
         const {access_token, expiry_date, id_token, refresh_token, scope, token_type} = credentials
