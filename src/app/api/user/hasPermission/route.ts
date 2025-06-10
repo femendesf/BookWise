@@ -7,7 +7,7 @@ export async function GET() {
     const session = await getServerSession(buildNextAuthOptions())
            
     if(!session){
-        return NextResponse.json({error: 'Usuário não autenticado'}, {status: 405});
+        return NextResponse.json({error: 'Usuário não autenticado'}, {status: 404 });
     }
     
     const response = await prisma.user.findFirst({
@@ -20,7 +20,7 @@ export async function GET() {
     })
 
     if(!response){
-        return NextResponse.json({error: 'Usuário não encontrado'}, {status: 405});
+        return NextResponse.json({error: 'Usuário não encontrado'}, {status: 404 });
     }
 
     console.log('HasGooglePermission:' , response?.hasGoogleBooksPermission)

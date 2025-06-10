@@ -13,12 +13,23 @@ import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 
 import { useProfileStore } from "@/store/profileStore";
-import axios from "axios";
+import { useReviewsUser } from "@/hooks/useReviewsUser";
 
 type ProfileProps = {
     session: Session | null,
     
 }
+
+type Book = {
+  id: string;
+  title: string;
+  author: string | string[];
+  cover: string;
+  rating: number;
+  description: string;
+  dateLastReading: string;
+};
+
 
 export function Profile({session} : ProfileProps) {
 
@@ -39,20 +50,23 @@ export function Profile({session} : ProfileProps) {
         hasFetched
     } = useProfileStore()
 
+    const { data :  reviews} = useReviewsUser()
+
+    console.log('Data from useReviewsUser:', reviews)
+    
+    useEffect(() => {
+        
+        if(reviews){
+            setQuantityReviews(reviews)
+        }
+    } , [reviews])
+
     function handleTextSearch(){
         setTextSearch('')
     }
-    
-    useEffect(() => {
-        const fetchJustQuantityReviewUser = async () => {
-            const response = await axios.get('/api/user/reviews/reviewsUser')
-            setQuantityReviews(response.data.length)
-        }
-        fetchJustQuantityReviewUser()
-    } , [hasFetched])
 
     const resultSearch = bookItems.filter(
-        book =>
+        (book : Book )=>
                 (book.title && typeof book.title === "string" && book.title.toLowerCase().includes(textSearch.toLowerCase())) ||
                 (book.author &&
                     (typeof book.author === "string"
@@ -62,8 +76,22 @@ export function Profile({session} : ProfileProps) {
                 )
     );
     
-    const year = createdAt! // Garante que o ano seja sempre uma string
-   
+    const year = createdAt ?? "----"; // fallback para string segura
+    
+    const renderBooks = (books: Book[]) => (
+        books.map(({ id, title, author, cover, rating, description, dateLastReading }) => (
+            <motion.div {...fadeIn} key={id}>
+                <MyBooks
+                title={title}
+                author={typeof author === "string" ? [author] : author}
+                img={cover}
+                rating={rating}
+                description={description}
+                dateLastReading={dateLastReading}
+                />
+            </motion.div>
+        ))
+    );
     return(
         <div className="flex justify-start gap-16">
 
@@ -96,57 +124,24 @@ export function Profile({session} : ProfileProps) {
                 </div>
                 
                 
-                {!textSearch ?
-                    <div className="mb-24">
-                        {bookItems.slice(0, visibleBooks).map(({title, author, cover, rating, description, dateLastReading}, index) => (
-                            <motion.div
-                                {...fadeIn}
-                                key={index}
-                            >
-                                <MyBooks
-                                    title={title}
-                                    author={author}
-                                    img={cover}
-                                    rating={rating}
-                                    description={description}
-                                    dateLastReading={dateLastReading}
-                                    
-                                    
-                                />
-                            </motion.div>
-                            
-                        ))}
+            {!textSearch ?
+                <div className="mb-24">
+                    {renderBooks(bookItems.slice(0, visibleBooks))}
 
-                        {bookItems.length > visibleBooks &&  <button
-                            className="flex items-center justify-center w-full h-12 mt-10 text-gray-200 bg-gray-600 rounded-md hover:bg-gray-500"
-                            onClick={() => setVisibleBooks(visibleBooks + 3)}
-                        >
-                            Ver mais
-                        </button>}
-                        
-                    </div>
-
-                    :
-                    <div>
-                        {resultSearch.map(({title, author, cover, rating, description, dateLastReading}, index) => {
-                            return(
-                                <motion.div
-                                    {...fadeIn} 
-                                    key={index}
-                                >
-                                    <MyBooks
-                                        title={title}
-                                        author={author}
-                                        img={cover}
-                                        rating={rating}
-                                        description={description}
-                                        dateLastReading={dateLastReading}
-                                    />
-                                </motion.div>
-                            )
-                        })}
-                    </div>
-                }
+                    {bookItems.length > visibleBooks && (
+                    <button
+                        className="flex items-center justify-center w-full h-12 mt-10 text-gray-200 bg-gray-600 rounded-md hover:bg-gray-500"
+                        onClick={() => setVisibleBooks(visibleBooks + 3)}
+                    >
+                        Ver mais
+                    </button>
+                    )}
+                </div>
+                :
+                <div>
+                    {renderBooks(resultSearch)}
+                </div>
+            }
             </div>
 
             <MyProfile name={name} avatar_url={avatar_url} reviewedBooks={quantityReviews} totPagesRead={totPagesRead} totAuthorsRead={uniqueAuthors!.length} categoryMoreRead={categoryMoreRead} createdAt={year}/>

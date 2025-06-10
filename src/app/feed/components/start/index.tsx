@@ -7,9 +7,7 @@ import { fadeIn } from "@/utils/fadeOut";
 import { MotionCard } from "@/utils/motionDiv";
 
 import { useBookStore } from "@/store/BookStore";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useProfileStore } from "@/store/profileStore";
+import { useRecentReviews } from "@/hooks/useRecentReviews";
 
 interface Review {
   comment: string; // O comentário da avaliação
@@ -36,43 +34,17 @@ interface StartProps{
     hasBookRead: boolean;
     setButtonSeeAll: (page: 'inicio' | 'perfil' | 'explorar') => void;
     setSelectedBook: (book: any) => void;
-    
-   
 }
 
 export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, } : StartProps){
 
-    const { hasFetched} = useProfileStore()
-    const [reviews, setReviews] = useState<Review[]>([]);
     const { booksByGenre } = useBookStore();
     
-    
     const popularBooks = booksByGenre['Tudo'] || []; // Livros populares
-    
-    useEffect(() => {
-        const fetchReviews = async () => {
-        try{
-            const response = await axios.get('/api/user/reviews/recentReviews')
-            console.log("Avaliações recebidas:", response.data);
-            
-            setReviews(response.data);
-        }catch(error){
-            console.error("Erro ao buscar avaliações:", error);
-        }finally{
-            console.log("Revisões carregadas:");
-           
-        }
 
-    }
-        fetchReviews()
-    }, [hasFetched])
-//     useEffect(() => {
-//     if (shouldRefreshRecentReviews) {
-//       fetchReviews();
-//       onRecentReviewsRefreshed(); // Notifica o Feed que já fez o refresh
-//     }
-//   }, [shouldRefreshRecentReviews, onRecentReviewsRefreshed]);
-  
+    const {data: recentReviews} = useRecentReviews()
+    
+    console.log('Livros Avaliados:', recentReviews);
     return(
 
         <motion.div
@@ -96,13 +68,12 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
                             <div className="flex flex-col gap-3">
                                 <span className="text-gray-100 text-sm">Avaliações mais recentes</span>
 
-                                {reviews.length > 0 ?
+                                {Array.isArray(recentReviews) && recentReviews.length > 0  ?
 
                                     <div className="flex flex-col gap-3">
-                                        {reviews.map((review, index) => {
+                                        {recentReviews.map((review : Review, index: any) => {
 
                                             const {
-                                                comment,
                                                 rating,
                                                 created_at,
                                                 user, // O objeto user da review (com name e avatar_url)

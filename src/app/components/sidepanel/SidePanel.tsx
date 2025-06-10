@@ -3,12 +3,13 @@ import { BookmarkSimple, BookOpen, X } from '@phosphor-icons/react'
 import { useEffect, useRef, useState } from "react"
 
 import { CardBook } from '../CardBook';
-
 import { SendReview } from './components/SendReview';
-
 import { BoxLogin } from '../BoxLogin';
 import { ReviewUser } from '../ReviewUser';
-import axios from 'axios';
+
+import { useCreateReview } from '@/hooks/useCreateReview';
+import { useReviewsBook } from '@/hooks/useReviewsBook';
+import { Loading } from '../Loading';
 
 interface Review {
   id: number
@@ -46,57 +47,35 @@ export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title
     
 
     const [reviewButton, setReviewButton] = useState(false)
-    const [reviews, setReviews] = useState<Review[]>([])
+    // const [reviews, setReviews] = useState<Review[]>([])
     const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
     const panelRef = useRef<HTMLDivElement>(null)// Criando uma referência para o painel
     
-    console.log('Avaliações:', reviews) // Verifica as avaliações que estão sendo carregadas
-    console.log('bookId', bookId) // Verifica o bookId que está sendo passado
-    const fetchBookAndReviews = async () => {
-
-        try {
-            const reviewsResponse = await axios.get(`/api/user/reviews/reviewedBooks?bookId=${bookId}`); // <--- USA O bookId DA GOOGLE BOOKS
-            console.log('Avaliações recebidas:', reviewsResponse.data); // Verifica as avaliações recebidas
-            setReviews(reviewsResponse.data); // Atualiza o estado de 'reviews'
-
-        } catch (error) {
-            console.error('Erro ao buscar livro ou avaliações:', error);
-        }
-    };
-    
+    const { mutate: createReviewMutation } = useCreateReview(() => {
+        setReviewButton(false)
+        onReviewSuccessfullyAdded()
+    })
+    const { data: reviews = [], isLoading, isError } = useReviewsBook(bookId)
      const handleNewComment = async (commentData: { avatar: string; nameUser: string; comment: string; rating: number }) => {
-        try {
+        const categoriesString = category.length <= 0 ? '' : category.join(', ')
 
-            const categoriesString = category.length <= 0 ? [] : category.join(', '); // Converte o array para string
-
-            const response = await axios.post('/api/user/reviews/reviewedBooks', {
-               
-                id: bookId, // <--- ENVIA O bookId DA GOOGLE BOOKS COMO `id` NO PAYLOAD
-                title: title,
-                author: author,
-                sinopse: sinopse,
-                imgCover: imgCover,
-                rating: commentData.rating,
-                comment: commentData.comment,
-                userId: userId,
-                userAvatar: userAvatar,
-                category: categoriesString,
-                pages: pages,
-            });
-
-            setReviews((prevReviews) => [response.data, ...prevReviews]); // Atualiza o estado de 'reviews'
-            setReviewButton(false);
-            onReviewSuccessfullyAdded()
-
-        } catch (error) {
-            console.error('Erro ao enviar comentário:', error);
-            // Lide com o erro, talvez mostrando uma mensagem ao usuário
-        }
+        createReviewMutation({
+            id: bookId,
+            title,
+            author,
+            sinopse,
+            imgCover,
+            rating: commentData.rating,
+            comment: commentData.comment,
+            userId,
+            userAvatar,
+            category: categoriesString,
+            pages,
+        })
     }
 
     useEffect(() => {
         document.body.style.overflow = 'hidden'
-        fetchBookAndReviews(); // Busca o livro e as avaliações quando o componente é montado
         return() => {
             document.body.style.overflow = ''
         }
@@ -115,22 +94,6 @@ export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title
         };
     }, [clickedExitBook]); // Adiciona um evento de clique fora do painel para fechá-lo
 
-
-    console.log({
-        'userID': userId,
-        'UserAvatar': userAvatar,
-        'nameUser': nameUser,
-        'bookId': bookId,
-        'imgCover': imgCover,
-        'title': title,
-        'author': author,
-        'sinopse': sinopse,
-        'rating': rating,
-        'index': index,
-        'category': category,
-        'pages': pages,
-
-    })
     return(
         <div className="fixed inset-0 flex bg-black bg-opacity-70 z-50">
 
@@ -225,16 +188,23 @@ export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title
                         />
                     }{/*Deixar Avalição*/ }
                     
-                    {reviews.map((review) => (
-                        <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews" key={review.id}>
-                            <ReviewUser
-                                imgProfile={review.user.avatar_url}
-                                nameUser={review.user.name}
-                                dateReview={review.createdAt}
-                                sizeImageUser="2.5rem"
-                                rating={review.rating}
-                                comment={review.comment}
-                            />
+                    
+                    { isLoading ? 
+                        <div className='flex justify-center items-center mt-10'>
+                            <Loading/>
+                        </div>
+                        
+                        :
+                        reviews.map((review : Review) => (
+                            <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews" key={review.id}>
+                                <ReviewUser
+                                    imgProfile={review.user.avatar_url}
+                                    nameUser={review.user.name}
+                                    dateReview={review.createdAt}
+                                    sizeImageUser="2.5rem"
+                                    rating={review.rating}
+                                    comment={review.comment}
+                                />
                         </div>
                         ))
                     }{/*Lista de avaliações*/}

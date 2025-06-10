@@ -1,0 +1,16 @@
+import { createReview } from "@/services/reviews"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+
+export function useCreateReview(onSuccessCallback?: () => void) {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: createReview,
+        onSuccess: (data) => {
+            // Invalida e atualiza dados locais
+            queryClient.invalidateQueries({ queryKey: ['reviewsBook'] })
+            queryClient.invalidateQueries({ queryKey: ['recentReviews'] })
+            if (onSuccessCallback) onSuccessCallback()
+        },
+    })
+}

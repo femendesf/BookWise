@@ -8,10 +8,8 @@ import { MotionCard } from "@/utils/motionDiv";
 import {motion} from 'framer-motion'
 import axios from "axios";
 
-import { DotStream } from 'ldrs/react'
-import 'ldrs/react/DotStream.css'
-
 import { useBookStore } from '@/store/BookStore';
+import { Loading } from "@/app/components/Loading";
 
 interface DiscoverProps {
     setSelectedBook: (book: any) => void;
@@ -184,11 +182,7 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
             
                { loading ? (
                     <div className="flex items-center justify-center mt-56">
-                       <DotStream
-                            size="60"
-                            speed="2.5"
-                            color="#8381D9" 
-                        />
+                       <Loading/>
                     </div>
                   
                 ) : 
