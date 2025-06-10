@@ -10,6 +10,7 @@ export function useCreateReview(onSuccessCallback?: () => void) {
             // Invalida e atualiza dados locais
             queryClient.invalidateQueries({ queryKey: ['reviewsBook'] })
             queryClient.invalidateQueries({ queryKey: ['recentReviews'] })
+            queryClient.invalidateQueries({ queryKey: ['reviewsUser'] })
             if (onSuccessCallback) onSuccessCallback()
         },
     })
