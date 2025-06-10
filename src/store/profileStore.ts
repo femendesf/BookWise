@@ -6,7 +6,7 @@ interface ProfileData {
   totPagesRead: number
   uniqueAuthors?: string[] 
   categoryMoreRead: string
-  reviews: number
+ 
 }
 
 interface ProfileState extends ProfileData {
@@ -22,7 +22,6 @@ export const useProfileStore = create<ProfileState>((set) => ({
   uniqueAuthors: [],
   categoryMoreRead: '',
   hasFetched: 0,
-  reviews: 0,
 
   setProfileData: (data) => set(() => ({
     ...data

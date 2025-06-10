@@ -8,7 +8,7 @@ import LogoGitHub from "../../public/assets/logo-github.svg";
 import { ArrowRight, User } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useIsAuthenticated } from "@/utils/isAuthenticated";
 
 export default function Login() {
@@ -20,19 +20,23 @@ export default function Login() {
 
     async function handleLoginGoogle() {
         
-
         const result = await signIn("google", { redirect: true, callbackUrl: "/feed" });
 
         if (result?.error){
 
-             if (result.error! === "OAuthSignin") {
+            if (result.error! === "OAuthSignin") {
                 setError("Você precisa aceitar as permissões de acesso ao Google Book!");
             
             }
-
             console.log(errorUrl);
         }
     }
+
+    useEffect(() => {
+        if (errorUrl === 'unauthorized') {
+            setError("Acesse com sua conta Google e aceite as permissões do Google Book!");
+        }
+    }, [errorUrl]);
 
     async function handleLoginGitHub() {
         const result = await signIn("github", { redirect: true, callbackUrl: "/feed" });
@@ -48,7 +52,7 @@ export default function Login() {
         }
     }
 
-    
+    console.log('Este é o erro: ', errorUrl)
     return (
         <>
             {isAuthenticated ? (
@@ -92,10 +96,9 @@ export default function Login() {
                                     <User size={32} />
                                     Entrar como visitante.
                                 </button>
-
-                                {error && <span className="text-red-500">Você precisa aceitar as permissões de acesso ao Google Book!</span>}
                             </div>
                         </div>
+                        {error != '' && <span className="text-red-500 mt-6">{error}</span>}
                     </div>
                 </div>
             )}

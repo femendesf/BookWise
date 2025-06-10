@@ -34,33 +34,38 @@ interface Review {
 interface StartProps{
     loggedIn: boolean;
     hasBookRead: boolean;
-    setButtonSeeAll: (page: 'inicio' | 'perfil' | 'explorar') => void
+    setButtonSeeAll: (page: 'inicio' | 'perfil' | 'explorar') => void;
     setSelectedBook: (book: any) => void;
+    
    
 }
 
-export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook} : StartProps){
+export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, } : StartProps){
 
     const { hasFetched} = useProfileStore()
     const [reviews, setReviews] = useState<Review[]>([]);
     const { booksByGenre } = useBookStore();
     
+    
     const popularBooks = booksByGenre['Tudo'] || []; // Livros populares
     
-    const fetchReviews = async () => {
+    useEffect(() => {
+        const fetchReviews = async () => {
         try{
             const response = await axios.get('/api/user/reviews/recentReviews')
             console.log("Avaliações recebidas:", response.data);
+            
             setReviews(response.data);
         }catch(error){
             console.error("Erro ao buscar avaliações:", error);
+        }finally{
+            console.log("Revisões carregadas:");
+           
         }
 
     }
-    useEffect(() => {
         fetchReviews()
     }, [hasFetched])
-
 //     useEffect(() => {
 //     if (shouldRefreshRecentReviews) {
 //       fetchReviews();

@@ -13,8 +13,12 @@ import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 
 import { useProfileStore } from "@/store/profileStore";
+import axios from "axios";
 
-type ProfileProps = {session: Session | null}
+type ProfileProps = {
+    session: Session | null,
+    
+}
 
 export function Profile({session} : ProfileProps) {
 
@@ -24,6 +28,7 @@ export function Profile({session} : ProfileProps) {
 
     const [textSearch, setTextSearch] = useState('')
     const [visibleBooks, setVisibleBooks] = useState(3);
+    const [ quantityReviews, setQuantityReviews ] = useState(0)
   
     const {
         createdAt,
@@ -31,15 +36,21 @@ export function Profile({session} : ProfileProps) {
         totPagesRead,
         uniqueAuthors,
         categoryMoreRead,
-        reviews,
         hasFetched
     } = useProfileStore()
 
-    useEffect(() => {console.log('VALOR DE HASFETCHED' , hasFetched)}, [hasFetched])
     function handleTextSearch(){
         setTextSearch('')
     }
-   
+    
+    useEffect(() => {
+        const fetchJustQuantityReviewUser = async () => {
+            const response = await axios.get('/api/user/reviews/reviewsUser')
+            setQuantityReviews(response.data.length)
+        }
+        fetchJustQuantityReviewUser()
+    } , [hasFetched])
+
     const resultSearch = bookItems.filter(
         book =>
                 (book.title && typeof book.title === "string" && book.title.toLowerCase().includes(textSearch.toLowerCase())) ||
@@ -138,7 +149,7 @@ export function Profile({session} : ProfileProps) {
                 }
             </div>
 
-            <MyProfile name={name} avatar_url={avatar_url} reviewedBooks={reviews} totPagesRead={totPagesRead} totAuthorsRead={uniqueAuthors!.length} categoryMoreRead={categoryMoreRead} createdAt={year}/>
+            <MyProfile name={name} avatar_url={avatar_url} reviewedBooks={quantityReviews} totPagesRead={totPagesRead} totAuthorsRead={uniqueAuthors!.length} categoryMoreRead={categoryMoreRead} createdAt={year}/>
         </div>
     )
 }

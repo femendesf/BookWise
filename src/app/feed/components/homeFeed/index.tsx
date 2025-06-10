@@ -51,9 +51,8 @@ export function Feed({session}: SessionFeed) {
         
     } | null>(null); // Envia o livro clicado para o sidePanel
 
-    const { setProfileData, setHasFetched, hasFetched } = useProfileStore()
+    const { setProfileData, setHasFetched} = useProfileStore()
     const [isLoading, setIsLoading] = useState(true);
-
     const [permissionGoogleBookAccepted, setPermissionGoogleBookAccepted] = useState(false);
 
     function handleChangeComponent(page: 'inicio' | 'perfil' | 'explorar') {
@@ -83,42 +82,37 @@ export function Feed({session}: SessionFeed) {
       }
 
       fetchPermission()
-
-      console.log('Tem verificação google Book DENTRO', permissionGoogleBookAccepted)
     } , [])
 
-    console.log('Tem verificação google Book FORA', permissionGoogleBookAccepted)
+
   useEffect(() => { 
 
         if(!session){
           setIsLoading(false)
           return
         }
-        setIsLoading(true);
         
         const fetchUserData = async () => {
           
           try {
               if(permissionGoogleBookAccepted){
                   
-                  const [createdAtRes, bookReadRes, reviews] = await Promise.all([
+                  const [createdAtRes, bookReadRes] = await Promise.all([
                       axios.get('/api/user/created_at'),
                       axios.get('/api/user/booksRead'),
-                      axios.get('api/user/reviews/reviewsUser')
                   ]);
 
                   const createdAt = dayjs(createdAtRes.data.user.created_at).year().toString(); // Converte a data para o formato Date
                   const books = bookReadRes.data.books || [];
-                  const reviewsUser = reviews.data;
                 
                   if (books.length === 0) {
                     setHasBookRead(false);
+
                     setProfileData({
                       createdAt,
                       bookItems: [],
                       totPagesRead: 0,
                       categoryMoreRead: '',
-                      reviews: reviewsUser.length
                     });
                     return;
                   }
@@ -149,7 +143,6 @@ export function Feed({session}: SessionFeed) {
                 const mostReadCategory = Object.entries(categoryCount).reduce(
                   (a, b) => (b[1] > a[1] ? b : a), ["", 0]
                 )[0];// Atualiza o estado com o número de autores lidos
-                  
                 
                 setProfileData({
                   createdAt,
@@ -157,18 +150,15 @@ export function Feed({session}: SessionFeed) {
                   totPagesRead: totPages,
                   uniqueAuthors: Array.from(authorsSet),
                   categoryMoreRead: mostReadCategory,
-                  reviews: reviewsUser.length
                 });
 
                   // Marca como já buscado
               }else{
 
-                const [reviewsUserRes, createdAt] = await Promise.all([
-                  axios.get('/api/user/reviews/reviewsUser'),
+                const [ createdAt] = await Promise.all([
                   axios.get('/api/user/created_at')
                 ]);
 
-                const reviewsUser = reviewsUserRes.data;
                 const created_github = dayjs(createdAt.data.user.created_at).year().toString(); // Converte a data para o formato Date
               
                 setProfileData({
@@ -176,16 +166,16 @@ export function Feed({session}: SessionFeed) {
                     bookItems: [],
                     totPagesRead: 0,
                     categoryMoreRead: '',
-                    reviews: reviewsUser.length
+                    
                 });
               }
             
           } catch (error) {
             console.error("Erro ao buscar data de criação do usuário", error);
             await api.get("/auth/logout"); // Remove os cookies no backend
-            await signOut({ redirect: true, callbackUrl: "/login" })
+            await signOut({ redirect: true, callbackUrl: '/login?error=unauthorized' })
           }finally{
-              setIsLoading(false); // Define o loading como false após a busca
+            setIsLoading(false)
           }
       }; 
     
@@ -238,12 +228,14 @@ export function Feed({session}: SessionFeed) {
                     setButtonSeeAll={handleChangeComponent}
                     loggedIn={isAuthenticated}
                     hasBookRead={hasBookRead}
-                   
                     setSelectedBook={setSelectedBook}
                    
                   /> 
                   : activePage === 'perfil' ? 
-                    <Profile session={session}/> 
+                    <Profile 
+                      session={session}
+                     
+                    /> 
                   : 
                     <Discover setSelectedBook={setSelectedBook}/>}
               </div>
@@ -280,25 +272,3 @@ export function Feed({session}: SessionFeed) {
         </div>
     )
 }
-
-// if(provider == 'github'){
-
-//                     const [providerRes, reviewsUserRes, createdAtToGitHub] = await Promise.all([
-//                       axios.get('/api/user/providerUser'),
-//                       axios.get('/api/user/reviews/reviewsUser'),
-//                       axios.get('/api/user/created_at')
-//                     ]);
-
-//                     const provider_github = providerRes.data;
-//                     const reviewsUser = reviewsUserRes.data;
-//                     const created_github = dayjs(createdAtToGitHub.data.user.created_at).year().toString(); // Converte a data para o formato Date
-//                     setProvider(provider_github.provider);
-
-//                     setProfileData({
-//                         createdAt: created_github,
-//                         bookItems: [],
-//                         totPagesRead: 0,
-//                         categoryMoreRead: '',
-//                         reviews: reviewsUser.length
-//                     });
-//                   }
