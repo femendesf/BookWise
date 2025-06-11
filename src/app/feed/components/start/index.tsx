@@ -59,7 +59,7 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
                         Início
                     </h1>
             
-                    <div className="flex gap-16">
+                    <div className="flex gap-16 h-full">
 
                         <div className="flex gap-10 flex-col w-[48rem] xxl:w-[51.25rem] mb-10">
 
@@ -130,7 +130,7 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
 
                         </div>{/* Recent Reviews */}
 
-                        <div className="flex flex-col gap-3 w-96 overflow-hidden">
+                        <div className="flex flex-col gap-3 w-[28.75rem] h-full overflow-hidden">
 
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-gray-100">Livros populares</span>
@@ -151,7 +151,6 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
                                         initial="hidden"
                                         animate="visible"
                                         custom={index} 
-                                        className="h-36 "
                                         key={book.id}
                                         onClick={() => setSelectedBook({
                                             ...book,
@@ -169,8 +168,8 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
                                             author={book.author}
                                             rating={book.rating}
                                             index={index}
-                                            widthAvatar={64}
-                                            heightAvatar={94}
+                                            widthAvatar={84}
+                                            heightAvatar={120}
                                             sizeStar={16}
                                             category={book.description.category}
                                             pages={book.description.pages}
