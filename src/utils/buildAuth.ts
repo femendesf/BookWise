@@ -84,10 +84,10 @@ export function buildNextAuthOptions(): NextAuthOptions {
             if (existingUser) {
               const existingAccount = await prisma.account.findUnique({
                   where: {
-                  provider_provider_account_id: {
-                      provider: account!.provider,
-                      provider_account_id: account!.providerAccountId,
-                  },
+                    provider_providerAccountId: {
+                        provider: account!.provider,
+                        providerAccountId: account!.providerAccountId,
+                    },
                   },
               });
 
@@ -95,36 +95,36 @@ export function buildNextAuthOptions(): NextAuthOptions {
               if (existingAccount) {
                 await prisma.account.update({
                   where: {
-                    provider_provider_account_id: {
+                    provider_providerAccountId: {
                       provider: account!.provider,
-                      provider_account_id: account!.providerAccountId,
+                      providerAccountId: account!.providerAccountId,
                     },
                   },
                   data: {
-                    // Preserve o refresh_token antigo se o novo for undefined
-                    refresh_token: account!.refresh_token ?? existingAccount.refresh_token,
-                    access_token: account!.access_token,
-                    expires_at: account!.expires_at,
-                    token_type: account!.token_type,
+                    // Preserve o refreshToken antigo se o novo for undefined
+                    refreshToken: account!.refresh_token ?? existingAccount.refreshToken,
+                    accessToken: account!.access_token,
+                    expiresAt: account!.expires_at,
+                    tokenType: account!.token_type,
                     scope: account!.scope,
-                    id_token: account!.id_token,
-                    session_state: account!.session_state,
+                    idToken: account!.id_token,
+                    sessionState: account!.session_state,
                   },
                 });
               } else {
                   await prisma.account.create({
                     data: {
-                      user_id: existingUser.id,
+                      userId: existingUser.id,
                       type: account!.type,
                       provider: account!.provider,
-                      provider_account_id: account!.providerAccountId,
-                      refresh_token: account!.refresh_token,
-                      access_token: account!.access_token,
-                      expires_at: account!.expires_at,
-                      token_type: account!.token_type,
+                      providerAccountId: account!.providerAccountId,
+                      refreshToken: account!.refresh_token,
+                      accessToken: account!.access_token,
+                      expiresAt: account!.expires_at,
+                      tokenType: account!.token_type,
                       scope: account!.scope,
-                      id_token: account!.id_token,
-                      session_state: account!.session_state,
+                      idToken: account!.id_token,
+                      sessionState: account!.session_state,
                     },
                   });
               }
@@ -150,7 +150,7 @@ export function buildNextAuthOptions(): NextAuthOptions {
               ...session.user,
               id: user.id,
               avatar_url: user.avatar_url,
-              hasGoogleBooksPermission: user.hasGoogleBooksPermission,
+            
             },
           };
         },

@@ -19,11 +19,11 @@ interface Review {
   user: {
     id: string
     name: string
-    avatar_url: string
+    avatarUrl: string
   }
 }
 interface SidePanelProps{
-    userId: string; // ID do usuário autenticado
+    userId: string; 
     nameUser: string;
     userAvatar: string;
 
@@ -57,10 +57,25 @@ export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title
     })
     const { data: reviews = [], isLoading, isError } = useReviewsBook(bookId)
      const handleNewComment = async (commentData: { avatar: string; nameUser: string; comment: string; rating: number }) => {
+
         const categoriesString = category.length <= 0 ? '' : category.join(', ')
+        console.log('ENVIADO QUANDO CLICAR EM ENVIAR', {
+            bookId,
+            title,
+            author,
+            sinopse,
+            imgCover,
+            rating: commentData.rating,
+            comment: commentData.comment,
+            userId,
+            userAvatar: commentData.avatar,
+            category: categoriesString,
+            pages,
+        })
+
 
         createReviewMutation({
-            id: bookId,
+            bookId: bookId,
             title,
             author,
             sinopse,
@@ -198,7 +213,7 @@ export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title
                         reviews.map((review : Review) => (
                             <div className="bg-gray-700 p-5 rounded-lg w-full" id="reviews" key={review.id}>
                                 <ReviewUser
-                                    imgProfile={review.user.avatar_url}
+                                    imgProfile={review.user.avatarUrl}
                                     nameUser={review.user.name}
                                     dateReview={review.createdAt}
                                     sizeImageUser="2.5rem"

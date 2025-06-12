@@ -5,22 +5,22 @@ export async function GET() {
   try {
     const recentReviews = await prisma.review.findMany({
       orderBy: {
-        created_at: 'desc', // Ordena pelas mais recentes
+        createdAt: 'desc', // Ordena pelas mais recentes
       },
       take: 10,
       include: {
         user: {
           select: {
             name: true,
-            avatar_url: true,
+            avatarUrl: true,
           },
         },
         book: {
           select: {
-            book_id: true,
+            bookId: true,
             title: true,
             author: true,
-            cover_url: true,
+            coverUrl: true,
             category: true,
             sinopse: true
           },

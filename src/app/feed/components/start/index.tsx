@@ -8,20 +8,19 @@ import { MotionCard } from "@/utils/motionDiv";
 
 import { useBookStore } from "@/store/BookStore";
 import { useRecentReviews } from "@/hooks/useRecentReviews";
-
 interface Review {
   comment: string; // O comentário da avaliação
   rating: number; // O rating da avaliação
-  created_at: string; // Data de criação da avaliação (vem como string do Prisma)
+  createdAt: string; // Data de criação da avaliação (vem como string do Prisma)
   user: {
     name: string; // Nome do usuário
-    avatar_url: string; // URL do avatar do usuário
+    avatarUrl: string; // URL do avatar do usuário
   };
   book: {
     book_id: string; // ID do Google Books
     title: string;
     author: string;
-    cover_url: string; // URL da capa do livro
+    coverUrl: string; // URL da capa do livro
     category: string; // Categoria do livro
     sinopse: string;
     // Não inclua sinopse aqui, pois a review não a possui diretamente.
@@ -44,7 +43,7 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
 
     const {data: recentReviews} = useRecentReviews()
     
-    console.log('Livros Avaliados:', recentReviews);
+    console.log('RECENTES REVIEWs:', recentReviews);
     return(
 
         <motion.div
@@ -75,11 +74,11 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
 
                                             const {
                                                 rating,
-                                                created_at,
+                                                createdAt,
                                                 user, // O objeto user da review (com name e avatar_url)
                                                 book, // O objeto book da review (com title, author, cover_url, category)
                                             } = review;
-
+                                            console.log('CAPA LIVRO:', book.coverUrl);
                                             return (
                                                 <div
                                                     key={index}
@@ -103,10 +102,10 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
                                                     <RecentReviews 
                                                     title={book.title}
                                                     author={book.author}
-                                                    imgBook={book.cover_url}
-                                                    imgProfile={user.avatar_url}
+                                                    imgBook={book.coverUrl}
+                                                    imgProfile={user.avatarUrl}
                                                     name={user.name}
-                                                    dateReview={created_at}
+                                                    dateReview={createdAt}
                                                     rating={rating}
                                                     description={book.sinopse}
                                                     index={index}
@@ -170,7 +169,7 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
                                             index={index}
                                             widthAvatar={84}
                                             heightAvatar={120}
-                                            sizeStar={16}
+                                            sizeStar={20}
                                             category={book.description.category}
                                             pages={book.description.pages}
                                         />

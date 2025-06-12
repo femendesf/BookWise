@@ -15,15 +15,15 @@ export async function GET(req: NextResponse){
 
     const account = await prisma.account.findFirst({
         where:{
-            user_id: session.user.id,
+            userId: session.user.id,
             provider: 'google'
         },
         select:{
-            access_token: true
+            accessToken: true
         }
     })
 
-    if(!account?.access_token){
+    if(!account?.accessToken){
         return NextResponse.json({error: 'Usuário não autenticado'}, {status: 405});
     }
 

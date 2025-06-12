@@ -7,7 +7,7 @@ export async function checkGoogleBooksPermission(userId: string) {
       // 🔍 Verifica se o usuário tem uma conta do Google vinculada
       const googleAccount = await prisma.account.findFirst({
         where: {
-          user_id: userId,
+          userId: userId,
           provider: 'google',
         },
       });

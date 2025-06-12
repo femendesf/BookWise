@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 interface CreateReviewParams {
-  id: string
+  bookId: string
   title: string
   author: string
   sinopse: string
@@ -15,7 +15,9 @@ interface CreateReviewParams {
 }
 
 export async function createReview(data: CreateReviewParams) {
+  console.log('DADOS NO CREATE REVIEW', data)
   const response = await axios.post('/api/user/reviews/reviewedBooks', data)
+ 
   return response.data
 }
 
@@ -25,6 +27,7 @@ export async function getReviewsBook(bookId: string) {
 }
 
 export async function getRecentReviews() {
+  console.log('DADOS NO GET RECENT REVIEWS')
   const response = await axios.get('/api/user/reviews/recentReviews')
   return response.data
 }

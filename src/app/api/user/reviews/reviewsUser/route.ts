@@ -16,7 +16,7 @@ export async function GET(){
         where: {
             reviews:{
                 some:{
-                    user_id: session.user.id
+                    userId: session.user.id
                 }
             }
         }

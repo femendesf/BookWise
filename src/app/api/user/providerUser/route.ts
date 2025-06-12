@@ -12,10 +12,10 @@ export async function GET() {
     
     const response = await prisma.account.findFirst({
         where: {
-            user_id: session.user.id
+            userId: session.user.id
         },
         select: {
-            access_token: true,
+            accessToken: true,
         }
     })
 

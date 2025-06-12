@@ -5,10 +5,10 @@ import { checkGoogleBooksPermission } from './checkGoogleBooksPemission';
 export async function runGoogleBooksPermissionCheck() {
   const accounts = await prisma.account.findMany({
     where: { provider: 'google' },
-    select: { user_id: true },
+    select: { userId: true },
   });
 
-  const uniqueUserIds = Array.from(new Set(accounts.map((acc) => acc.user_id)));
+  const uniqueUserIds = Array.from(new Set(accounts.map((acc) => acc.userId)));
 
   for (const userId of uniqueUserIds) {
     await checkGoogleBooksPermission(userId);

@@ -11,9 +11,9 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({error: 'Usuário não autenticado'}, {status: 405});
     }
 
-    const userId = session.user.id;
+    // const userId = session.user.id;
     const body = await req.json();
-
+    
     const { 
         title, 
         author, 
@@ -24,39 +24,44 @@ export async function POST(req: NextRequest) {
         category, 
         pages, 
         sinopse,
-        avatar_user,
-        id: googleBookId // Renomeamos 'id' do body para 'googleBookId' para clareza
+        bookId,
+        userId,
+        userAvatar,
+       // Renomeamos 'id' do body para 'googleBookId' para clareza
     } = body;
 
-     if (!googleBookId || !title || !author || !imgCover || rating === undefined || !comment || !category ) {
+    console.log("Dados recebidos:", body);
+    
+    if (!bookId || !title || !author || !imgCover || rating === undefined || !comment || !category) {
         return NextResponse.json({ error: 'Dados incompletos para a avaliação. Faltando ID do Google Books, título, autor, capa, rating, comentário ou categoria.' }, { status: 400 });
     }
-
     const categoryString = typeof category === 'string' ? category : ''; 
 
     try {
-   
+      console.log('ENTROU NO TRY')
       // Verifica se o livro já existe
       let book = await prisma.book.findFirst({
-        where: { book_id: googleBookId}
+        where: { bookId: bookId}
       });
 
       if (!book) {
             // Se o livro não existe, cria um novo
+            console.log('LIVRO NÃO EXISTE')
             book = await prisma.book.create({
                 data: {
-                    book_id: googleBookId, // <--- SALVAMOS O book_id DA API GOOGLE BOOKS
+                    bookId : bookId, // <--- SALVAMOS O bookId DA API GOOGLE BOOKS
                     title,
                     author,
-                    sinopse,
                     description,
-                    cover_url: imgCover, 
-                    category: categoryString, 
+                    sinopse, 
+                    coverUrl: imgCover,
                     pages: pages || 0, 
+                    category: categoryString,
                     rating: rating, // Rating inicial pode ser a primeira avaliação
                 }
             });
         } else {
+          console.log('LIVRO EXISTE')
             // Se o livro já existe, você pode querer atualizar suas propriedades
             // Mantenha o book_id, mas atualize outros campos se necessário.
             await prisma.book.update({
@@ -64,8 +69,8 @@ export async function POST(req: NextRequest) {
                 data: {
                     title: title, // Você pode querer atualizar título, autor, etc. caso haja mudanças
                     author: author,
-                    sinopse: sinopse || book.sinopse, // Atualiza sinopse se fornecida
-                    cover_url: imgCover,
+                    sinopse,
+                    coverUrl: imgCover,
                     category: categoryString,
                     pages: pages || book.pages || 0,
                     // O rating do livro será atualizado após a review ser criada
@@ -73,16 +78,8 @@ export async function POST(req: NextRequest) {
             });
         }
 
-      // Encontrar usuário
-      // const user = await prisma.user.findFirst({
-      //   where: { name: nameUser }
-      // });
-
-      // if (!user) {
-      //   return new Response(JSON.stringify({ error: "User not found" }), { status: 404 });
-      // }
-
       // 2. Criar a avaliação
+      console.log('CRIANDO REVIEW')
       const newReview = await prisma.review.create({
         data: {
           comment: comment,
@@ -98,30 +95,41 @@ export async function POST(req: NextRequest) {
           user: {
             select: {
               name: true,
-              avatar_url: true,
+              avatarUrl: true,
             },
           },
         },
       });
       
       // 3. Atualizar o rating médio do livro (opcional, mas recomendado)
-      const reviews = await prisma.review.findMany({
-        where: { book_id: book.id },
-        select: { rating: true },
-      });
+      // const reviews = await prisma.review.findMany({
+      //   where: { bookId: book.id },
+      //   select: { rating: true },
+      // });
 
-      const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
-      const averageRating = totalRating / reviews.length;
+      // const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
+      // const averageRating = totalRating / reviews.length;
 
-      await prisma.book.update({
-        where: { id: book.id },
-        data: { rating: averageRating },
-      });
-        return new Response(JSON.stringify(newReview), { status: 201 });
+      // await prisma.book.update({
+      //   where: { id: book.id },
+      //   data: { rating: averageRating },
+      // });
+        
+        return NextResponse.json(newReview, { status: 201 });
 
-      } catch (error) {
-        console.error("Erro ao criar avaliação:", error);
-        return new Response(JSON.stringify({ error: "Erro interno" }), { status: 500 });
+      } catch (error:any) {
+          if (error && error.code && error.meta) {
+            // Este bloco tenta criar um JSON.stringify de um objeto com meta e code.
+            // Se o payload para NextResponse.json for um objeto, stringify pode ser problemático.
+            // NextResponse.json espera um objeto serializável.
+            return NextResponse.json({
+                message: 'Erro Prisma',
+                code: error.code,
+                meta: error.meta,
+            }, { status: 400 }); // Removido o new NextResponse(JSON.stringify(...)) para usar NextResponse.json
+          }
+          console.error("Erro ao criar avaliação:", error);
+        return NextResponse.json({ error: 'Erro ao criar avaliação' }, { status: 500 });
       }
 }
 
@@ -136,7 +144,7 @@ export async function GET(req: NextRequest) {
     }
 
     const book = await prisma.book.findFirst({
-        where: { book_id: googleBookId }, // <--- Uses Google Book ID (not unique)
+        where: { bookId: googleBookId }, // <--- Uses Google Book ID (not unique)
         select: { id: true } // Selects the internal Prisma ID
     });
 
@@ -145,12 +153,12 @@ export async function GET(req: NextRequest) {
     }
 
     const reviews = await prisma.review.findMany({
-      where: { book_id: book.id }, // Uses the internal Prisma ID to find reviews
+      where: { bookId: book.id }, // Uses the internal Prisma ID to find reviews
       include: {
         user: {
           select: {
             name: true,
-            avatar_url: true,
+            avatarUrl: true,
           },
         },
         book: { // Inclua os dados do livro
@@ -161,7 +169,7 @@ export async function GET(req: NextRequest) {
         },
       },
       orderBy: {
-        created_at: 'desc',
+        createdAt: 'desc',
       },
     });
     const formattedReviews = reviews.map(review => ({

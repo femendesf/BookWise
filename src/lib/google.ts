@@ -7,7 +7,7 @@ export async function getGoogleOAuthToken(userId: string){
     const account = await prisma.account.findFirst({
         where:{
             provider: 'google',
-            user_id: userId
+            userId: userId
         }
     })
 
@@ -22,24 +22,24 @@ export async function getGoogleOAuthToken(userId: string){
     )
 
     auth.setCredentials({
-        access_token: account.access_token,
-        refresh_token: account.refresh_token,
-        expiry_date: account.expires_at ? account.expires_at * 1000 : null
+        access_token: account.accessToken,
+        refresh_token: account.refreshToken,
+        expiry_date: account.expiresAt ? account.expiresAt * 1000 : null
     })
 
     
     //--------------------------------------------------------------------------------
     
     
-    if(!account.expires_at){
+    if(!account.expiresAt){
         return auth
     }
 
-    const isTokenExpired = dayjs(account.expires_at * 1000).isBefore((new Date()))
+    const isTokenExpired = dayjs(account.expiresAt * 1000).isBefore((new Date()))
 
     // Check if the token is expired
     if(isTokenExpired){
-         if (!account.refresh_token) {
+         if (!account.refreshToken) {
             console.warn(`Usuário ${userId} não possui refresh_token salvo para renovar o token.`);
             return null;
         }
@@ -53,12 +53,12 @@ export async function getGoogleOAuthToken(userId: string){
                 id: account.id
             },
             data:{
-                access_token,
-                expires_at: expiry_date ? Math.floor(expiry_date / 1000) : null,
-                id_token,
-                refresh_token,
+                accessToken: access_token,
+                expiresAt: expiry_date ? Math.floor(expiry_date / 1000) : null,
+                idToken: id_token,
+                refreshToken: refresh_token,
                 scope,
-                token_type
+                tokenType: token_type
             }
         })
 

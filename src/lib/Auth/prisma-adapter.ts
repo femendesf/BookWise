@@ -22,7 +22,7 @@ export function PrismaAdapter(): Adapter{
                     id: existingUser.id,
                     name: existingUser.name!,
                     email: existingUser.email!,
-                    avatar_url: existingUser.avatar_url!,
+                    avatarUrl: existingUser.avatarUrl!,
                     emailVerified: null,
                 };
             }
@@ -33,7 +33,7 @@ export function PrismaAdapter(): Adapter{
                 data: {
                     name: user.name,
                     email: user.email,
-                    avatar_url: user.avatar_url,
+                    avatarUrl: user.avatar_url,
                 }
             })
 
@@ -41,7 +41,7 @@ export function PrismaAdapter(): Adapter{
                 id: newUser.id,
                 name: newUser.name,
                 email: newUser.email,
-                avatar_url: newUser.avatar_url,
+                avatarUrl: newUser.avatarUrl,
                 emailVerified: null,
             }
         },
@@ -63,7 +63,7 @@ export function PrismaAdapter(): Adapter{
                     id: user.id,
                     name: user.name!,
                     email: user.email,
-                    avatar_url: user.avatar_url!,
+                    avatar_url: user.avatarUrl!,
                     emailVerified: null,
                 }
             } catch (error) {
@@ -89,7 +89,7 @@ export function PrismaAdapter(): Adapter{
                 id: user.id,
                 name: user.name!,
                 email: user.email,
-                avatar_url: user.avatar_url!,
+                avatar_url: user.avatarUrl!,
                 emailVerified: null,
             }
         },
@@ -97,9 +97,9 @@ export function PrismaAdapter(): Adapter{
         async getUserByAccount({ providerAccountId, provider }) {
             const account = await prisma.account.findUnique({
                 where: {
-                    provider_provider_account_id: {
+                    provider_providerAccountId: {
                         provider,
-                        provider_account_id: providerAccountId
+                        providerAccountId
                     }
                 },
                 include: {
@@ -117,7 +117,7 @@ export function PrismaAdapter(): Adapter{
                 id: user.id,
                 name: user.name!,
                 email: user.email,
-                avatar_url: user.avatar_url!,
+                avatar_url: user.avatarUrl!,
                 emailVerified: null,
             }
         },
@@ -135,7 +135,7 @@ export function PrismaAdapter(): Adapter{
                 data: {
                     name: user.name,
                     email: user.email,
-                    avatar_url: user.avatar_url,
+                    avatarUrl: user.avatar_url,
                 }
             })
 
@@ -144,7 +144,7 @@ export function PrismaAdapter(): Adapter{
                 name: prismaUser.name!,
                 email: prismaUser.email!,
                 emailVerified: null,
-                avatar_url: prismaUser.avatar_url!,
+                avatar_url: prismaUser.avatarUrl!,
                 
               }
         },
@@ -152,17 +152,17 @@ export function PrismaAdapter(): Adapter{
         async linkAccount(account: { userId: string; type: string; provider: string; providerAccountId: string; refresh_token?: string; access_token?: string; expires_at?: number; token_type?: string; scope?: string; id_token?: string; session_state?: string; }) {
             await prisma.account.create({
                 data: {
-                    user_id: account.userId,
+                    userId: account.userId,
                     type: account.type,
                     provider: account.provider,
-                    provider_account_id: account.providerAccountId,
-                    refresh_token: account.refresh_token,
-                    access_token: account.access_token,
-                    expires_at: account.expires_at,
-                    token_type: account.token_type,
+                    providerAccountId: account.providerAccountId,
+                    refreshToken: account.refresh_token,
+                    accessToken: account.access_token,
+                    expiresAt: account.expires_at,
+                    tokenType: account.token_type,
                     scope: account.scope,
-                    id_token: account.id_token,
-                    session_state: account.session_state!,
+                    idToken: account.id_token,
+                    sessionState: account.session_state!,
                 }
             })
         },
@@ -170,14 +170,14 @@ export function PrismaAdapter(): Adapter{
         async createSession({ sessionToken, userId, expires } : AdapterSession) : Promise<AdapterSession> {
             
             const session = await prisma.session.upsert({
-                where: {session_token: sessionToken},
-                update:{ user_id: userId, expires },
-                create:{ user_id: userId, session_token: sessionToken, expires}
+                where: {sessionToken},
+                update:{ userId, expires },
+                create:{ userId, sessionToken, expires }
             });
 
             return {
-                sessionToken: session.session_token,
-                userId: session.user_id,
+                sessionToken: session.sessionToken,
+                userId: session.userId,
                 expires: session.expires,
             };
             
@@ -186,7 +186,7 @@ export function PrismaAdapter(): Adapter{
         async getSessionAndUser(sessionToken) {
             const prismaSession = await prisma.session.findUnique({
                 where:{
-                  session_token: sessionToken,
+                  sessionToken: sessionToken,
                 },
                 include:{
                   user: true,
@@ -201,16 +201,16 @@ export function PrismaAdapter(): Adapter{
     
               return{
                 session:{
-                  userId: session.user_id,
+                  userId: session.userId,
                   expires: session.expires,
-                  sessionToken: session.session_token,
+                  sessionToken: session.sessionToken,
                 },
                 user: {
                   id: user.id,
                   name: user.name!,
                   email: user.email!,
                   emailVerified: null,
-                  avatar_url: user.avatar_url!,
+                  avatar_url: user.avatarUrl!,
                 },
               }
         },
@@ -218,17 +218,17 @@ export function PrismaAdapter(): Adapter{
         async updateSession({ sessionToken , userId, expires }) { 
             const prismaSession = await prisma.session.update({
                 where:{
-                  session_token: sessionToken
+                  sessionToken: sessionToken
                 },
                 data:{
                   expires,
-                  user_id: userId,
+                  userId: userId,
                 },
               })
               
               return{
-                sessionToken: prismaSession.session_token,
-                userId: prismaSession.user_id,
+                sessionToken: prismaSession.sessionToken,
+                userId: prismaSession.userId,
                 expires: prismaSession.expires,
               }
         },
@@ -236,7 +236,7 @@ export function PrismaAdapter(): Adapter{
         async deleteSession(sessionToken) {
             await prisma.session.deleteMany({
                 where:{
-                  session_token: sessionToken,
+                  sessionToken: sessionToken,
                 },
               })
         },
