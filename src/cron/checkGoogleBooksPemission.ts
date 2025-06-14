@@ -4,6 +4,7 @@ import axios from 'axios';
 export async function checkGoogleBooksPermission(userId: string) {
   try {
 
+    console.log('CHECKGOOGLEBOOKPERMISSION FOI EXECUTADO');
       // 🔍 Verifica se o usuário tem uma conta do Google vinculada
       const googleAccount = await prisma.account.findFirst({
         where: {

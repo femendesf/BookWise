@@ -48,8 +48,6 @@ export function Feed({session}: SessionFeed) {
 
     const { setBooksForGenre } = useBookStore(); // Acessa o estado do BookStore
     const { setProfileData, setHasFetched} = useProfileStore()
-    // const [isLoading, setIsLoading] = useState(true);
-    // const [permissionGoogleBookAccepted, setPermissionGoogleBookAccepted] = useState(false);
     
     const {data : permissionGoogleBookAccepted, isLoading: isLoadingPermission} = useGoogleBooksPermissions(session)
     const shouldFetchProfile = typeof permissionGoogleBookAccepted === 'boolean';
@@ -83,21 +81,18 @@ export function Feed({session}: SessionFeed) {
       }
     }, [allBooks]);
 
-      useEffect(() => {
-        if (profileError) {
-          console.error('Erro ao buscar perfil do usuário', profileError);
-          
-          signOut({ redirect: true, callbackUrl: '/login?error=unauthorized' });
-        }
-      }, [profileError]);
+    useEffect(() => {
+      if (profileError) {
+        console.error('Erro ao buscar perfil do usuário', profileError);
+        
+        signOut({ redirect: true, callbackUrl: '/login?error=unauthorized' });
+      }
+    }, [profileError]);
 
-       const isLoading = isLoadingPermission || isLoadingProfile;
+      const isLoading = isLoadingPermission || isLoadingProfile;
 
-       console.log('isLoading:', isLoading);
-       console.log('permissionGoogleBookAccepted:', permissionGoogleBookAccepted);
-       console.log('profileData:', profileData);
-       console.log('allBooks:', allBooks);
-
+      console.log('permissionGoogleBookAccepted:', permissionGoogleBookAccepted);
+       
   //   useEffect(() => {
 
   //       if(!session){

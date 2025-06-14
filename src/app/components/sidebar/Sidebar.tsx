@@ -34,7 +34,6 @@ export function Sidebar({activePage,avatar_url, name, isAuthenticated, setActive
     setActivePage(buttonName); 
   }
 
-  console.log(activePage);
   async function handleLogout() {
 
     await api.get("/auth/logout"); // Remove os cookies no backend
@@ -42,8 +41,6 @@ export function Sidebar({activePage,avatar_url, name, isAuthenticated, setActive
 
     setActivePage(activePage); 
   }
-
-
 
   return (
 

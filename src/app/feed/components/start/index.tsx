@@ -43,7 +43,6 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
 
     const {data: recentReviews} = useRecentReviews()
     
-    console.log('RECENTES REVIEWs:', recentReviews);
     return(
 
         <motion.div
@@ -78,7 +77,7 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
                                                 user, // O objeto user da review (com name e avatar_url)
                                                 book, // O objeto book da review (com title, author, cover_url, category)
                                             } = review;
-                                            console.log('CAPA LIVRO:', book.coverUrl);
+                                         
                                             return (
                                                 <div
                                                     key={index}

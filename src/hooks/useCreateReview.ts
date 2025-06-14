@@ -8,7 +8,7 @@ export function useCreateReview(onSuccessCallback?: () => void) {
         mutationFn: createReview,
         onSuccess: (data) => {
             // Invalida e atualiza dados locais
-            queryClient.invalidateQueries({ queryKey: ['reviewsBook', data.bookId] })
+            queryClient.invalidateQueries({ queryKey: ['reviewsBook'] })
             queryClient.invalidateQueries({ queryKey: ['recentReviews'] })
             queryClient.invalidateQueries({ queryKey: ['reviewsUser'] })
             if (onSuccessCallback) onSuccessCallback()

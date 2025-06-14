@@ -74,6 +74,8 @@ export function buildNextAuthOptions(): NextAuthOptions {
     callbacks: {
 
         async signIn({ user, account  }) {
+
+            console.log('SIGN FOI EXECUTADO')
             if (!user.email) return false;
           
             // Verifica se já existe user com mesmo email
@@ -81,7 +83,11 @@ export function buildNextAuthOptions(): NextAuthOptions {
               where: { email: user.email },
             });
 
+            console.log('USUARIO EXISTE:' , existingUser)
+            
+
             if (existingUser) {
+              console.log('ENTROU NO IF FO EXISTING USER')
               const existingAccount = await prisma.account.findUnique({
                   where: {
                     provider_providerAccountId: {
@@ -90,9 +96,11 @@ export function buildNextAuthOptions(): NextAuthOptions {
                     },
                   },
               });
+              
 
               // Se ainda não tiver uma conta vinculada com esse provider, vincula
               if (existingAccount) {
+                console.log('ENTROU NO IF FO EXISTIN ACCOUNT')
                 await prisma.account.update({
                   where: {
                     provider_providerAccountId: {
@@ -112,6 +120,7 @@ export function buildNextAuthOptions(): NextAuthOptions {
                   },
                 });
               } else {
+                 console.log('EXISTING USER É FALSO, EXECUTOU A FUNÇÃO DO ELSE')
                   await prisma.account.create({
                     data: {
                       userId: existingUser.id,
@@ -129,20 +138,26 @@ export function buildNextAuthOptions(): NextAuthOptions {
                   });
               }
 
-              if (account?.provider === "google") {
-                if (!account.scope?.includes("https://www.googleapis.com/auth/books")) {
-                    return false;
-                }
-              }
-
+              
               // Verifica e atualiza o campo hasGoogleBooksPermission
               await checkGoogleBooksPermission(existingUser.id);
+               console.log('EXISTING EXECUTADO COM SUCESSO')
+             
+            }
+
+            if (account?.provider === "google") {
+              if (!account.scope?.includes("https://www.googleapis.com/auth/books")) {
+                  return false;
+              }
+              
             }
 
             return true;
         },
 
         async session({ session, user }) {
+
+       
 
           return {
             ...session,
@@ -155,7 +170,9 @@ export function buildNextAuthOptions(): NextAuthOptions {
           };
         },
 
+        
     },
+    
   };
 }
 

@@ -16,15 +16,19 @@ export async function GET(req: Request) {
 
         const idBook = data.items?.map((item: any) => item.id) || [];
         
-        const reviewBookMap = await prisma.review.groupBy({
-            by: ['bookId'],
+        const dbBooks = await prisma.book.findMany({
             where: {
-                bookId: { in: idBook },
+                bookId: {
+                in: idBook,
+                },
             },
-            _avg: {
+            select: {
+                bookId: true,
                 rating: true,
             },
         });
+
+        const dbBookMap = new Map(dbBooks.map(book => [book.bookId, book.rating]));
 
 
         console.log("*************** ID LIVROS ***************" , idBook);
@@ -37,22 +41,15 @@ export async function GET(req: Request) {
             console.log("*********************************************");
 
             const categories = item.volumeInfo.categories || [];
-            
             const bookId = item.id;
 
-            const googleRating = item.volumeInfo.averageRating || 0; // Avaliação do Google Books
-
-            const dbReview = reviewBookMap.find(r => r.bookId === bookId); // Busca a avaliação do livro no banco de dados
-            const dbRating = dbReview?._avg?.rating || 0; // Avaliação média do livro no banco de dados
-
-            const combinedRating = (googleRating + dbRating) / (googleRating && dbRating ? 2 : 1); // Avaliação combinada
-
+            const dbRating = dbBookMap.get(bookId) || 0;
             return {
                 id: item.id,
                 title: item.volumeInfo.title,
                 author: item.volumeInfo.authors?.join(", ") || "Desconhecido",
                 cover: item.volumeInfo.imageLinks?.thumbnail || "/errorCover.svg",
-                rating: combinedRating,
+                rating: dbRating,
                 sinopse: item.volumeInfo.description || "Descrição não disponível",
                 description: {
                     category: categories,

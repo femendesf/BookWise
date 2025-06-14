@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
           console.log('LIVRO EXISTE')
             // Se o livro já existe, você pode querer atualizar suas propriedades
             // Mantenha o book_id, mas atualize outros campos se necessário.
+            
             await prisma.book.update({
                 where: { id: book.id }, // Atualiza pelo ID interno do Prisma
                 data: {
@@ -102,18 +103,18 @@ export async function POST(req: NextRequest) {
       });
       
       // 3. Atualizar o rating médio do livro (opcional, mas recomendado)
-      // const reviews = await prisma.review.findMany({
-      //   where: { bookId: book.id },
-      //   select: { rating: true },
-      // });
+      const reviews = await prisma.review.findMany({
+        where: { bookId: book.id },
+        select: { rating: true },
+      });
 
-      // const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
-      // const averageRating = totalRating / reviews.length;
+      const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
+      const averageRating = totalRating / reviews.length;
 
-      // await prisma.book.update({
-      //   where: { id: book.id },
-      //   data: { rating: averageRating },
-      // });
+      await prisma.book.update({
+        where: { id: book.id },
+        data: { rating: averageRating },
+      });
         
         return NextResponse.json(newReview, { status: 201 });
 

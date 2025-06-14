@@ -52,7 +52,6 @@ export default function Login() {
         }
     }
 
-    console.log('Este é o erro: ', errorUrl)
     return (
         <>
             {isAuthenticated ? (

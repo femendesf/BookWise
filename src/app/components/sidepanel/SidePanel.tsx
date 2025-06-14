@@ -39,15 +39,13 @@ interface SidePanelProps{
 
     isAuthenticated: boolean;
     clickedExitBook: (clicked: boolean) => void;
-     onReviewSuccessfullyAdded: () => void;
+    onReviewSuccessfullyAdded: () => void;
 }
-
 
 export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title, author, sinopse, rating, index, category, pages, isAuthenticated,  clickedExitBook, onReviewSuccessfullyAdded} : SidePanelProps){
     
 
     const [reviewButton, setReviewButton] = useState(false)
-    // const [reviews, setReviews] = useState<Review[]>([])
     const [showLogin, setShowLogin] = useState(false)//Estado para mostrar o login
     const panelRef = useRef<HTMLDivElement>(null)// Criando uma referência para o painel
     

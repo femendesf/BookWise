@@ -1,11 +1,12 @@
-import { Adapter, AdapterUser, AdapterSession } from "next-auth/adapters";
+import { Adapter, AdapterUser, AdapterSession, AdapterAccount } from "next-auth/adapters";
 import { prisma } from '../prisma'
+import { checkGoogleBooksPermission } from "@/cron/checkGoogleBooksPemission";
 
 export function PrismaAdapter(): Adapter{
     return{
 
         async createUser(user: AdapterUser) {
-            console.log(user)
+            (user)
 
             // 1. Verifica se já existe um User com o mesmo e-mail
             let existingUser = await prisma.user.findUnique({
@@ -149,22 +150,42 @@ export function PrismaAdapter(): Adapter{
               }
         },
 
-        async linkAccount(account: { userId: string; type: string; provider: string; providerAccountId: string; refresh_token?: string; access_token?: string; expires_at?: number; token_type?: string; scope?: string; id_token?: string; session_state?: string; }) {
-            await prisma.account.create({
+       async linkAccount(account : any): Promise<AdapterAccount> {
+            const newAccount = await prisma.account.create({
                 data: {
-                    userId: account.userId,
-                    type: account.type,
-                    provider: account.provider,
-                    providerAccountId: account.providerAccountId,
-                    refreshToken: account.refresh_token,
-                    accessToken: account.access_token,
-                    expiresAt: account.expires_at,
-                    tokenType: account.token_type,
-                    scope: account.scope,
-                    idToken: account.id_token,
-                    sessionState: account.session_state!,
+                userId: account.userId,
+                type: account.type,
+                provider: account.provider,
+                providerAccountId: account.providerAccountId,
+                refreshToken: account.refresh_token,
+                accessToken: account.access_token,
+                expiresAt: account.expires_at,
+                tokenType: account.token_type,
+                scope: account.scope,
+                idToken: account.id_token,
+                sessionState: account.session_state!,
                 }
-            })
+            });
+
+            // ✅ Executa a verificação após criar a conta
+            if (account.provider === "google") {
+                await checkGoogleBooksPermission(account.userId);
+            }
+
+        // ✅ Retorna no formato AdapterAccount
+            return {
+                userId: newAccount.userId,
+                type: newAccount.type as "email" | "oauth" | "oidc",
+                provider: newAccount.provider,
+                providerAccountId: newAccount.providerAccountId,
+                refresh_token: newAccount.refreshToken ?? undefined,
+                access_token: newAccount.accessToken ?? undefined,
+                expires_at: newAccount.expiresAt ?? undefined,
+                token_type: newAccount.tokenType ?? undefined,
+                scope: newAccount.scope ?? undefined,
+                id_token: newAccount.idToken ?? undefined,
+                session_state: newAccount.sessionState ?? undefined,
+            };
         },
 
         async createSession({ sessionToken, userId, expires } : AdapterSession) : Promise<AdapterSession> {

@@ -47,13 +47,9 @@ export function Profile({session} : ProfileProps) {
         totPagesRead,
         uniqueAuthors,
         categoryMoreRead,
-        hasFetched
     } = useProfileStore()
 
     const { data :  reviews} = useReviewsUser()
-
-    console.log('Data from useReviewsUser:', reviews)
-    
     useEffect(() => {
         
         if(reviews){

@@ -1,109 +1,39 @@
 'use client'
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Binoculars } from "@phosphor-icons/react";
 import { InputSearchBook } from "../../../components/InputSearchBook";
 import { CardBook } from "../../../components/CardBook";
 import { MotionCard } from "@/utils/motionDiv";
 import {motion} from 'framer-motion'
-import axios from "axios";
 
-import { useBookStore } from '@/store/BookStore';
 import { Loading } from "@/app/components/Loading";
+import { useFilteredBooks } from "@/hooks/useFilteredBooks";
 
 interface DiscoverProps {
     setSelectedBook: (book: any) => void;
 }
 
+export interface Book {
+  id: string
+  googleId?: string
+  title: string
+  author: string
+  cover: string
+  rating: number
+  description: {
+    category: string[]
+    pages: number
+  }
+}
+
 export function Discover({ setSelectedBook }: DiscoverProps) {
     
     const [textSearch, setTextSearch] = useState(""); // Armazenando o texto da busca
-    const [genderSelected, setGenderSelected] = useState('Tudo') // Armazenando o gênero selecionado
-    const [books, setBooks] = useState<any[]>([]); // Armazenando os livros
+    const [genreSelected, setGenreSelected] = useState('Tudo') // Armazenando o gênero selecionado
 
-    const { getBooksForGenre, setBooksForGenre } = useBookStore();
-
-    const [loading, setLoading] = useState(true);// Armazenando o estado de carregamento
-    const fetchBooks = async (force = false) => { 
-
-        /*setLoading(true);
-
-        const category = genderSelected === 'Tudo' ? '' : genderSelected;
-        console.log('Categoria selecionada:', category);
-        try {
-
-            const formattedQuery = textSearch.trim().split(/\s+/).join('+');
-            const response = await axios.get(`api/books?q=${formattedQuery}&subject=${category}`);
-            
-            const data = response.data;
-
-            if (data.error) {
-                console.error(data.error);
-                setBooks([]);
-            } else {
-                setBooks(data);
-            }
-        } catch (error) {
-            console.error("Erro ao buscar livros:", error);
-            setBooks([]);
-        }finally{
-            setLoading(false); 
-        }
-        */
-
-        // 🌀 Fazendo a busca na API usando ChatGPT
-        setLoading(true);
-        const category = genderSelected === 'Tudo' ? '' : genderSelected;
-        const trimmedSearch = textSearch.trim();
-
-        if (!force && trimmedSearch === '') {
-            const cachedBooks = getBooksForGenre(category);
-
-            if (cachedBooks && cachedBooks.length > 0) {
-                setBooks(cachedBooks);
-                setLoading(false);
-                return;
-            }
-        }
-
-        // 🌀 Busca na API se:
-        // 1. Está buscando por texto
-        // 2. Ou ainda não temos os livros no cache
-        try {
-            const formattedQuery = trimmedSearch.split(/\s+/).join('+');
-            const response = await axios.get(`/api/books?q=${formattedQuery}&subject=${category}`);
-            const data = response.data;
-
-            if (data.error) {
-                setBooks([]);
-            } else {
-                setBooks(data);
-
-            // Se não for busca por texto, salva no cache
-            if (trimmedSearch === "") {
-                setBooksForGenre(category, data);
-            }
-            }
-        } catch (error) {
-            console.error("Erro ao buscar livros:", error);
-            setBooks([]);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        const cachedBooks = getBooksForGenre(genderSelected === 'Tudo' ? '' : genderSelected);
-
-        if (cachedBooks && cachedBooks.length > 0 && textSearch.trim() === '') {
-            setBooks(cachedBooks);
-            setLoading(false);
-        } else {
-            fetchBooks();
-        }
-
-    }, [genderSelected, textSearch]);
-
+    const { data: booksFiltered = [], isLoading } = useFilteredBooks({ textSearch, genreSelected });
+ 
     const buttons = [
         {
             id: 'Tudo',
@@ -140,12 +70,6 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
         
     ]
 
-    console.log('LIVROS:', books);
-    // const searchedBooks = books.filter(book =>
-    //     (book.title && typeof book.title === "string" && book.title.toLowerCase().includes(textSearch.toLowerCase())) ||
-    //     (book.author && typeof book.author === "string" && book.author.toLowerCase().includes(textSearch.toLowerCase()))
-    // );
-   
     return (
        <div className=" flex flex-col w-[75rem] xxl:w-[80rem] " id="style-info-cards">
 
@@ -171,31 +95,31 @@ export function Discover({ setSelectedBook }: DiscoverProps) {
                 {buttons.map(({id, label})=> (
                     <button 
                         key={id}
-                        className={`${genderSelected === id ? 'text-gray-100 bg-purple-200': 'border-purple-100 text-purple-100 border hover:bg-purple-200 hover:text-gray-100'}
+                        className={`${genreSelected === id ? 'text-gray-100 bg-purple-200': 'border-purple-100 text-purple-100 border hover:bg-purple-200 hover:text-gray-100'}
                             px-4 py-1 rounded-full`}
-                        onClick={() => setGenderSelected(id)}
+                        onClick={() => setGenreSelected(id)}
                     >
                         {label}
                     </button>
                 ))}
             </div>
             
-               { loading ? (
+               { isLoading ? (
                     <div className="flex items-center justify-center mt-56">
                        <Loading/>
                     </div>
                   
                 ) : 
                     <div>
-                        {books.length <= 0 ? 
+                        {booksFiltered.length <= 0 ? 
                             <div className="flex items-center justify-center mt-56">
                                 <span className="text-purple-100 text-center text-xl font-bold">Nenhum livro encontrado</span>
                             </div>
                         : 
                             <div className="grid grid-cols-3 w-[69rem] gap-5 mb-10" >
                             {
-                                books.map((book, index) => {
-                                    
+                                booksFiltered.map((book : Book, index: number) => {
+
                                     const uniqueKey = `${book.googleId || book.title}-${index}`; // Use um ID se disponível
                                     return(
                                         <motion.div

@@ -44,7 +44,7 @@ model Account {
   idToken           String? @db.Text
   sessionState      String?
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
