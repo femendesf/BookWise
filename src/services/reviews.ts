@@ -4,7 +4,7 @@ interface CreateReviewParams {
   bookId: string
   title: string
   author: string
-  sinopse: string
+  synopsis: string
   imgCover: string
   rating: number
   comment: string

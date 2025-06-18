@@ -6,15 +6,15 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
 model User {
   id        String  @id @default(uuid())
   email     String  @unique
-  name      String? @db.Text
-  avatarUrl String? @db.Text
+  name      String?
+  avatarUrl String?
 
   createdAt DateTime @default(now())
 
@@ -24,8 +24,9 @@ model User {
   hasGoogleBooksPermission Boolean @default(false)
 
   account Account[]
-  reviews Review[] // Adicionado: Um usuário pode ter várias avaliações
+  reviews Review[]
   session Session[]
+  books   Book[]
 
   @@map("users")
 }
@@ -36,12 +37,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refreshToken      String? @db.Text
-  accessToken       String? @db.Text
+  refreshToken      String?
+  accessToken       String?
   expiresAt         Int?
   tokenType         String?
   scope             String?
-  idToken           String? @db.Text
+  idToken           String?
   sessionState      String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -61,17 +62,19 @@ model Session {
 }
 
 model Book {
-  id          String   @id @default(uuid())
-  bookId      String
-  title       String   @db.Text
-  author      String   @db.Text
-  coverUrl    String   @db.Text
-  description String?  @db.Text
-  sinopse     String?  @db.Text
-  pages       Int?
-  category    String? // Mudado para String? ou String
-  rating      Float?
-  reviews     Review[]
+  id       String   @id @default(uuid())
+  bookId   String
+  title    String
+  author   String
+  coverUrl String
+  synopsis String?
+  pages    Int?
+  category String? // Mudado para String? ou String
+  rating   Float?
+  reviews  Review[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("books")
 }
@@ -81,7 +84,7 @@ model Review {
   userId    String
   bookId    String
   rating    Float
-  comment   String?  @db.Text
+  comment   String?
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)

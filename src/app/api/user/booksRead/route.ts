@@ -43,19 +43,17 @@ export async function GET(req: NextResponse){
         const data = response.data;
 
         const books = data.items?.map((item: any) => {
-                    
-                   
-                    return {
-                        id: item.id,
-                        title: item.volumeInfo.title,
-                        author: item.volumeInfo.authors || [],
-                        cover: item.volumeInfo.imageLinks?.thumbnail || "/errorCover.svg",
-                        rating: item.volumeInfo.averageRating || 0,
-                        description: item.volumeInfo.description || "Descrição não disponível",
-                        categories: item.volumeInfo.categories || [],
-                        pages: item.volumeInfo.pageCount || 0,
-                        dateLastReading: item.userInfo.updated || "Data não disponível",
-                    };
+            return {
+                id: item.id,
+                title: item.volumeInfo.title,
+                author: item.volumeInfo.authors || [],
+                cover: item.volumeInfo.imageLinks?.thumbnail || "/errorCover.svg",
+                rating: item.volumeInfo.averageRating || 0,
+                synopsis: item.volumeInfo.description || "Descrição não disponível",
+                categories: item.volumeInfo.categories || [],
+                pages: item.volumeInfo.pageCount || 0,
+                dateLastReading: item.userInfo.updated || "Data não disponível",
+            };
         }) || [];
 
         return NextResponse.json({books}, {status: 200});

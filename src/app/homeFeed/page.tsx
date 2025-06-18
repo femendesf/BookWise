@@ -1,6 +1,11 @@
 import { buildNextAuthOptions } from "@/utils/buildAuth";
-import { Feed } from "./components/homeFeed";
+
 import { getServerSession } from "next-auth";
+import { Feed } from "./feed";
+
+export const metadata = {
+    title: 'BookWise/Feed',
+}
 
 export default async function PageFeed() {
 

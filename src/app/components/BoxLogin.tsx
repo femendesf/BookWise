@@ -5,8 +5,6 @@ import LogoGoogle from "../../public/assets/logo-google.svg";
 import LogoGitHub from "../../public/assets/logo-github.svg";
 import { X } from "@phosphor-icons/react";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { api } from "@/lib/axios";
 
 interface LoginProps{
    

@@ -1,7 +1,6 @@
 import { Check, X } from "@phosphor-icons/react";
 import { TextAreaWithCounter } from "./TextAreaWithCounter";
 import { useState } from "react";
-import { listComments } from "@/utils/listComments";
 import { PhotoProfile } from "../../PhotoProfile";
 import { StarRating } from "../../StarRating";
 

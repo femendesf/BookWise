@@ -1,7 +1,6 @@
 import Image from "next/image";
-import Cover from '@/public/assets/livrosAlgoritmos.svg'
 import { motion } from "framer-motion";
-import { StarRating } from "../../../../components/StarRating";
+import { StarRating } from "../../../../../components/StarRating";
 import { useProfileStore } from "@/store/profileStore";
 import { convertDateRead } from "@/utils/convertDateRead";
 
@@ -62,7 +61,7 @@ export function LastReading({setButtonSeeAll} : LastReadingProps){
 
                             </div>
 
-                            <p className="text-gray-300 text-sm">{bookRead.description}</p>
+                            <p className="text-gray-300 text-sm">{bookRead.synopsis}</p>
                         </div>
                     </div> 
                 </div>

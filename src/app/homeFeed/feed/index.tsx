@@ -3,10 +3,6 @@
 import { useEffect, useState } from "react"
 import { useIsAuthenticated  } from '@/utils/isAuthenticated';
 
-import { Start } from "../start";
-import { Profile } from "../profile";
-import { Discover } from "../discover";
-
 import { BoxLogin } from "@/app/components/BoxLogin";
 
 import { Sidebar } from "@/app/components/sidebar/Sidebar";
@@ -21,6 +17,9 @@ import { useGoogleBooksPermissions } from "@/hooks/useGoogleBooksPermissions";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useAllBooks } from "@/hooks/useAllBooks";
 import { Loading } from "@/app/components/Loading";
+import { Start } from "./components/start";
+import { Profile } from "./components/profile";
+import { Discover } from "./components/discover";
 
 type SessionFeed ={session: Session | null}
 
@@ -37,7 +36,7 @@ export function Feed({session}: SessionFeed) {
         id: number;
         title: string;
         author: string;
-        sinopse: string;
+        synopsis: string;
         cover: string;
         rating: number;
         description: {
@@ -92,6 +91,76 @@ export function Feed({session}: SessionFeed) {
       const isLoading = isLoadingPermission || isLoadingProfile;
 
       console.log('permissionGoogleBookAccepted:', permissionGoogleBookAccepted);
+
+    return(
+        <div className="flex w-full h-full">
+            
+            <Sidebar
+                activePage={activePage}
+                setActivePage={handleChangeComponent}
+                setClickedButtonLogin={setShowLogin}
+                avatar_url={avatar_url}
+                name={name}
+                isAuthenticated={isAuthenticated}
+            />
+            {isLoading ?
+              <div className="flex items-center justify-center w-full h-full mt-96">
+                  <Loading/>
+              </div>
+
+              :
+
+              <div className="mt-12 ml-16 xxl:ml-24 w-full" id="home">
+                 {activePage === 'inicio' ? 
+                  <Start
+                    setButtonSeeAll={handleChangeComponent}
+                    loggedIn={isAuthenticated}
+                    hasBookRead={hasBookRead}
+                    setSelectedBook={setSelectedBook}
+                   
+                  /> 
+                  : activePage === 'perfil' ? 
+                    <Profile 
+                      session={session}
+                     
+                    /> 
+                  : 
+                    <Discover setSelectedBook={setSelectedBook}/>}
+              </div>
+            }
+            
+            {showLogin && 
+                <BoxLogin
+                   
+                    setCloseLogin={setShowLogin}
+                /> 
+            }{/*Mostra a tela de login se tiver clicado no botão de fazer login */}
+            
+            
+                {selectedBook && 
+                
+                    <SidePanel
+                        userId={session?.user?.id || ''}
+                        nameUser={name}
+                        userAvatar={avatar_url}
+                        title={selectedBook.title}
+                        author={selectedBook.author}
+                        synopsis={selectedBook.synopsis}
+                        imgCover={selectedBook.cover || ''}
+                        rating={selectedBook.rating}
+                        index={selectedBook.id}
+                        category={selectedBook.description.category}
+                        pages={selectedBook.description.pages}
+                        isAuthenticated={isAuthenticated}
+                        clickedExitBook={() => setSelectedBook(null)}
+                        bookId={selectedBook.id.toString() || ''}
+                        onReviewSuccessfullyAdded={handleReviewAddedFromSidePanel}
+                    />
+                }
+        </div>
+    )
+}
+
        
   //   useEffect(() => {
 
@@ -228,72 +297,3 @@ export function Feed({session}: SessionFeed) {
 
   //   fetchAllBooks();
   // }, []); // Chama a função para buscar todos os livros
-
-    return(
-        <div className="flex w-full h-full">
-            
-            <Sidebar
-                activePage={activePage}
-                setActivePage={handleChangeComponent}
-                setClickedButtonLogin={setShowLogin}
-                avatar_url={avatar_url}
-                name={name}
-                isAuthenticated={isAuthenticated}
-            />
-            {isLoading ?
-              <div className="flex items-center justify-center w-full h-full mt-96">
-                  <Loading/>
-              </div>
-
-              :
-
-              <div className="mt-12 ml-16 xxl:ml-24 w-full" id="home">
-                 {activePage === 'inicio' ? 
-                  <Start
-                    setButtonSeeAll={handleChangeComponent}
-                    loggedIn={isAuthenticated}
-                    hasBookRead={hasBookRead}
-                    setSelectedBook={setSelectedBook}
-                   
-                  /> 
-                  : activePage === 'perfil' ? 
-                    <Profile 
-                      session={session}
-                     
-                    /> 
-                  : 
-                    <Discover setSelectedBook={setSelectedBook}/>}
-              </div>
-            }
-            
-            {showLogin && 
-                <BoxLogin
-                   
-                    setCloseLogin={setShowLogin}
-                /> 
-            }{/*Mostra a tela de login se tiver clicado no botão de fazer login */}
-            
-            
-                {selectedBook && 
-                
-                    <SidePanel
-                        userId={session?.user?.id || ''}
-                        nameUser={name}
-                        userAvatar={avatar_url}
-                        title={selectedBook.title}
-                        author={selectedBook.author}
-                        sinopse={selectedBook.sinopse}
-                        imgCover={selectedBook.cover || ''}
-                        rating={selectedBook.rating}
-                        index={selectedBook.id}
-                        category={selectedBook.description.category}
-                        pages={selectedBook.description.pages}
-                        isAuthenticated={isAuthenticated}
-                        clickedExitBook={() => setSelectedBook(null)}
-                        bookId={selectedBook.id.toString() || ''}
-                        onReviewSuccessfullyAdded={handleReviewAddedFromSidePanel}
-                    />
-                }
-        </div>
-    )
-}

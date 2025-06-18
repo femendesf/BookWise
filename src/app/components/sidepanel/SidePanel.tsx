@@ -11,6 +11,7 @@ import { useCreateReview } from '@/hooks/useCreateReview';
 import { useReviewsBook } from '@/hooks/useReviewsBook';
 import { Loading } from '../Loading';
 
+
 interface Review {
   id: number
   rating: number
@@ -30,7 +31,7 @@ interface SidePanelProps{
     bookId: string;
     title: string;
     author: string;
-    sinopse: string;
+    synopsis: string;
     imgCover: string;
     rating: number;
     index: number;
@@ -42,7 +43,7 @@ interface SidePanelProps{
     onReviewSuccessfullyAdded: () => void;
 }
 
-export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title, author, sinopse, rating, index, category, pages, isAuthenticated,  clickedExitBook, onReviewSuccessfullyAdded} : SidePanelProps){
+export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title, author, synopsis, rating, index, category, pages, isAuthenticated, clickedExitBook, onReviewSuccessfullyAdded} : SidePanelProps){
     
 
     const [reviewButton, setReviewButton] = useState(false)
@@ -57,26 +58,12 @@ export function SidePanel({userId, userAvatar, nameUser, bookId, imgCover, title
      const handleNewComment = async (commentData: { avatar: string; nameUser: string; comment: string; rating: number }) => {
 
         const categoriesString = category.length <= 0 ? '' : category.join(', ')
-        console.log('ENVIADO QUANDO CLICAR EM ENVIAR', {
-            bookId,
-            title,
-            author,
-            sinopse,
-            imgCover,
-            rating: commentData.rating,
-            comment: commentData.comment,
-            userId,
-            userAvatar: commentData.avatar,
-            category: categoriesString,
-            pages,
-        })
-
-
+      
         createReviewMutation({
             bookId: bookId,
             title,
             author,
-            sinopse,
+            synopsis,
             imgCover,
             rating: commentData.rating,
             comment: commentData.comment,

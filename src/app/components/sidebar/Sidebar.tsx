@@ -37,7 +37,7 @@ export function Sidebar({activePage,avatar_url, name, isAuthenticated, setActive
   async function handleLogout() {
 
     await api.get("/auth/logout"); // Remove os cookies no backend
-    await signOut({ redirect: true, callbackUrl: "/feed" }); // Faz logout no NextAuth
+    await signOut({ redirect: true, callbackUrl: "/homeFeed" }); // Faz logout no NextAuth
 
     setActivePage(activePage); 
   }

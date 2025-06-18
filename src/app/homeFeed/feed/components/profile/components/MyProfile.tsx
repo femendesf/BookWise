@@ -1,5 +1,5 @@
 import { BookmarkSimple, BookOpen, Books, UserList } from "@phosphor-icons/react";
-import { PhotoProfile } from "../../../../components/PhotoProfile";
+import { PhotoProfile } from "../../../../../components/PhotoProfile";
 
 import { categoryTranslations } from "@/utils/categoriesTranslated";
 

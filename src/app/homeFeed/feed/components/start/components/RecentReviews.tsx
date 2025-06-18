@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { motion } from 'framer-motion';
-import { ReviewUser } from '../../../../components/ReviewUser';
+import { ReviewUser } from '../../../../../components/ReviewUser';
 
 import { MotionCard } from '@/utils/motionDiv';
 interface RecentReviewsProps {
@@ -11,11 +11,11 @@ interface RecentReviewsProps {
     author: string;
     imgBook: string;
     rating: number;
-    description: string;
+    synopsis: string;
     index: number;  // Novo índice para controlar o delay
 }
 
-export function RecentReviews({ name, imgProfile, dateReview, title, author, imgBook, rating, description, index }: RecentReviewsProps) {
+export function RecentReviews({ name, imgProfile, dateReview, title, author, imgBook, rating, synopsis, index }: RecentReviewsProps) {
     
     return (
         <motion.div
@@ -36,7 +36,7 @@ export function RecentReviews({ name, imgProfile, dateReview, title, author, img
                         <h2>{title}</h2>
                         <h3>{author}</h3>
                     </div>
-                    <p className='line-clamp-4 text-gray-300 text-sm'>{description}</p>
+                    <p className='line-clamp-4 text-gray-300 text-sm'>{synopsis}</p>
                 </div>
             </div>
         </motion.div>

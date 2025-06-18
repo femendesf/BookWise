@@ -50,7 +50,7 @@ export async function GET(req: Request) {
                 author: item.volumeInfo.authors?.join(", ") || "Desconhecido",
                 cover: item.volumeInfo.imageLinks?.thumbnail || "/errorCover.svg",
                 rating: dbRating,
-                sinopse: item.volumeInfo.description || "Descrição não disponível",
+                synopsis: item.volumeInfo.description || "Descrição não disponível",
                 description: {
                     category: categories,
                     pages: item.volumeInfo.pageCount || 0,

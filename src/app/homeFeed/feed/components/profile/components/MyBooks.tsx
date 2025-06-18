@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { motion } from 'framer-motion';
-import { StarRating } from "../../../../components/StarRating";
-import dayjs from "dayjs";
+import { StarRating } from "../../../../../components/StarRating";
 import { convertDateRead } from "@/utils/convertDateRead";
 
 interface MyBooksProps {
@@ -9,7 +8,7 @@ interface MyBooksProps {
     author: string[];
     img: string;
     rating: number;
-    description: string;
+    synopsis: string;
     dateLastReading: string;
     
 }
@@ -27,7 +26,7 @@ const cardVariants = {
     })
 }
 
-export function MyBooks({title, author, img, rating, description, dateLastReading}: MyBooksProps) {
+export function MyBooks({title, author, img, rating, synopsis, dateLastReading}: MyBooksProps) {
 
   
     const formattedDate = convertDateRead(dateLastReading)
@@ -63,7 +62,7 @@ export function MyBooks({title, author, img, rating, description, dateLastReadin
             
                 </div>
 
-                <p className="text-gray-300 text-sm">{description}</p>
+                <p className="text-gray-300 text-sm">{synopsis}</p>
             </motion.div>
         </div>
     )

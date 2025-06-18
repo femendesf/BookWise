@@ -1,7 +1,7 @@
 import {ChartLineUp } from "@phosphor-icons/react";
 import { RecentReviews } from "./components/RecentReviews";
 import { LastReading } from "./components/LastReading";
-import { CardBook } from "../../../components/CardBook";
+import { CardBook } from "../../../../components/CardBook";
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
 import { MotionCard } from "@/utils/motionDiv";
@@ -22,9 +22,9 @@ interface Review {
     author: string;
     coverUrl: string; // URL da capa do livro
     category: string; // Categoria do livro
-    sinopse: string;
-    // Não inclua sinopse aqui, pois a review não a possui diretamente.
-    // Se RecentReviews precisar da sinopse, você precisaria de outro fetch ou passar setSelectedBook com os dados do livro completo.
+    synopsis: string;
+    // Não inclua synopsis aqui, pois a review não a possui diretamente.
+    // Se RecentReviews precisar da synopsis, você precisaria de outro fetch ou passar setSelectedBook com os dados do livro completo.
   };
 }
 
@@ -106,7 +106,7 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
                                                     name={user.name}
                                                     dateReview={createdAt}
                                                     rating={rating}
-                                                    description={book.sinopse}
+                                                    synopsis={book.synopsis}
                                                     index={index}
                                                     key={index}/>
                                                 </div>

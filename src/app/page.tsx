@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect} from "react";
 export default function Home() {
 
-
   const isAuthenticated = useIsAuthenticated();
 
   const router = useRouter();
@@ -13,7 +12,7 @@ export default function Home() {
   useEffect(() => {
 
     if (isAuthenticated) {
-      router.push("/feed"); // Redireciona para Feed
+      router.push("/homeFeed"); // Redireciona para Feed
     } else{
       router.push("/login"); // Redireciona para Login
     }

@@ -16,17 +16,15 @@ export async function POST(req: NextRequest) {
     
     const { 
         title, 
-        author, 
-        description,
+        author,
         imgCover, 
         rating, 
         comment, 
         category, 
         pages, 
-        sinopse,
+        synopsis,
         bookId,
         userId,
-        userAvatar,
        // Renomeamos 'id' do body para 'googleBookId' para clareza
     } = body;
 
@@ -52,12 +50,13 @@ export async function POST(req: NextRequest) {
                     bookId : bookId, // <--- SALVAMOS O bookId DA API GOOGLE BOOKS
                     title,
                     author,
-                    description,
-                    sinopse, 
+                  
+                    synopsis, 
                     coverUrl: imgCover,
                     pages: pages || 0, 
                     category: categoryString,
-                    rating: rating, // Rating inicial pode ser a primeira avaliação
+                    rating: rating, // Rating inicial pode ser a primeira avaliação,
+                    userId: userId,
                 }
             });
         } else {
@@ -70,7 +69,7 @@ export async function POST(req: NextRequest) {
                 data: {
                     title: title, // Você pode querer atualizar título, autor, etc. caso haja mudanças
                     author: author,
-                    sinopse,
+                    synopsis,
                     coverUrl: imgCover,
                     category: categoryString,
                     pages: pages || book.pages || 0,

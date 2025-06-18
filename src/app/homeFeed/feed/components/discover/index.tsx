@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { Binoculars } from "@phosphor-icons/react";
-import { InputSearchBook } from "../../../components/InputSearchBook";
-import { CardBook } from "../../../components/CardBook";
+
 import { MotionCard } from "@/utils/motionDiv";
 import {motion} from 'framer-motion'
 
 import { Loading } from "@/app/components/Loading";
 import { useFilteredBooks } from "@/hooks/useFilteredBooks";
+import { InputSearchBook } from "@/app/components/InputSearchBook";
+import { CardBook } from "@/app/components/CardBook";
 
 interface DiscoverProps {
     setSelectedBook: (book: any) => void;

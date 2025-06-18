@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 
 import { motion } from "framer-motion";
 import { fadeIn } from "@/utils/fadeOut";
-import { InputSearchBook } from "../../../components/InputSearchBook";
+import { InputSearchBook } from "../../../../components/InputSearchBook";
 
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
@@ -26,7 +26,7 @@ type Book = {
   author: string | string[];
   cover: string;
   rating: number;
-  description: string;
+  synopsis: string;
   dateLastReading: string;
 };
 
@@ -75,15 +75,15 @@ export function Profile({session} : ProfileProps) {
     const year = createdAt ?? "----"; // fallback para string segura
     
     const renderBooks = (books: Book[]) => (
-        books.map(({ id, title, author, cover, rating, description, dateLastReading }) => (
+        books.map(({ id, title, author, cover, rating, synopsis, dateLastReading }) => (
             <motion.div {...fadeIn} key={id}>
                 <MyBooks
-                title={title}
-                author={typeof author === "string" ? [author] : author}
-                img={cover}
-                rating={rating}
-                description={description}
-                dateLastReading={dateLastReading}
+                    title={title}
+                    author={typeof author === "string" ? [author] : author}
+                    img={cover}
+                    rating={rating}
+                    synopsis={synopsis}
+                    dateLastReading={dateLastReading}
                 />
             </motion.div>
         ))

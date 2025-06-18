@@ -22,7 +22,7 @@ export async function GET() {
             author: true,
             coverUrl: true,
             category: true,
-            sinopse: true
+            synopsis: true
           },
         },
       },
