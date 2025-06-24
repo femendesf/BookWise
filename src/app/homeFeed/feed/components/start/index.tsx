@@ -8,6 +8,7 @@ import { MotionCard } from "@/utils/motionDiv";
 
 import { useBookStore } from "@/store/BookStore";
 import { useRecentReviews } from "@/hooks/useRecentReviews";
+import { Loading } from "@/app/components/Loading";
 interface Review {
   comment: string; // O comentário da avaliação
   rating: number; // O rating da avaliação
@@ -41,7 +42,7 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
     
     const popularBooks = booksByGenre['Tudo'] || []; // Livros populares
 
-    const {data: recentReviews} = useRecentReviews()
+    const {data: recentReviews, isLoading} = useRecentReviews()
     
     return(
 
@@ -66,39 +67,20 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
                             <div className="flex flex-col gap-3">
                                 <span className="text-gray-100 text-sm">Avaliações mais recentes</span>
 
-                                {Array.isArray(recentReviews) && recentReviews.length > 0  ?
+                            {isLoading ? (
 
+                                <div className="flex items-center justify-center w-full h-full mt-52">
+                                    <Loading/>
+                                </div>
+
+                                ) : Array.isArray(recentReviews) && recentReviews.length > 0 ? (
                                     <div className="flex flex-col gap-3">
-                                        {recentReviews.map((review : Review, index: any) => {
+                                        {recentReviews.map((review: Review, index: any) => {
+                                            const { rating, createdAt, user, book } = review;
 
-                                            const {
-                                                rating,
-                                                createdAt,
-                                                user, // O objeto user da review (com name e avatar_url)
-                                                book, // O objeto book da review (com title, author, cover_url, category)
-                                            } = review;
-                                         
                                             return (
-                                                <div
-                                                    key={index}
-                                                    /*
-                                                    
-                                                    onClick={() => setSelectedBook({
-                                                        // Função para abrir o livro selecionado
-                                                        // Certifique-se de que setSelectedBook pode lidar com este formato
-                                                        bookId: book.book_id,
-                                                        title: book.title,
-                                                        author: book.author,
-                                                        imgCover: book.cover_url,
-                                                        rating: rating, // Rating do livro, se quiser passar
-                                                        category: book.category ? [book.category] : [], // Garante que é um array
-                                                        pages: 0, // Se não tiver nas reviews, precisaria buscar ou ter um padrão
-                                                        sinopse: '', // Você pode querer carregar a sinopse do livro em setSelectedBook
-                                                        // Adicione o que mais setSelectedBook espera/precisa para o side panel
-                                                    })}
-                                                        */
-                                                >
-                                                    <RecentReviews 
+                                                <div key={index}>
+                                                <RecentReviews 
                                                     title={book.title}
                                                     author={book.author}
                                                     imgBook={book.coverUrl}
@@ -108,22 +90,17 @@ export function Start({loggedIn, hasBookRead, setButtonSeeAll, setSelectedBook, 
                                                     rating={rating}
                                                     synopsis={book.synopsis}
                                                     index={index}
-                                                    key={index}/>
+                                                />
                                                 </div>
-                                            )
-                                        }
-                                        )}
+                                            );
+                                        })}
                                     </div>
-                                    
-                                    :
-
+                                ) : (
                                     <div className="flex items-center justify-center w-full h-full mt-52">
-                                        <p className="text-purple-100 font-bold text-xl">Nenhuma avalição recente disponível!</p>
+                                        <p className="text-purple-100 font-bold text-xl">Nenhuma avaliação recente disponível!</p>
                                     </div>
-
-                                
-                                }
-                                
+                                )
+                            }
                             </div> 
 
                         </div>{/* Recent Reviews */}
