@@ -1,7 +1,5 @@
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
-// import { set } from "zod";
-
 interface inputSearchBook{
     setTextSearch: (text: string) => void;
     placeholder: string;
