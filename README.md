@@ -91,7 +91,7 @@ DATABASE_URL
 
 DIRECT_URL
 
-NEXTAUTH_URL (ex: https://book-wise-ten-liart.vercel.app) - Essa variavel foi usada direto no deploy da Vercel, pois para o aplicativo em produção foi criado uma outra aplicação no painel do GitHub (🔗 https://github.com/settings/developers), para poder trabalhar em no modo desenvolvimento sem problema.
+NEXTAUTH_URL (ex: https://book-wise-ten-liart.vercel.app) - Essa variavel foi usada direto no deploy da Vercel, pois para o aplicativo em produção foi criado uma outra aplicação no painel do GitHub (🔗 https://github.com/settings/developers), para poder trabalhar em modo desenvolvimento sem problema.
 
 GOOGLE_CLIENT_ID e GOOGLE_CLIENT_SECRET
 
